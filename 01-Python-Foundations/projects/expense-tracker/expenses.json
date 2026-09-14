@@ -1,0 +1,20 @@
+[
+    {
+        "amount": 2000.0,
+        "category": "SIP",
+        "description": "mutual fund",
+        "date": "2026-06-09"
+    },
+    {
+        "amount": 11000.0,
+        "category": "rent",
+        "description": "house rent",
+        "date": "2026-09-01"
+    },
+    {
+        "amount": 2000.0,
+        "category": "groceries",
+        "description": "oil atta dal veggies",
+        "date": "2026-09-09"
+    }
+]
