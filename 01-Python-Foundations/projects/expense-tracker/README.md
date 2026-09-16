@@ -1,96 +1,32 @@
-# Expense Tracker CLI
+# Expense Tracker & Analyzer
 
-A simple command-line expense tracker built with Python.
+A command-line Python application for storing expenses and analyzing spending data.
+
+This project was originally built during Day 1 of my Python Engineering learning plan and was refactored on Day 2 to practice Python modules, imports, and code organization.
 
 ## Features
 
-* Add an expense with:
-
-  * Amount
-  * Category
-  * Description
-  * Date
-* View all expenses
-* Calculate total spending
-* View spending by category
-* Save expenses to a JSON file
-* Load saved expenses when the program starts
-* Handle invalid amounts
-* Handle invalid menu choices
-* Handle missing or empty JSON files
-* Accept flexible date formats
-* Automatically use today's date when no date is entered
+- View all expenses
+- Calculate total spending
+- View spending by category
+- Find highest expense
+- Find lowest expense
+- Calculate average expense
+- Find expenses above a specified amount
+- Store expenses in JSON
+- Handle missing JSON files
+- Handle invalid or empty JSON data
+- Handle invalid user input
+- Interactive CLI menu
 
 ## Project Structure
 
 ```text
 expense-tracker/
+├── main.py
+├── data.py
+├── analyzer.py
 ├── expense_tracker.py
 ├── expenses.json
 ├── experiments.py
 └── README.md
-```
-
-## How to Run
-
-Make sure you are inside the `expense-tracker` folder.
-
-Run:
-
-```bash
-python expense_tracker.py
-```
-
-## Example
-
-```text
-===== Expense Tracker =====
-1. Add Expense
-2. View Expenses
-3. Total Spending
-4. Category Summary
-5. Exit
-
-Choose an option: 1
-
-Amount: 2000
-Category: groceries
-Description: oil atta dal veggies
-Date (DD-MM-YY, press Enter for today): 09/09/26
-
-Expense added successfully.
-```
-
-## Data Storage
-
-Expenses are stored in:
-
-```text
-expenses.json
-```
-
-The program loads the existing expenses when it starts and saves the updated list whenever a new expense is added.
-
-## What I Implemented
-
-This project was built while learning Python file handling and the standard library.
-
-Concepts practiced:
-
-* `json`
-* `pathlib`
-* Reading files
-* Writing files
-* Loading JSON data
-* Saving JSON data
-* Working with file paths
-* Exception handling
-* `try` / `except`
-* Lists
-* Dictionaries
-* Loops
-* Functions
-* User input
-* Basic input validation
-* Date handling
-* Building a CLI application
