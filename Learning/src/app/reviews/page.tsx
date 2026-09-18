@@ -76,7 +76,7 @@ export default function ReviewsPage() {
               <label key={q.id} className="block">
                 <span className="text-sm">{q.prompt}</span>
                 {q.hint && (
-                  <span className="mt-0.5 block text-sm leading-relaxed text-faint">
+                  <span className="mt-0.5 block text-[0.68rem] leading-relaxed text-faint">
                     {q.hint}
                   </span>
                 )}
@@ -107,7 +107,7 @@ export default function ReviewsPage() {
               return (
                 <Card key={r.id} as="article">
                   <div className="px-5 py-4">
-                    <p className="text-xs font-semibold uppercase tracking-[0.14em] text-accent">
+                    <p className="text-[0.66rem] font-semibold uppercase tracking-[0.14em] text-accent">
                       {r.kind} ·{" "}
                       {new Date(r.createdAt).toLocaleDateString(undefined, {
                         day: "numeric",
@@ -118,10 +118,10 @@ export default function ReviewsPage() {
                     <dl className="mt-3 space-y-2.5">
                       {Object.entries(r.answers).map(([qid, value]) => (
                         <div key={qid}>
-                          <dt className="text-xs text-faint">
+                          <dt className="text-[0.68rem] text-faint">
                             {qs.find((q) => q.id === qid)?.prompt ?? qid}
                           </dt>
-                          <dd className="mt-0.5 whitespace-pre-wrap text-sm leading-relaxed text-muted">
+                          <dd className="mt-0.5 whitespace-pre-wrap text-xs leading-relaxed text-muted">
                             {value}
                           </dd>
                         </div>

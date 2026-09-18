@@ -7,13 +7,13 @@ import { designBriefs } from "@/data/systemDesigns";
 import { blueprintById, skillById } from "@/data";
 import { Card, PageHeader, Pill } from "@/components/ui";
 
-const SECTION_TITLE = "text-xs font-semibold uppercase tracking-[0.14em] text-faint";
+const SECTION_TITLE = "text-[0.66rem] font-semibold uppercase tracking-[0.14em] text-faint";
 
 function List({ items, className = "" }: { items: string[]; className?: string }) {
   return (
     <ul className={`mt-2 space-y-1.5 ${className}`}>
       {items.map((i) => (
-        <li key={i} className="text-sm leading-relaxed text-muted">
+        <li key={i} className="text-xs leading-relaxed text-muted">
           · {i}
         </li>
       ))}
@@ -35,7 +35,7 @@ export default function SystemDesignPage() {
       <Card className="mb-6">
         <div className="px-5 py-4">
           <p className="text-sm font-medium">How to use these</p>
-          <p className="mt-2 max-w-3xl text-sm leading-relaxed text-muted">
+          <p className="mt-2 max-w-3xl text-xs leading-relaxed text-muted">
             Read the prompt and the scale, then close the page and design it
             yourself on paper for fifteen minutes. Only then open the brief and
             compare. Reading a finished design teaches almost nothing; failing
@@ -57,10 +57,10 @@ export default function SystemDesignPage() {
               >
                 <span className="min-w-0 flex-1">
                   <span className="text-[0.95rem] font-medium">{brief.title}</span>
-                  <span className="mt-1.5 block max-w-3xl text-sm leading-relaxed text-muted">
+                  <span className="mt-1.5 block max-w-3xl text-xs leading-relaxed text-muted">
                     {brief.prompt}
                   </span>
-                  <span className="mt-2 flex items-center gap-1.5 text-xs text-faint">
+                  <span className="mt-2 flex items-center gap-1.5 text-[0.68rem] text-faint">
                     <Gauge size={11} /> {brief.scale}
                   </span>
                 </span>
@@ -91,7 +91,7 @@ export default function SystemDesignPage() {
                       {brief.components.map((c) => (
                         <div key={c.name}>
                           <dt className="text-xs font-medium">{c.name}</dt>
-                          <dd className="mt-0.5 text-sm leading-relaxed text-muted">
+                          <dd className="mt-0.5 text-xs leading-relaxed text-muted">
                             {c.role}
                           </dd>
                         </div>
@@ -126,7 +126,7 @@ export default function SystemDesignPage() {
                           <dt className="text-xs font-medium text-accent">
                             {d.decision}
                           </dt>
-                          <dd className="mt-1 text-sm leading-relaxed text-muted">
+                          <dd className="mt-1 text-xs leading-relaxed text-muted">
                             {d.tradeoff}
                           </dd>
                         </div>
@@ -172,12 +172,12 @@ export default function SystemDesignPage() {
 
                   <div className="flex flex-wrap items-center gap-2 border-t border-line-soft px-5 py-3.5">
                     {brief.relatedBlueprints.map((id) => (
-                      <Link key={id} href={`/library/patterns#${id}`}>
+                      <Link key={id} href={`/blueprints#${id}`}>
                         <Pill tone="accent">{blueprintById.get(id)?.name ?? id}</Pill>
                       </Link>
                     ))}
                     {brief.relatedSkills.map((id) => (
-                      <Link key={id} href={`/plan/skills#${id}`}>
+                      <Link key={id} href={`/skills#${id}`}>
                         <Pill>{skillById.get(id)?.name ?? id}</Pill>
                       </Link>
                     ))}
