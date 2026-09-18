@@ -302,17 +302,35 @@ data must degrade gracefully, never crash and never silently destroy readable
 data.** Keep persistence isolated (`src/lib/state.ts`, `src/lib/store.tsx`) so a
 future FastAPI + PostgreSQL + auth backend replaces those files, not the pages.
 
-**Pages:** Dashboard · Today · Roadmap · Calendar · Skills · Projects ·
-Portfolio · Knowledge / Engineering Journal · AI Patterns / Blueprints ·
-System Design · Reviews · Career Readiness · Settings.
+**Navigation — three destinations, not fourteen.** The app answers one
+question, so it presents one working surface:
+
+- **Today** (`/`) — the mission. Dashboard and Today are the same screen; do
+  not reintroduce a separate summary page that restates it.
+- **Plan** — Roadmap · Calendar · Skills · Projects · Readiness · Reviews.
+- **Library** — Patterns · System Design · AI Radar · Journal.
+- **Settings** is a gear in the header, not a peer of the three.
+
+Readiness merges portfolio and career: both answer "what can I show and what
+will I be asked about it". `/day/[n]` and `/` render the same `DayDetail`
+component. Every former URL redirects to its new home via `next.config.ts`;
+keep that map updated rather than breaking links.
+
+**Layout:** single column with a reading measure on Today; wider only where
+Plan and Library genuinely need it. Secondary detail belongs in a `Disclosure`
+(`<details>`), not in a competing card. One type step for micro-labels
+(`text-xs`); prose is `text-sm` or larger — never label-size. Group list rows
+into one bordered panel with dividers instead of one bordered card per row.
+
+**Interaction must be visible.** Ticking a task pops the checkbox, draws the
+strike-through across the label, flashes the row once, bumps the counter and
+animates the progress bar; finishing the last essential task reveals the
+finish-the-day prompt. All of it is CSS, so nothing re-renders to animate, and
+all of it is disabled under `prefers-reduced-motion`. A control that changes
+state and looks identical afterwards is a bug.
+
 Plus: Focus Mode, timer, progress tracking, recovery mode, capability checks,
 skill matrix, gap analysis, command palette / global search.
-
-**Dashboard:** today's mission is the dominant element. Header shows
-`AI ENGINEER TRAINING SYSTEM`, day X, current phase, current module, progress,
-streak. Mission shows objective, estimated time, why it matters, required
-output, learn / practice / build / test / ship, definition of done. Then current
-project, skills in progress, up next. Do not overload it.
 
 **Projects & portfolio engine:** purpose, required skills, milestones, quality
 gates, tests, docs, deployment, evidence, repository path, GitHub link.
@@ -402,26 +420,26 @@ AI-Engineer/
 (installed via winget with the owner's approval). `Learning/node_modules/`
 present, `package-lock.json` committed. Python remains Anaconda 3.13.
 
-**Learning app — 57 files, ~14,500 lines, VERIFIED**
+**Learning app — 62 files, ~15,000 lines, VERIFIED**
 
 `src/data/`: types, 24 phases, 8 weeks, 56 skills with evidence ladders, 8
 projects, 10 blueprints, 8 capability checks, 8 system design briefs, 18 career
-areas, 12 radar entries, 46 authored days for phases 1–2.
+areas, 12 radar entries, 46 authored days for phases 1-2.
 `src/lib/`: state (v2), store, progress, maturity, reviews, notifications,
 notifier, useCue.
-`src/components/`: ui, Shell, CommandPalette, mission, DayDetail, FocusMode,
-CueRunner.
-`src/app/`: dashboard, today, day/[n], roadmap, calendar, skills, projects,
-knowledge, blueprints, system-design, radar, portfolio, career, reviews,
-settings.
+`src/components/`: ui (incl. Disclosure, SectionHeader), Shell (top bar),
+SubNav, CommandPalette, mission, DayDetail, FocusMode, CueRunner.
+`src/sections/`: Portfolio, Career — composed into `/plan/readiness`.
+`src/app/`: `/`, `/day/[n]`, `/plan/*` (6), `/library/*` (4), `/settings`.
 `tests/`: four vitest suites, 82 tests.
 
 **Verification status (re-run after every change):**
 
 - `npm test` — 82 passing
 - `npm run typecheck` — clean
-- `npm run build` — succeeds, 17 routes
-- `npm run dev` — all 17 routes return 200, content assertions pass
+- `npm run build` — succeeds, 15 routes
+- `npm run dev` — all 15 routes return 200 and all 14 legacy redirects resolve,
+  from a server started on a cleared `.next`
 
 There is no `lint` script. `next lint` is deprecated in Next 15 and no ESLint
 config or dependency exists, so the dead script was removed rather than left
@@ -438,11 +456,12 @@ pretending to work. `npm run check` runs typecheck + test + build.
 
 **Still outstanding:**
 
-- Client-side rendering is unverified. Route HTML and SSR output are checked,
-  but no browser drives the app, so hydration, clicks, focus mode, the timer
-  and the cue wiring have never been exercised end to end. This needs either
-  jsdom + Testing Library or Playwright — both are new dependencies and need
-  approval.
+- Client-side rendering is unverified, and this now matters more than it did.
+  Route HTML and SSR output are checked, but no browser drives the app, so
+  hydration, clicks, the focus timer, the cue wiring and every one of the new
+  completion animations have never been exercised end to end. This needs
+  either jsdom + Testing Library or Playwright — both are new dependencies and
+  need approval.
 - IndexedDB — localStorage only. It is sufficient at this data size; revisit if
   state grows past a few MB.
 - Days for phases 3–24 (deliberately outlined until approached).
@@ -450,10 +469,10 @@ pretending to work. `npm run check` runs typecheck + test + build.
 - GitHub sync, cloud sync, AI mentor — all labelled as not implemented in the
   Settings UI.
 
-**Git:** `7478e0b`. Three commits made this session: `ba231c0` (app + CLAUDE.md),
+**Git:** `3bb4387`. Five local commits: `ba231c0` (app + CLAUDE.md),
 `c96571d` (notifications, sound, system design, career, radar), `7478e0b`
-(weeks, blueprints, integrity tests). Nothing pushed — push always needs
-approval.
+(weeks, blueprints, integrity tests), `c95367b` (state update), `3bb4387`
+(navigation and Today rebuild). Nothing pushed — push always needs approval.
 
 **Immediate next step:** decide on browser-level testing, then continue with
 the remaining gaps above.
