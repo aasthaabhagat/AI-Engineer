@@ -9,6 +9,7 @@ import {
   phaseById,
   projectById,
   skills,
+  weekForDay,
 } from "@/data";
 import { useStore } from "@/lib/store";
 import {
@@ -44,6 +45,7 @@ export default function DashboardPage() {
 
   const phase = today ? phaseById.get(today.phaseId) : undefined;
   const mod = today ? moduleById.get(today.moduleId) : undefined;
+  const week = today ? weekForDay(today.dayNumber) : undefined;
   const phaseStats = today
     ? phaseProgress(days, today.phaseId, state)
     : { done: 0, total: 0, ratio: 0 };
@@ -85,6 +87,11 @@ export default function DashboardPage() {
                 Phase {phase.order}: {phase.title}
               </span>
               {mod && <span className="text-faint">· {mod.title}</span>}
+              {week && (
+                <span className="text-faint">
+                  · Week {week.number}: {week.title}
+                </span>
+              )}
             </p>
           )}
         </div>

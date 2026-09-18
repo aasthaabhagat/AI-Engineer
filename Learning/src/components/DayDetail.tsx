@@ -4,7 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { CheckCircle2, ExternalLink, RotateCcw, Timer } from "lucide-react";
 import type { Day } from "@/data/types";
-import { moduleById, phaseById, projectById, skillById } from "@/data";
+import { moduleById, phaseById, projectById, skillById, weekForDay } from "@/data";
 import { useStore } from "@/lib/store";
 import { availableMinutes, dayTaskProgress, planForTime } from "@/lib/progress";
 import { useAudioUnlock, useCue } from "@/lib/useCue";
@@ -39,6 +39,7 @@ export function DayDetail({ day, focusOnLoad = false }: { day: Day; focusOnLoad?
   const phase = phaseById.get(day.phaseId);
   const mod = moduleById.get(day.moduleId);
   const project = day.projectId ? projectById.get(day.projectId) : undefined;
+  const week = weekForDay(day.dayNumber);
 
   return (
     <>
@@ -68,6 +69,7 @@ export function DayDetail({ day, focusOnLoad = false }: { day: Day; focusOnLoad?
             <p className="mt-3 text-xs text-faint">
               Phase {phase.order}: {phase.title}
               {mod && ` · ${mod.title}`}
+              {week && ` · Week ${week.number}`}
             </p>
           )}
 

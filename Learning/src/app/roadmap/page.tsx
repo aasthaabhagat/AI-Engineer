@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { ChevronDown, Flag, Lock } from "lucide-react";
-import { days, phaseById, phases } from "@/data";
+import { dayByNumber, days, phaseById, phases, weeksForPhase } from "@/data";
 import { TRACK_LABEL, type Track } from "@/data/types";
 import { useStore } from "@/lib/store";
 import { currentDay, phaseProgress } from "@/lib/progress";
@@ -150,27 +150,53 @@ export default function RoadmapPage() {
                   {phaseDays.length > 0 && (
                     <div className="border-t border-line-soft px-5 py-4">
                       <p className="mb-3 text-[0.68rem] font-semibold uppercase tracking-[0.14em] text-faint">
-                        Days
+                        Weeks
                       </p>
-                      <div className="flex flex-wrap gap-1.5">
-                        {phaseDays.map((d) => {
-                          const done = Boolean(state.completedDays[d.id]);
-                          const current = active?.id === d.id;
+                      <div className="space-y-4">
+                        {weeksForPhase(phase.id).map((week) => {
+                          const weekDays = week.days
+                            .map((n) => dayByNumber.get(n))
+                            .filter((d): d is NonNullable<typeof d> => Boolean(d));
+                          const weekDone = weekDays.filter((d) =>
+                            state.completedDays[d.id],
+                          ).length;
+
                           return (
-                            <Link
-                              key={d.id}
-                              href={`/day/${d.dayNumber}`}
-                              title={d.title}
-                              className={`rounded-md border px-2 py-1 font-mono text-[0.7rem] tabular-nums transition ${
-                                current
-                                  ? "border-accent bg-accent text-[#0a0b0e]"
-                                  : done
-                                    ? "border-ok/40 bg-ok/10 text-ok"
-                                    : "border-line bg-raised text-muted hover:text-ink"
-                              }`}
-                            >
-                              {d.dayNumber}
-                            </Link>
+                            <div key={week.id}>
+                              <div className="flex flex-wrap items-baseline gap-x-2.5">
+                                <span className="text-xs font-medium">
+                                  Week {week.number}: {week.title}
+                                </span>
+                                <span className="text-[0.66rem] tabular-nums text-faint">
+                                  {weekDone}/{weekDays.length}
+                                </span>
+                              </div>
+                              <p className="mt-1 max-w-2xl text-[0.68rem] leading-relaxed text-muted">
+                                {week.outcome}
+                              </p>
+                              <div className="mt-2 flex flex-wrap gap-1.5">
+                                {weekDays.map((d) => {
+                                  const done = Boolean(state.completedDays[d.id]);
+                                  const current = active?.id === d.id;
+                                  return (
+                                    <Link
+                                      key={d.id}
+                                      href={`/day/${d.dayNumber}`}
+                                      title={d.title}
+                                      className={`rounded-md border px-2 py-1 font-mono text-[0.7rem] tabular-nums transition ${
+                                        current
+                                          ? "border-accent bg-accent text-[#0a0b0e]"
+                                          : done
+                                            ? "border-ok/40 bg-ok/10 text-ok"
+                                            : "border-line bg-raised text-muted hover:text-ink"
+                                      }`}
+                                    >
+                                      {d.dayNumber}
+                                    </Link>
+                                  );
+                                })}
+                              </div>
+                            </div>
                           );
                         })}
                       </div>

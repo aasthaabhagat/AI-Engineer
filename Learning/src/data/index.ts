@@ -9,6 +9,7 @@ export { phases, phaseById, moduleById } from "./phases";
 export { skills, skillById, allEvidenceIds } from "./skills";
 export { projects, projectById } from "./projects";
 export { blueprints, blueprintById, capabilities } from "./blueprints";
+export { weeks, weekByNumber, weekForDay, weeksForPhase } from "./weeks";
 
 /**
  * All authored days, in order.

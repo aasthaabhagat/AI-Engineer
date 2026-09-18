@@ -212,6 +212,291 @@ export const blueprints: Blueprint[] = [
       "PII handling policy for anything sent to a provider",
     ],
   },
+  {
+    id: "bp-copilot",
+    name: "AI Copilot",
+    category: "Assistive",
+    problem:
+      "Speed up an expert doing skilled work, without taking the decision away from them.",
+    whenToUse:
+      "A human stays accountable, the work is repetitive but judgement-heavy, and a draft is cheaper to correct than to write.",
+    whenNotToUse:
+      "Nobody reviews the output, or the task is simple enough to automate outright. A copilot nobody checks is automation with extra steps and no accountability.",
+    flow: [
+      "User works in their existing tool",
+      "Copilot observes the context: document, ticket, code",
+      "Retrieve relevant precedent and knowledge",
+      "Generate a suggestion with its sources",
+      "Present it as a draft the user can accept, edit or reject",
+      "Record which of those three happened",
+      "Feed that signal into evaluation",
+    ],
+    components: [
+      { name: "Context capture", role: "What the user is looking at. Wrong context produces confident irrelevance." },
+      { name: "Retriever", role: "Precedent: similar past cases, documentation, examples." },
+      { name: "Suggestion generator", role: "Drafts grounded in retrieved material, with citations." },
+      { name: "Accept/edit/reject capture", role: "The only honest measure of whether it helps." },
+      { name: "Feature flags", role: "Per-team rollout and instant rollback." },
+    ],
+    tradeoffs: [
+      "Suggest-only builds trust slowly and caps the upside",
+      "Auto-apply multiplies both the value and the damage",
+      "More context improves relevance and costs tokens and latency",
+      "Showing sources builds trust and consumes screen space",
+    ],
+    failurePoints: [
+      "Confidently wrong suggestions permanently eroding trust — the first impression is the one that sticks",
+      "Latency so high the user has already written it themselves",
+      "Suggestions built on outdated precedent",
+      "Acceptance measured, usefulness assumed: people accept mediocre drafts when rejecting costs a click",
+    ],
+    evaluation: [
+      "Accept, edit and reject rates tracked separately",
+      "Edit distance when edited — a heavily rewritten acceptance is a failure",
+      "Time to complete against a control group",
+      "Quality of the final output, not only the speed",
+    ],
+    security: [
+      "The copilot sees what the user sees — respect their permissions exactly",
+      "Never surface another user's data as precedent",
+      "Log suggestions for audit where decisions are consequential",
+    ],
+  },
+  {
+    id: "bp-ai-search",
+    name: "AI Search",
+    category: "Retrieval",
+    problem: "Find the right item when the user's words do not match the document's words.",
+    whenToUse:
+      "Intent and synonyms matter, the corpus is large, and keyword search visibly fails on real queries.",
+    whenNotToUse:
+      "Users search by identifier, or the corpus is small enough that filters and keyword search already work. Do not replace what works.",
+    flow: [
+      "Normalise the query; detect exact-match patterns like IDs and codes",
+      "Run keyword and vector retrieval in parallel",
+      "Fuse the two result sets",
+      "Rerank the top candidates within the latency budget",
+      "Apply filters, permissions and business rules",
+      "Return results; log the query and what was clicked",
+    ],
+    components: [
+      { name: "Keyword index", role: "BM25. Still the best answer for exact terms and identifiers." },
+      { name: "Vector index", role: "Intent, paraphrase and synonym matching." },
+      { name: "Fusion", role: "Reciprocal rank fusion or a weighted merge. The interesting work lives here." },
+      { name: "Reranker", role: "Cross-encoder over the top N, if the budget allows." },
+      { name: "Click log", role: "The only ground truth you will get at scale." },
+    ],
+    tradeoffs: [
+      "Hybrid costs two indexes to maintain and beats either alone",
+      "Reranking buys precision at 20-50ms",
+      "LLM query rewriting helps quality and usually breaks the latency budget",
+    ],
+    failurePoints: [
+      "Exact identifier searches returning similar items instead of the item",
+      "An embedding model change silently reordering every result",
+      "Index lag after the source changes",
+      "Permissions applied after ranking, leaking the existence of hidden items",
+    ],
+    evaluation: [
+      "Offline: NDCG and recall@k on a labelled query set",
+      "Online: interleaving or A/B against the current search",
+      "Zero-result rate and query reformulation rate",
+      "Never ship on offline metrics alone",
+    ],
+    security: [
+      "Filter by permission inside the query, not after it",
+      "Rate limit to prevent corpus scraping",
+    ],
+  },
+  {
+    id: "bp-doc-intelligence",
+    name: "Document Intelligence",
+    category: "Extraction",
+    problem: "Turn documents into structured records a system can act on.",
+    whenToUse:
+      "High volume of semi-structured documents where a human currently retypes fields into a form.",
+    whenNotToUse:
+      "The documents are structured data in disguise — parse the source format rather than reading a picture of it.",
+    flow: [
+      "Intake, deduplicate, classify the document type",
+      "Parse text and layout — layout is signal, not noise",
+      "Extract fields against that type's schema",
+      "Validate: types, required fields, arithmetic that must reconcile",
+      "Score confidence; route uncertain documents to human review",
+      "Emit the record with per-field provenance",
+      "Human corrections become evaluation data",
+    ],
+    components: [
+      { name: "Classifier", role: "Document type. Cheap, and it selects the schema." },
+      { name: "Parser / OCR", role: "Text plus layout. Quality here caps everything downstream." },
+      { name: "Extractor", role: "Schema-constrained extraction per document type." },
+      { name: "Validator", role: "Business rules, not just JSON shape." },
+      { name: "Review queue", role: "Where uncertainty goes. Its depth is a health metric." },
+    ],
+    tradeoffs: [
+      "LLM extraction needs no labels and costs per document",
+      "A fine-tuned model is far cheaper at volume and needs labels plus a retraining loop",
+      "A higher confidence threshold trades human review cost against error cost",
+    ],
+    failurePoints: [
+      "Poor scans producing confident nonsense",
+      "Schema drift breaking the downstream consumer",
+      "The review queue growing faster than humans drain it",
+      "A model version change degrading extraction silently",
+    ],
+    evaluation: [
+      "Per-field precision and recall, never one document-level accuracy number",
+      "Human override rate per field — the best quality signal available",
+      "Confusion pairs: which fields get mistaken for each other",
+      "Cost per document, including review time",
+    ],
+    security: [
+      "Documents carry personal and financial data: encryption, retention limits, access control",
+      "Redact before sending to a third-party model, or host it privately",
+    ],
+  },
+  {
+    id: "bp-workflow",
+    name: "Deterministic AI Workflow",
+    category: "Orchestration",
+    problem: "A multi-step task where the steps are known in advance.",
+    whenToUse:
+      "Almost always, when the sequence is knowable. A workflow is cheaper, faster, testable, debuggable and reproducible. This is the default; an agent is the exception you have to justify.",
+    whenNotToUse:
+      "The path genuinely depends on intermediate findings and cannot be enumerated. Then, and only then, reach for an agent.",
+    flow: [
+      "Trigger: event, schedule or request",
+      "Step 1 with a typed input and output contract",
+      "Deterministic branch on the result",
+      "An AI step only where judgement is genuinely required",
+      "Validate every AI output against its schema",
+      "Continue, or route to human review",
+      "Emit the result with a step-by-step trace",
+    ],
+    components: [
+      { name: "Orchestrator", role: "An explicit state machine or DAG. Visible, not emergent." },
+      { name: "Typed steps", role: "Each step has a contract, so each is independently testable." },
+      { name: "AI steps", role: "Narrow: classify, extract, summarise, draft. Never 'figure it out'." },
+      { name: "Validators", role: "Between every AI step and the next deterministic one." },
+      { name: "Retry policy", role: "Per step, with idempotency so retries are safe." },
+    ],
+    tradeoffs: [
+      "Rigid and predictable versus flexible and unpredictable",
+      "Every step testable in isolation and every path enumerable",
+      "Adding a case means changing code, not just a prompt",
+    ],
+    failurePoints: [
+      "An AI step given too broad a responsibility, turning the workflow into a fragile agent",
+      "Missing validation between steps, letting a bad output propagate",
+      "Non-idempotent steps making retries destructive",
+    ],
+    evaluation: [
+      "Each AI step evaluated independently against its own test set",
+      "End-to-end success rate on realistic inputs",
+      "Per-step failure attribution — you can localise the fault, which is the whole advantage",
+    ],
+    security: [
+      "Each step runs with the narrowest permission it needs",
+      "Validate AI output before it reaches anything with side effects",
+    ],
+  },
+  {
+    id: "bp-multi-agent",
+    name: "Multi-Agent System",
+    category: "Agentic",
+    problem: "A task large enough that one agent's context or focus cannot hold it.",
+    whenToUse:
+      "Genuinely separable sub-problems needing different tools or expertise, where coordination costs less than the benefit. This is rare.",
+    whenNotToUse:
+      "Usually. Multi-agent multiplies cost, latency and failure modes. Most systems described as multi-agent are a single agent with good tools, or a workflow with pretensions. Prove a single agent fails first.",
+    flow: [
+      "Coordinator receives the goal",
+      "Decompose into sub-tasks with explicit contracts",
+      "Dispatch to specialists, each with its own narrow tools",
+      "Each returns a structured result, not prose",
+      "Coordinator validates and integrates",
+      "Escalate to a human on conflict or repeated failure",
+      "Return the result with the full multi-agent trace",
+    ],
+    components: [
+      { name: "Coordinator", role: "Owns decomposition, integration and the global budget." },
+      { name: "Specialist agents", role: "Narrow scope, narrow tools, structured output contract." },
+      { name: "Shared state", role: "Explicit and inspectable. Never implicit through conversation." },
+      { name: "Global budget", role: "Total steps and spend across all agents, not per agent." },
+      { name: "Conflict resolution", role: "What happens when two agents disagree, decided in advance." },
+    ],
+    tradeoffs: [
+      "Specialisation improves each part and makes integration the hard problem",
+      "Parallel execution cuts wall-clock time and multiplies cost",
+      "Message passing loses information at every hop",
+    ],
+    failurePoints: [
+      "Cost explosion — every agent calls a model, and they call each other",
+      "Agents circling with no global step budget",
+      "Error compounding: one bad sub-result poisoning everything downstream",
+      "Debugging becomes archaeology across several traces",
+      "Coordination overhead exceeding the benefit, which is the usual outcome",
+    ],
+    evaluation: [
+      "End-to-end success against a single-agent baseline. If it does not clearly win, delete it",
+      "Cost and latency per task versus that baseline",
+      "Per-agent contribution: which specialist actually earns its place",
+    ],
+    security: [
+      "Each agent holds only its own permissions; the coordinator does not pool them",
+      "Inter-agent messages are untrusted input, exactly like tool output",
+      "Audit across the whole system, not per agent",
+    ],
+  },
+  {
+    id: "bp-ai-saas",
+    name: "Multi-Tenant AI SaaS",
+    category: "Platform",
+    problem: "Serve an AI product to many customers from one system, safely and profitably.",
+    whenToUse: "A commercial AI product with more than one paying organisation.",
+    whenNotToUse:
+      "A single-tenant internal tool. Multi-tenancy is a permanent tax; do not pay it before there are tenants.",
+    flow: [
+      "Request arrives with tenant and user identity",
+      "Resolve tenant configuration, plan limits and spend budget",
+      "Enforce rate limit and quota before any model call",
+      "Route to the tenant's model tier",
+      "Execute with every data access scoped to that tenant",
+      "Meter usage: tokens, cost, requests",
+      "Return, and record for billing and analytics",
+    ],
+    components: [
+      { name: "Tenant resolver", role: "Identity to tenant to configuration. The first line of isolation." },
+      { name: "Quota and metering", role: "Per-tenant spend caps enforced before the call, not after the bill." },
+      { name: "Data isolation", role: "Row-level security or separate schemas, enforced in the database rather than in application code." },
+      { name: "Model router", role: "Plan tier determines model, context size and features." },
+      { name: "Usage store", role: "Per-tenant token and cost accounting for billing and margin." },
+    ],
+    tradeoffs: [
+      "Shared infrastructure is cheap, and one bug is a cross-tenant breach",
+      "Isolated infrastructure is safe and multiplies operational cost",
+      "Per-tenant fine-tuning improves quality and wrecks the unit economics",
+      "Generous free tiers grow adoption and can be drained by one abusive account",
+    ],
+    failurePoints: [
+      "Cross-tenant data leakage — the existential failure, usually a missing filter",
+      "One tenant's bulk job starving every other tenant",
+      "Unbounded per-tenant spend turning a customer into a loss",
+      "Noisy-neighbour latency on shared inference capacity",
+      "Per-tenant prompt customisation making evaluation impossible",
+    ],
+    evaluation: [
+      "Isolation tested adversarially, in CI, as a first-class test",
+      "Quality measured per tenant — an aggregate hides the unhappy one",
+      "Gross margin per tenant, since AI cost scales with usage rather than seats",
+    ],
+    security: [
+      "Isolation enforced at the data layer, never only in application code",
+      "Per-tenant encryption keys where the data justifies it",
+      "Tenant id never read from a client-supplied field",
+      "Per-tenant audit log, exportable for their own compliance",
+    ],
+  },
 ];
 
 /** "Can I build this?" checks. Learning aids, not certifications. */
