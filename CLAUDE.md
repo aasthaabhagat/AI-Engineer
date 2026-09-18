@@ -335,8 +335,25 @@ Failure is evidence of engineering learning.
 
 **Reviews:** daily, weekly, monthly, quarterly capability audit.
 
-**UI:** premium AI engineering command centre. Dark-first, modern, minimal,
-technical, focused, professional. Strong typography, subtle borders, generous
+**Navigation is settled — do not restructure it.** The left sidebar with all
+fourteen destinations is what the owner wants. A three-destination version was
+built and rejected (commits `3bb4387`, reverted by `afff9f3`); Dashboard and
+Today stay as separate pages even though they overlap. Improve the visual
+design, never the information architecture, unless the owner asks.
+
+**Theming.** Light is the default and is designed first; dark is a real second
+design over the same variables, not an inversion. Both palettes live in
+`globals.css` — light on `@theme`, dark under `:root[data-theme="dark"]`.
+Components must use semantic tokens only (`bg-panel`, `text-muted`,
+`border-line`, `text-on-accent`); a component that names a raw hex breaks one
+of the two themes. Shadows carry depth on light and are switched off on dark,
+where borders do that job. The saved theme is applied by an inline script in
+`layout.tsx` before first paint, so there is no flash — keep that script in
+step with the storage shape. The toggle lives in the sidebar; Settings keeps
+its control too.
+
+**UI:** premium AI engineering command centre. Modern, minimal, technical,
+focused, professional. Strong typography, subtle borders, generous
 spacing, restrained motion. Avoid childish gamification, neon, heavy
 glassmorphism, large decorative graphics, meaningless statistics and card soup.
 Responsive down to phone width; accessible — semantic HTML, keyboard
@@ -402,26 +419,27 @@ AI-Engineer/
 (installed via winget with the owner's approval). `Learning/node_modules/`
 present, `package-lock.json` committed. Python remains Anaconda 3.13.
 
-**Learning app — 57 files, ~14,500 lines, VERIFIED**
+**Learning app — 57 files, ~14,700 lines, VERIFIED**
 
 `src/data/`: types, 24 phases, 8 weeks, 56 skills with evidence ladders, 8
 projects, 10 blueprints, 8 capability checks, 8 system design briefs, 18 career
-areas, 12 radar entries, 46 authored days for phases 1–2.
-`src/lib/`: state (v2), store, progress, maturity, reviews, notifications,
+areas, 12 radar entries, 46 authored days for phases 1-2.
+`src/lib/`: state (v3), store, progress, maturity, reviews, notifications,
 notifier, useCue.
 `src/components/`: ui, Shell, CommandPalette, mission, DayDetail, FocusMode,
 CueRunner.
 `src/app/`: dashboard, today, day/[n], roadmap, calendar, skills, projects,
 knowledge, blueprints, system-design, radar, portfolio, career, reviews,
 settings.
-`tests/`: four vitest suites, 82 tests.
+`tests/`: four vitest suites, 84 tests.
 
 **Verification status (re-run after every change):**
 
-- `npm test` — 82 passing
+- `npm test` — 84 passing
 - `npm run typecheck` — clean
 - `npm run build` — succeeds, 17 routes
-- `npm run dev` — all 17 routes return 200, content assertions pass
+- `npm run dev` — all 17 routes return 200, and both palettes plus the task
+  animations are present in the served stylesheet
 
 There is no `lint` script. `next lint` is deprecated in Next 15 and no ESLint
 config or dependency exists, so the dead script was removed rather than left
@@ -431,6 +449,9 @@ pretending to work. `npm run check` runs typecheck + test + build.
 
 - The dashboard renders a loading state during SSR because progress lives in
   localStorage. Not a bug.
+- State v3 adopts the light default once for anyone whose saved state predates
+  it, because the first save had already written "dark" to storage. After v3
+  the theme is the user's own and is never overridden.
 - After many file edits the dev server can throw
   `__webpack_modules__[moduleId] is not a function`. It is a stale HMR cache:
   stop node, delete `.next`, restart. It is not a code fault.
@@ -438,11 +459,12 @@ pretending to work. `npm run check` runs typecheck + test + build.
 
 **Still outstanding:**
 
-- Client-side rendering is unverified. Route HTML and SSR output are checked,
-  but no browser drives the app, so hydration, clicks, focus mode, the timer
-  and the cue wiring have never been exercised end to end. This needs either
-  jsdom + Testing Library or Playwright — both are new dependencies and need
-  approval.
+- Client-side rendering is unverified. Route HTML, SSR output and the served
+  stylesheet are checked, but no browser drives the app, so hydration, clicks,
+  the theme toggle, focus mode, the timer, the cue wiring and the task
+  completion animations have never been exercised end to end. This needs
+  either jsdom + Testing Library or Playwright — both are new dependencies and
+  need approval.
 - IndexedDB — localStorage only. It is sufficient at this data size; revisit if
   state grows past a few MB.
 - Days for phases 3–24 (deliberately outlined until approached).
@@ -450,10 +472,12 @@ pretending to work. `npm run check` runs typecheck + test + build.
 - GitHub sync, cloud sync, AI mentor — all labelled as not implemented in the
   Settings UI.
 
-**Git:** `7478e0b`. Three commits made this session: `ba231c0` (app + CLAUDE.md),
-`c96571d` (notifications, sound, system design, career, radar), `7478e0b`
-(weeks, blueprints, integrity tests). Nothing pushed — push always needs
-approval.
+**Git:** `c0ce264`. Commits so far: `ba231c0` (app + CLAUDE.md), `c96571d`
+(notifications, sound, system design, career, radar), `7478e0b` (weeks,
+blueprints, integrity tests), `c95367b` (state update), `3bb4387` + `c1bd7e1`
+(three-destination restructure — **rejected**), `afff9f3` (revert of it),
+`c0ce264` (light theme, theme toggle, visual pass). Nothing pushed — push
+always needs approval.
 
 **Immediate next step:** decide on browser-level testing, then continue with
 the remaining gaps above.
