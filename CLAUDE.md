@@ -398,38 +398,65 @@ AI-Engineer/
 └── Learning/                  IN SCOPE — the Training OS
 ```
 
-**Learning app — 44 files, ~10,900 lines, UNVERIFIED**
+**Environment: installed and verified.** Node.js 24.19.0 LTS and npm 11.17.0
+(installed via winget with the owner's approval). `Learning/node_modules/`
+present, `package-lock.json` committed. Python remains Anaconda 3.13.
 
-Built: Next.js config, `src/data/` (types, 24 phases, 56 skills with evidence
-ladders, 8 projects, 4 blueprints, 8 capability checks, 46 authored days for
-phases 1–2), `src/lib/` (state, store, progress, maturity, reviews),
-`src/components/` (ui, Shell, CommandPalette, mission, DayDetail, FocusMode),
-`src/app/` (dashboard, today, day/[n], roadmap, calendar, skills, projects,
-knowledge, blueprints, portfolio, reviews, settings), `tests/` (two vitest
-suites).
+**Learning app — 57 files, ~14,500 lines, VERIFIED**
 
-**Status: nothing has been installed, type-checked, tested or built.**
-`node_modules/` does not exist. **Node.js is not installed on this machine**
-(`winget` 1.29.290 is available; Python is Anaconda 3.13). The code is written
-but unproven — treat every part of it as unverified until a build and the test
-suite have actually run.
+`src/data/`: types, 24 phases, 8 weeks, 56 skills with evidence ladders, 8
+projects, 10 blueprints, 8 capability checks, 8 system design briefs, 18 career
+areas, 12 radar entries, 46 authored days for phases 1–2.
+`src/lib/`: state (v2), store, progress, maturity, reviews, notifications,
+notifier, useCue.
+`src/components/`: ui, Shell, CommandPalette, mission, DayDetail, FocusMode,
+CueRunner.
+`src/app/`: dashboard, today, day/[n], roadmap, calendar, skills, projects,
+knowledge, blueprints, system-design, radar, portfolio, career, reviews,
+settings.
+`tests/`: four vitest suites, 82 tests.
 
-**Not yet built** (from the spec, still outstanding):
+**Verification status (re-run after every change):**
 
-- Notifications and sound (section 8) — entirely absent
-- System Design page
-- Career Readiness page (currently folded into Portfolio)
-- Daily review (weekly/monthly/quarterly exist)
-- AI Engineering Radar and monthly Modern AI Update
-- Weeks layer between Module and Day
-- IndexedDB (localStorage only so far)
+- `npm test` — 82 passing
+- `npm run typecheck` — clean
+- `npm run build` — succeeds, 17 routes
+- `npm run dev` — all 17 routes return 200, content assertions pass
 
-**Git:** last commit `bc9a91f "Refactor expense tracker into modules"`.
-`Learning/` is untracked and has never been committed.
+There is no `lint` script. `next lint` is deprecated in Next 15 and no ESLint
+config or dependency exists, so the dead script was removed rather than left
+pretending to work. `npm run check` runs typecheck + test + build.
 
-**Immediate next step:** get approval to install Node.js LTS and the declared
-dependencies, then install, verify (`npm test`, `tsc --noEmit`, `npm run build`,
-`npm run dev`), fix whatever fails, and only then continue building features.
+**Known behaviours worth remembering:**
+
+- The dashboard renders a loading state during SSR because progress lives in
+  localStorage. Not a bug.
+- After many file edits the dev server can throw
+  `__webpack_modules__[moduleId] is not a function`. It is a stale HMR cache:
+  stop node, delete `.next`, restart. It is not a code fault.
+- Git warns `LF will be replaced by CRLF` on Windows. Harmless.
+
+**Still outstanding:**
+
+- Client-side rendering is unverified. Route HTML and SSR output are checked,
+  but no browser drives the app, so hydration, clicks, focus mode, the timer
+  and the cue wiring have never been exercised end to end. This needs either
+  jsdom + Testing Library or Playwright — both are new dependencies and need
+  approval.
+- IndexedDB — localStorage only. It is sufficient at this data size; revisit if
+  state grows past a few MB.
+- Days for phases 3–24 (deliberately outlined until approached).
+- Background notifications (needs a service worker and push infrastructure).
+- GitHub sync, cloud sync, AI mentor — all labelled as not implemented in the
+  Settings UI.
+
+**Git:** `7478e0b`. Three commits made this session: `ba231c0` (app + CLAUDE.md),
+`c96571d` (notifications, sound, system design, career, radar), `7478e0b`
+(weeks, blueprints, integrity tests). Nothing pushed — push always needs
+approval.
+
+**Immediate next step:** decide on browser-level testing, then continue with
+the remaining gaps above.
 
 ---
 
