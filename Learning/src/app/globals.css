@@ -1,0 +1,142 @@
+@import "tailwindcss";
+
+/*
+  Dark-first command centre.
+  Tokens are defined once here; components use semantic utilities
+  (bg-panel, text-muted, border-line) rather than raw palette values.
+*/
+@theme {
+  --color-bg: #0a0b0e;
+  --color-panel: #101219;
+  --color-raised: #161923;
+  --color-line: #232733;
+  --color-line-soft: #1a1e27;
+  --color-ink: #e9ecf4;
+  --color-muted: #969db1;
+  --color-faint: #6b7286;
+
+  --color-accent: #7c9cff;
+  --color-accent-soft: #1d2440;
+  --color-teal: #4fd1c5;
+  --color-amber: #e2a94a;
+  --color-danger: #e2686b;
+  --color-ok: #5fbf7f;
+
+  --color-track-ai: #a78bfa;
+  --color-track-software: #7c9cff;
+  --color-track-production: #4fd1c5;
+  --color-track-career: #e2a94a;
+
+  --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
+  --font-mono: ui-monospace, "SF Mono", "Cascadia Mono", "Segoe UI Mono",
+    "Roboto Mono", Menlo, monospace;
+}
+
+:root[data-theme="light"] {
+  --color-bg: #f7f8fa;
+  --color-panel: #ffffff;
+  --color-raised: #f1f3f7;
+  --color-line: #e0e3ea;
+  --color-line-soft: #eceef3;
+  --color-ink: #12141a;
+  --color-muted: #5c6373;
+  --color-faint: #848b9c;
+  --color-accent: #3b5bdb;
+  --color-accent-soft: #e6ebff;
+}
+
+html,
+body {
+  background: var(--color-bg);
+  color: var(--color-ink);
+}
+
+body {
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background: var(--color-accent);
+  color: #0a0b0e;
+}
+
+/* Visible focus for keyboard users, invisible for mouse users. */
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Thin scrollbars that do not shout. */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-line) transparent;
+}
+*::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+*::-webkit-scrollbar-thumb {
+  background: var(--color-line);
+  border-radius: 999px;
+  border: 3px solid transparent;
+  background-clip: content-box;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Checkbox that matches the rest of the surface. */
+.checkbox {
+  appearance: none;
+  width: 1.05rem;
+  height: 1.05rem;
+  border: 1.5px solid var(--color-line);
+  border-radius: 5px;
+  background: var(--color-raised);
+  display: grid;
+  place-content: center;
+  cursor: pointer;
+  flex: none;
+  transition: border-color 120ms ease, background 120ms ease;
+}
+.checkbox:hover {
+  border-color: var(--color-accent);
+}
+.checkbox:checked {
+  background: var(--color-accent);
+  border-color: var(--color-accent);
+}
+.checkbox:checked::after {
+  content: "";
+  width: 0.55rem;
+  height: 0.3rem;
+  border-left: 2px solid #0a0b0e;
+  border-bottom: 2px solid #0a0b0e;
+  transform: rotate(-45deg) translate(1px, -1px);
+}
+
+.field {
+  background: var(--color-raised);
+  border: 1px solid var(--color-line);
+  border-radius: 8px;
+  padding: 0.5rem 0.7rem;
+  color: var(--color-ink);
+  width: 100%;
+  font-size: 0.875rem;
+}
+.field:focus {
+  border-color: var(--color-accent);
+  outline: none;
+}
+.field::placeholder {
+  color: var(--color-faint);
+}
