@@ -1,19 +1,49 @@
 "use client";
 
-import { useState } from "react";
-import { AlertTriangle, Download, Upload } from "lucide-react";
+import { useEffect, useState } from "react";
+import { AlertTriangle, Bell, Download, Upload, Volume2 } from "lucide-react";
 import { useStore } from "@/lib/store";
-import { Button, Card, CardHeader, PageHeader } from "@/components/ui";
+import { NOTIFICATION_CATEGORIES } from "@/lib/notifications";
+import {
+  notificationSupport,
+  playCue,
+  requestNotificationPermission,
+  unlockAudio,
+  type PermissionState,
+} from "@/lib/notifier";
+import { Button, Card, CardHeader, PageHeader, Pill } from "@/components/ui";
 
 const DAY_NAMES = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
 export default function SettingsPage() {
-  const { state, updateSettings, resetAll, exportState, importState } = useStore();
+  const {
+    state,
+    updateSettings,
+    updateNotifications,
+    toggleNotificationCategory,
+    resetAll,
+    exportState,
+    importState,
+  } = useStore();
   const [confirmReset, setConfirmReset] = useState(false);
   const [importText, setImportText] = useState("");
   const [importResult, setImportResult] = useState<string | null>(null);
+  const [permission, setPermission] = useState<PermissionState>("default");
 
   const s = state.settings;
+  const n = state.notifications;
+
+  // Read the real browser permission after mount; it is not available on the
+  // server and must never be guessed.
+  useEffect(() => {
+    setPermission(notificationSupport());
+  }, []);
+
+  const enableNotifications = async () => {
+    const result = await requestNotificationPermission();
+    setPermission(result);
+    updateNotifications({ enabled: result === "granted" });
+  };
 
   const toggleStudyDay = (d: number) => {
     const next = s.studyDays.includes(d)
@@ -142,6 +172,170 @@ export default function SettingsPage() {
           </div>
         </Card>
 
+        <Card className="h-fit lg:col-span-2">
+          <CardHeader
+            title="Notifications and sound"
+            hint="Both are off until you turn them on. Nothing plays or pops up without permission."
+          />
+          <div className="space-y-5 px-5 py-4">
+            <div className="grid gap-5 sm:grid-cols-2">
+              <div>
+                <div className="flex items-center justify-between gap-3">
+                  <span className="flex items-center gap-2 text-sm">
+                    <Bell size={14} className="text-faint" /> Browser notifications
+                  </span>
+                  {permission === "granted" ? (
+                    <label className="flex items-center gap-2 text-xs text-muted">
+                      <input
+                        type="checkbox"
+                        className="checkbox"
+                        checked={n.enabled}
+                        onChange={(e) => updateNotifications({ enabled: e.target.checked })}
+                      />
+                      Enabled
+                    </label>
+                  ) : (
+                    <Button
+                      variant="ghost"
+                      onClick={enableNotifications}
+                      disabled={permission === "unsupported" || permission === "denied"}
+                    >
+                      Allow
+                    </Button>
+                  )}
+                </div>
+                <p className="mt-2 text-[0.68rem] leading-relaxed text-faint">
+                  {permission === "unsupported" &&
+                    "This browser does not support the Notification API."}
+                  {permission === "denied" &&
+                    "Permission was denied. Re-enable it in the browser's site settings — the page cannot ask again."}
+                  {permission === "default" &&
+                    "Requires your explicit permission. The prompt only appears when you press Allow."}
+                  {permission === "granted" &&
+                    "Granted. Notifications appear only when this tab is in the background — no popup for something already on screen."}
+                </p>
+              </div>
+
+              <div>
+                <div className="flex items-center justify-between gap-3">
+                  <span className="flex items-center gap-2 text-sm">
+                    <Volume2 size={14} className="text-faint" /> Sound
+                  </span>
+                  <label className="flex items-center gap-2 text-xs text-muted">
+                    <input
+                      type="checkbox"
+                      className="checkbox"
+                      checked={n.sound}
+                      onChange={(e) => {
+                        if (e.target.checked) unlockAudio();
+                        updateNotifications({ sound: e.target.checked });
+                      }}
+                    />
+                    Enabled
+                  </label>
+                </div>
+                <label className="mt-3 block">
+                  <span className="text-xs text-muted">
+                    Volume: {Math.round(n.volume * 100)}%
+                  </span>
+                  <input
+                    type="range"
+                    min={0}
+                    max={100}
+                    step={5}
+                    disabled={!n.sound}
+                    className="mt-2 w-full accent-[var(--color-accent)] disabled:opacity-40"
+                    value={Math.round(n.volume * 100)}
+                    onChange={(e) =>
+                      updateNotifications({ volume: Number(e.target.value) / 100 })
+                    }
+                  />
+                </label>
+                <button
+                  disabled={!n.sound}
+                  onClick={() => {
+                    unlockAudio();
+                    playCue("milestone", n.volume);
+                  }}
+                  className="mt-1 text-xs text-accent hover:underline disabled:text-faint disabled:no-underline"
+                >
+                  Play a test tone
+                </button>
+                <p className="mt-2 text-[0.68rem] leading-relaxed text-faint">
+                  Short synthesized tones, generated with the Web Audio API. No
+                  audio files, no library.
+                </p>
+              </div>
+            </div>
+
+            <div>
+              <p className="text-[0.66rem] font-semibold uppercase tracking-[0.14em] text-faint">
+                Categories
+              </p>
+              <ul className="mt-3 space-y-2.5">
+                {NOTIFICATION_CATEGORIES.map((c) => (
+                  <li key={c.id} className="flex items-start gap-3">
+                    <input
+                      type="checkbox"
+                      className="checkbox mt-0.5"
+                      checked={n.categories[c.id]}
+                      onChange={() => toggleNotificationCategory(c.id)}
+                      aria-label={c.label}
+                    />
+                    <span className="min-w-0">
+                      <span className="block text-sm">{c.label}</span>
+                      <span className="block text-[0.68rem] leading-relaxed text-faint">
+                        {c.description}
+                      </span>
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div className="grid gap-4 sm:grid-cols-2">
+              <label className="block">
+                <span className="text-xs text-muted">Daily reminder time</span>
+                <input
+                  type="time"
+                  className="field mt-1.5"
+                  value={n.dailyReminderTime}
+                  onChange={(e) =>
+                    updateNotifications({ dailyReminderTime: e.target.value })
+                  }
+                />
+              </label>
+              <label className="block">
+                <span className="text-xs text-muted">
+                  Suggest a break after {n.breakAfterMinutes} minutes
+                </span>
+                <input
+                  type="range"
+                  min={15}
+                  max={120}
+                  step={5}
+                  className="mt-3 w-full accent-[var(--color-accent)]"
+                  value={n.breakAfterMinutes}
+                  onChange={(e) =>
+                    updateNotifications({ breakAfterMinutes: Number(e.target.value) })
+                  }
+                />
+              </label>
+            </div>
+
+            <p className="rounded-lg border border-line bg-raised px-3.5 py-3 text-[0.68rem] leading-relaxed text-muted">
+              <Pill tone="warn">Limitation</Pill>{" "}
+              <span className="mt-1.5 block">
+                Cues only fire while this app is open in a tab. Reaching you when
+                the browser is closed needs a service worker and push
+                infrastructure, which this version does not have — so it does not
+                pretend to. The daily reminder fires on the first check after
+                your chosen time, once per day.
+              </span>
+            </p>
+          </div>
+        </Card>
+
         <Card className="h-fit">
           <CardHeader
             title="Backup"
@@ -223,6 +417,11 @@ export default function SettingsPage() {
       <Card className="mt-6">
         <CardHeader title="Not built yet" hint="Listed honestly rather than faked" />
         <ul className="space-y-2 px-5 py-4 text-xs leading-relaxed text-muted">
+          <li>
+            · <span className="text-ink">Background notifications</span> — cues
+            fire only while a tab is open. Waking you when the browser is closed
+            needs a service worker and a push service.
+          </li>
           <li>
             · <span className="text-ink">GitHub sync</span> — no integration
             exists. Commit counts and repository state are not read from

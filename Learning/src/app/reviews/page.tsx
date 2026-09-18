@@ -7,11 +7,11 @@ import { questionsByKind } from "@/lib/reviews";
 import { completedMinutes, currentStreak, overallProgress } from "@/lib/progress";
 import { Button, Card, CardHeader, EmptyState, PageHeader, Stat } from "@/components/ui";
 
-type Kind = "weekly" | "monthly" | "quarterly";
+type Kind = "daily" | "weekly" | "monthly" | "quarterly";
 
 export default function ReviewsPage() {
   const { state, saveReview } = useStore();
-  const [kind, setKind] = useState<Kind>("weekly");
+  const [kind, setKind] = useState<Kind>("daily");
   const [answers, setAnswers] = useState<Record<string, string>>({});
 
   const questions = questionsByKind[kind];
@@ -32,7 +32,7 @@ export default function ReviewsPage() {
       <PageHeader
         eyebrow="Reflection loop"
         title="Reviews"
-        description="Weekly for course correction, monthly for direction, quarterly for a capability audit that actually changes the roadmap."
+        description="Daily for two minutes of noticing, weekly for course correction, monthly for direction, quarterly for a capability audit that actually changes the roadmap."
       />
 
       <Card className="mb-6 grid grid-cols-2 divide-x divide-y divide-line-soft sm:grid-cols-4 sm:divide-y-0">
@@ -43,7 +43,7 @@ export default function ReviewsPage() {
       </Card>
 
       <div className="mb-6 flex flex-wrap gap-2">
-        {(["weekly", "monthly", "quarterly"] as Kind[]).map((k) => (
+        {(["daily", "weekly", "monthly", "quarterly"] as Kind[]).map((k) => (
           <button
             key={k}
             onClick={() => {

@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import {
   BookMarked,
+  Briefcase,
   CalendarDays,
   ClipboardCheck,
   Command,
@@ -13,6 +14,8 @@ import {
   LayoutDashboard,
   Layers,
   Menu,
+  Network,
+  Radar,
   Settings,
   Sparkles,
   Target,
@@ -32,7 +35,10 @@ const NAV = [
   { href: "/projects", label: "Projects", icon: FolderGit2 },
   { href: "/knowledge", label: "Knowledge", icon: BookMarked },
   { href: "/blueprints", label: "Blueprints", icon: Sparkles },
+  { href: "/system-design", label: "System Design", icon: Network },
+  { href: "/radar", label: "AI Radar", icon: Radar },
   { href: "/portfolio", label: "Portfolio", icon: Trophy },
+  { href: "/career", label: "Career Readiness", icon: Briefcase },
   { href: "/reviews", label: "Reviews", icon: ClipboardCheck },
   { href: "/settings", label: "Settings", icon: Settings },
 ];

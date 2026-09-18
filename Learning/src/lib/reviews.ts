@@ -4,6 +4,18 @@ export interface ReviewQuestion {
   hint?: string;
 }
 
+/** Two minutes at the end of a session. Long enough to notice, short enough to do. */
+export const dailyQuestions: ReviewQuestion[] = [
+  { id: "d-built", prompt: "What did I actually build or change today?" },
+  { id: "d-stuck", prompt: "Where did I get stuck, and what unstuck me?" },
+  {
+    id: "d-evidence",
+    prompt: "What evidence exists now that did not exist this morning?",
+    hint: "A commit, a test, a working feature, a measurement. If the answer is nothing, that is worth knowing too.",
+  },
+  { id: "d-tomorrow", prompt: "What is the first thing to pick up tomorrow?" },
+];
+
 export const weeklyQuestions: ReviewQuestion[] = [
   { id: "w-learned", prompt: "What did I learn?" },
   { id: "w-built", prompt: "What did I build?" },
@@ -51,6 +63,7 @@ export const quarterlyQuestions: ReviewQuestion[] = [
 ];
 
 export const questionsByKind = {
+  daily: dailyQuestions,
   weekly: weeklyQuestions,
   monthly: monthlyQuestions,
   quarterly: quarterlyQuestions,

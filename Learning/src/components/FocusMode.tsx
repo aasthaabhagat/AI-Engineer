@@ -1,9 +1,11 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
-import { Pause, Play, RotateCcw, X } from "lucide-react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { Coffee, Pause, Play, RotateCcw, X } from "lucide-react";
 import type { Day } from "@/data/types";
 import { useStore } from "@/lib/store";
+import { breakDue, formatDuration } from "@/lib/notifications";
+import { useAudioUnlock, useCue } from "@/lib/useCue";
 import { PriorityTag, ProgressBar, RepoPath } from "./ui";
 
 /**
@@ -12,9 +14,15 @@ import { PriorityTag, ProgressBar, RepoPath } from "./ui";
  */
 export function FocusMode({ day, onExit }: { day: Day; onExit: () => void }) {
   const { state, toggleTask } = useStore();
+  const cue = useCue();
+  const unlockAudio = useAudioUnlock();
   const [index, setIndex] = useState(0);
   const [seconds, setSeconds] = useState(0);
   const [running, setRunning] = useState(true);
+  /** Unbroken focus across tasks, for the break reminder. */
+  const [sessionSeconds, setSessionSeconds] = useState(0);
+  const [breakSuggested, setBreakSuggested] = useState(false);
+  const overrunFiredRef = useRef<Set<string>>(new Set());
 
   const tasks = day.tasks;
   const task = tasks[index];
@@ -26,11 +34,48 @@ export function FocusMode({ day, onExit }: { day: Day; onExit: () => void }) {
     [tasks, state.completedTasks],
   );
 
+  // Entering focus mode is a user gesture, which is the only moment a browser
+  // will let us start an AudioContext.
+  useEffect(() => {
+    unlockAudio();
+  }, [unlockAudio]);
+
   useEffect(() => {
     if (!running) return;
-    const id = window.setInterval(() => setSeconds((s) => s + 1), 1000);
+    const id = window.setInterval(() => {
+      setSeconds((s) => s + 1);
+      setSessionSeconds((s) => s + 1);
+    }, 1000);
     return () => window.clearInterval(id);
   }, [running]);
+
+  // Passing the planned minutes is information, not a deadline — fired once
+  // per task so a long task does not nag every second.
+  useEffect(() => {
+    if (!task) return;
+    if (seconds !== task.minutes * 60) return;
+    if (overrunFiredRef.current.has(task.id)) return;
+    overrunFiredRef.current.add(task.id);
+    cue({
+      category: "timerComplete",
+      title: `${task.minutes} minutes on: ${task.title}`,
+      body: "Planned time reached. Keep going if you are mid-thought.",
+      tag: `timer-${task.id}`,
+    });
+  }, [seconds, task, cue]);
+
+  // Break reminder after an unbroken stretch.
+  useEffect(() => {
+    if (breakSuggested) return;
+    if (!breakDue(sessionSeconds, state.notifications)) return;
+    setBreakSuggested(true);
+    cue({
+      category: "breakReminder",
+      title: "Time for a break",
+      body: `${Math.round(sessionSeconds / 60)} minutes of unbroken focus. Stand up for five.`,
+      tag: "break",
+    });
+  }, [sessionSeconds, breakSuggested, state.notifications, cue]);
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -48,9 +93,37 @@ export function FocusMode({ day, onExit }: { day: Day; onExit: () => void }) {
 
   if (!task) return null;
 
-  const mm = String(Math.floor(seconds / 60)).padStart(2, "0");
-  const ss = String(seconds % 60).padStart(2, "0");
+  const elapsed = formatDuration(seconds);
   const overrun = seconds > task.minutes * 60;
+
+  /** Tick a task, advance, and cue the session end when it was the last one. */
+  const completeCurrent = () => {
+    const wasDone = done;
+    toggleTask(task.id);
+
+    if (!wasDone) {
+      cue({
+        category: "taskComplete",
+        title: "Task done",
+        body: task.title,
+        tag: `task-${task.id}`,
+      });
+
+      const remaining = tasks.filter(
+        (t) => t.id !== task.id && !state.completedTasks[t.id],
+      );
+      if (remaining.length === 0) {
+        cue({
+          category: "focusComplete",
+          title: `Day ${day.dayNumber} tasks complete`,
+          body: `${formatDuration(sessionSeconds)} of focus. Mark the day done and record the evidence.`,
+          tag: "focus-complete",
+        });
+      } else if (next) {
+        setIndex(index + 1);
+      }
+    }
+  };
 
   return (
     <div className="fixed inset-0 z-50 flex flex-col bg-bg">
@@ -98,8 +171,27 @@ export function FocusMode({ day, onExit }: { day: Day; onExit: () => void }) {
             }`}
             aria-live="off"
           >
-            {mm}:{ss}
+            {elapsed}
           </p>
+
+          {breakSuggested && (
+            <div className="mx-auto mt-5 flex max-w-sm items-center gap-2.5 rounded-lg border border-amber/30 bg-amber/10 px-3.5 py-2.5">
+              <Coffee size={15} className="shrink-0 text-amber" />
+              <p className="text-xs leading-relaxed text-muted">
+                {Math.round(sessionSeconds / 60)} minutes unbroken. Take five —
+                you will debug better after.
+              </p>
+              <button
+                onClick={() => {
+                  setBreakSuggested(false);
+                  setSessionSeconds(0);
+                }}
+                className="ml-auto shrink-0 text-xs text-amber hover:underline"
+              >
+                Reset
+              </button>
+            </div>
+          )}
 
           <div className="mt-5 flex justify-center gap-2">
             <button
@@ -119,10 +211,7 @@ export function FocusMode({ day, onExit }: { day: Day; onExit: () => void }) {
 
           <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
             <button
-              onClick={() => {
-                toggleTask(task.id);
-                if (!done && next) setIndex(index + 1);
-              }}
+              onClick={completeCurrent}
               className="rounded-lg bg-accent px-4 py-2.5 text-sm font-medium text-[#0a0b0e] transition hover:brightness-110"
             >
               {done ? "Mark not done" : next ? "Done — next task" : "Mark done"}
@@ -156,6 +245,9 @@ export function FocusMode({ day, onExit }: { day: Day; onExit: () => void }) {
           <div className="flex items-center justify-between text-xs text-muted">
             <span>
               {completedCount}/{tasks.length} tasks done
+              <span className="ml-3 text-faint">
+                session {formatDuration(sessionSeconds)}
+              </span>
             </span>
             <span className="tabular-nums">
               {Math.round((completedCount / tasks.length) * 100)}%

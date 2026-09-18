@@ -1,6 +1,13 @@
 import type { ProjectStatus } from "@/data/types";
+import type { RadarStance } from "@/data/radar";
+import {
+  defaultNotificationPrefs,
+  normalizePrefs,
+  type NotificationPrefs,
+} from "./notifications";
 
-export const STATE_VERSION = 1;
+/** v2 added notification preferences and cue bookkeeping. */
+export const STATE_VERSION = 2;
 export const STORAGE_KEY = "ai-engineer-training-os";
 
 export interface Settings {
@@ -57,14 +64,26 @@ export interface JournalEntry {
 export interface Review {
   id: string;
   createdAt: string;
-  kind: "weekly" | "monthly" | "quarterly";
+  kind: "daily" | "weekly" | "monthly" | "quarterly";
   /** Question id -> answer. Questions live in lib/reviews.ts. */
   answers: Record<string, string>;
+}
+
+/** Dedupe bookkeeping so a cue fires once, not on every render. */
+export interface CueLog {
+  /** Local date key of the last daily mission reminder. */
+  dailyReminder?: string;
+  /** Highest streak milestone already announced. */
+  streakMilestone?: number;
+  /** Local date key of the last recovery-mode notice. */
+  recoveryNotice?: string;
 }
 
 export interface PersistedState {
   version: number;
   settings: Settings;
+  notifications: NotificationPrefs;
+  cues: CueLog;
   /** taskId -> ISO completion timestamp. */
   completedTasks: Record<string, string>;
   /** dayId -> record. */
@@ -72,6 +91,8 @@ export interface PersistedState {
   /** evidenceId -> ISO timestamp. */
   evidence: Record<string, string>;
   projects: Record<string, ProjectState>;
+  /** Radar entry id -> your stance on it. */
+  radar: Record<string, RadarStance>;
   notes: Note[];
   journal: JournalEntry[];
   reviews: Review[];
@@ -121,10 +142,13 @@ export function createInitialState(): PersistedState {
   return {
     version: STATE_VERSION,
     settings: { ...defaultSettings },
+    notifications: { ...defaultNotificationPrefs },
+    cues: {},
     completedTasks,
     completedDays: { ...seededDays },
     evidence: { ...seededEvidence },
     projects: {},
+    radar: {},
     notes: [],
     journal: [],
     reviews: [],
@@ -147,6 +171,13 @@ export function migrateState(raw: unknown): PersistedState {
   return {
     version: STATE_VERSION,
     settings: { ...base.settings, ...(input.settings ?? {}) },
+    // v1 state has no notifications key; normalizePrefs supplies safe defaults
+    // (notifications and sound both OFF) rather than assuming consent.
+    notifications: normalizePrefs(input.notifications),
+    cues:
+      input.cues && typeof input.cues === "object" && !Array.isArray(input.cues)
+        ? (input.cues as CueLog)
+        : {},
     completedTasks: isRecord(input.completedTasks)
       ? input.completedTasks
       : base.completedTasks,
@@ -158,6 +189,10 @@ export function migrateState(raw: unknown): PersistedState {
     projects:
       input.projects && typeof input.projects === "object"
         ? (input.projects as Record<string, ProjectState>)
+        : {},
+    radar:
+      input.radar && typeof input.radar === "object" && !Array.isArray(input.radar)
+        ? (input.radar as Record<string, RadarStance>)
         : {},
     notes: Array.isArray(input.notes) ? input.notes : [],
     journal: Array.isArray(input.journal) ? input.journal : [],

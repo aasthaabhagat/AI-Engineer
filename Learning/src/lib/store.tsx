@@ -11,10 +11,13 @@ import {
 } from "react";
 import { dayById } from "@/data";
 import type { ProjectStatus } from "@/data/types";
+import type { RadarStance } from "@/data/radar";
+import type { NotificationPrefs } from "./notifications";
 import {
   STORAGE_KEY,
   createInitialState,
   migrateState,
+  type CueLog,
   type JournalEntry,
   type Note,
   type PersistedState,
@@ -34,6 +37,10 @@ interface StoreValue {
   reopenDay: (dayId: string) => void;
   toggleEvidence: (evidenceId: string) => void;
   updateSettings: (patch: Partial<Settings>) => void;
+  updateNotifications: (patch: Partial<NotificationPrefs>) => void;
+  toggleNotificationCategory: (category: keyof NotificationPrefs["categories"]) => void;
+  recordCue: (patch: Partial<CueLog>) => void;
+  setRadarStance: (entryId: string, stance: RadarStance | null) => void;
   setProjectStatus: (projectId: string, status: ProjectStatus) => void;
   toggleMilestone: (projectId: string, milestoneId: string) => void;
   setProjectField: (
@@ -152,6 +159,44 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
     setState((prev) => ({ ...prev, settings: { ...prev.settings, ...patch } }));
   }, []);
 
+  const updateNotifications = useCallback((patch: Partial<NotificationPrefs>) => {
+    setState((prev) => ({
+      ...prev,
+      notifications: { ...prev.notifications, ...patch },
+    }));
+  }, []);
+
+  const toggleNotificationCategory = useCallback<
+    StoreValue["toggleNotificationCategory"]
+  >((category) => {
+    setState((prev) => ({
+      ...prev,
+      notifications: {
+        ...prev.notifications,
+        categories: {
+          ...prev.notifications.categories,
+          [category]: !prev.notifications.categories[category],
+        },
+      },
+    }));
+  }, []);
+
+  const recordCue = useCallback((patch: Partial<CueLog>) => {
+    setState((prev) => ({ ...prev, cues: { ...prev.cues, ...patch } }));
+  }, []);
+
+  const setRadarStance = useCallback<StoreValue["setRadarStance"]>(
+    (entryId, stance) => {
+      setState((prev) => {
+        const radar = { ...prev.radar };
+        if (stance === null) delete radar[entryId];
+        else radar[entryId] = stance;
+        return { ...prev, radar };
+      });
+    },
+    [],
+  );
+
   const setProjectStatus = useCallback((projectId: string, status: ProjectStatus) => {
     setState((prev) => {
       const existing = prev.projects[projectId] ?? { milestonesDone: [] };
@@ -254,6 +299,10 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
       reopenDay,
       toggleEvidence,
       updateSettings,
+      updateNotifications,
+      toggleNotificationCategory,
+      recordCue,
+      setRadarStance,
       setProjectStatus,
       toggleMilestone,
       setProjectField,
@@ -275,6 +324,10 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
       reopenDay,
       toggleEvidence,
       updateSettings,
+      updateNotifications,
+      toggleNotificationCategory,
+      recordCue,
+      setRadarStance,
       setProjectStatus,
       toggleMilestone,
       setProjectField,

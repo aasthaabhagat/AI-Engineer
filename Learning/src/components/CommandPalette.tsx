@@ -4,6 +4,9 @@ import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Search } from "lucide-react";
 import { blueprints, days, phases, projects, skills } from "@/data";
+import { designBriefs } from "@/data/systemDesigns";
+import { radarEntries } from "@/data/radar";
+import { careerAreas } from "@/data/career";
 import { useStore } from "@/lib/store";
 
 interface Item {
@@ -56,7 +59,10 @@ export function CommandPalette() {
       { id: "n-proj", label: "Go to Projects", group: "Navigate", run: go("/projects") },
       { id: "n-know", label: "Go to Knowledge", group: "Navigate", run: go("/knowledge") },
       { id: "n-bp", label: "Go to Blueprints", group: "Navigate", run: go("/blueprints") },
+      { id: "n-sd", label: "Go to System Design", group: "Navigate", run: go("/system-design") },
+      { id: "n-radar", label: "Go to AI Radar", group: "Navigate", run: go("/radar") },
       { id: "n-port", label: "Go to Portfolio", group: "Navigate", run: go("/portfolio") },
+      { id: "n-career", label: "Go to Career Readiness", group: "Navigate", run: go("/career") },
       { id: "n-rev", label: "Go to Reviews", group: "Navigate", run: go("/reviews") },
       { id: "n-set", label: "Go to Settings", group: "Navigate", run: go("/settings") },
       { id: "n-focus", label: "Start Focus Mode", group: "Actions", run: go("/today?focus=1") },
@@ -101,6 +107,28 @@ export function CommandPalette() {
       run: go(`/blueprints#${b.id}`),
     }));
 
+    const designItems: Item[] = designBriefs.map((d) => ({
+      id: `sd-${d.id}`,
+      label: d.title,
+      group: "System design",
+      run: go(`/system-design#${d.id}`),
+    }));
+
+    const radarItems: Item[] = radarEntries.map((r) => ({
+      id: `rd-${r.id}`,
+      label: r.name,
+      group: "Radar",
+      hint: r.category,
+      run: go(`/radar#${r.id}`),
+    }));
+
+    const careerItems: Item[] = careerAreas.map((c) => ({
+      id: `ca-${c.id}`,
+      label: c.name,
+      group: "Career",
+      run: go(`/career#${c.id}`),
+    }));
+
     const noteItems: Item[] = state.notes.map((n) => ({
       id: `nt-${n.id}`,
       label: n.title,
@@ -116,6 +144,9 @@ export function CommandPalette() {
       ...skillItems,
       ...projectItems,
       ...blueprintItems,
+      ...designItems,
+      ...radarItems,
+      ...careerItems,
       ...noteItems,
     ];
   }, [router, state.completedDays, state.notes]);

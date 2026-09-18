@@ -3,6 +3,7 @@ import "./globals.css";
 import { StoreProvider } from "@/lib/store";
 import { Shell } from "@/components/Shell";
 import { CommandPalette } from "@/components/CommandPalette";
+import { CueRunner } from "@/components/CueRunner";
 
 export const metadata: Metadata = {
   title: "AI Engineer Training OS",
@@ -19,6 +20,7 @@ export default function RootLayout({
         <StoreProvider>
           <Shell>{children}</Shell>
           <CommandPalette />
+          <CueRunner />
         </StoreProvider>
       </body>
     </html>

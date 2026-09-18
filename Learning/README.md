@@ -12,12 +12,19 @@ explicit paths into the projects elsewhere in this repository.
 ```bash
 cd Learning
 npm install
-npm run dev      # http://localhost:3000
-npm test         # logic tests
-npm run build    # production build
+npm run dev        # http://localhost:3000
+npm test           # logic tests (vitest)
+npm run typecheck  # tsc --noEmit
+npm run build      # production build
+npm run check      # typecheck + test + build
 ```
 
-Requires Node.js 20+.
+Requires Node.js 20+. Verified on Node 24.19.0 LTS with npm 11.17.0.
+
+There is no `lint` script: `next lint` is deprecated in Next 15 and no ESLint
+config exists here, so a script that could not run was removed rather than left
+in place pretending to work. TypeScript strict mode plus the test suite are the
+current gates.
 
 ## How it works
 
@@ -40,9 +47,19 @@ RAG system however good the retrieval feels.
 recovery mode: essentials only until the rhythm returns. The backlog is
 compressed, never accumulated.
 
-**Nothing is faked.** There is no GitHub sync, no AI mentor, no cloud sync — and
-the app says so on the Settings page rather than showing a plausible-looking
-number. Those arrive when there is a backend to support them, in phases 11-14.
+**Notifications and sound are native and off by default.** The `Notification`
+API and Web Audio `AudioContext`, no library and no audio files. Permission is
+only ever requested from a button press; the audio context only starts from a
+user gesture; system notifications only appear when the tab is in the
+background. Cues fire only while the app is open — background delivery needs a
+service worker and push infrastructure, which does not exist here and is
+labelled as such.
+
+**Nothing is faked.** There is no GitHub sync, no AI mentor, no cloud sync, and
+the AI Radar is not a live feed — it is a set of durable categories with the
+questions to judge anything new in them. The app says so on the Settings page
+rather than showing a plausible-looking number. Those arrive when there is a
+backend to support them, in phases 11-14.
 
 ## Structure
 

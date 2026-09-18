@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import type { Day, Task } from "@/data/types";
 import {
+  STATE_VERSION,
   createInitialState,
   migrateState,
   type PersistedState,
@@ -231,7 +232,7 @@ describe("scheduledDate", () => {
 
 describe("migrateState", () => {
   it("returns usable defaults for junk input", () => {
-    expect(migrateState(null).version).toBe(1);
+    expect(migrateState(null).version).toBe(STATE_VERSION);
     expect(migrateState("not an object").settings).toBeDefined();
     expect(migrateState(42).notes).toEqual([]);
   });

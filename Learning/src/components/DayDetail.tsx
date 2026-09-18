@@ -7,6 +7,7 @@ import type { Day } from "@/data/types";
 import { moduleById, phaseById, projectById, skillById } from "@/data";
 import { useStore } from "@/lib/store";
 import { availableMinutes, dayTaskProgress, planForTime } from "@/lib/progress";
+import { useAudioUnlock, useCue } from "@/lib/useCue";
 import {
   Button,
   Card,
@@ -21,6 +22,8 @@ import { FocusMode } from "./FocusMode";
 
 export function DayDetail({ day, focusOnLoad = false }: { day: Day; focusOnLoad?: boolean }) {
   const { state, completeDay, reopenDay } = useStore();
+  const cue = useCue();
+  const unlockAudio = useAudioUnlock();
   const [focus, setFocus] = useState(focusOnLoad);
   const [reflection, setReflection] = useState("");
   const [evidenceNote, setEvidenceNote] = useState("");
@@ -70,7 +73,13 @@ export function DayDetail({ day, focusOnLoad = false }: { day: Day; focusOnLoad?
 
           <div className="mt-5 flex flex-wrap items-center gap-3">
             {!complete && (
-              <Button onClick={() => setFocus(true)}>
+              <Button
+                onClick={() => {
+                  // Audio must start inside the gesture, not in an effect.
+                  unlockAudio();
+                  setFocus(true);
+                }}
+              >
                 <span className="flex items-center gap-2">
                   <Timer size={15} /> Focus mode
                 </span>
@@ -225,12 +234,19 @@ export function DayDetail({ day, focusOnLoad = false }: { day: Day; focusOnLoad?
                     </label>
                     <Button
                       className="w-full"
-                      onClick={() =>
+                      onClick={() => {
+                        unlockAudio();
                         completeDay(day.id, {
                           reflection: reflection.trim() || undefined,
                           evidenceNote: evidenceNote.trim() || undefined,
-                        })
-                      }
+                        });
+                        cue({
+                          category: "milestone",
+                          title: `Day ${day.dayNumber} complete`,
+                          body: day.deliverables[0] ?? day.title,
+                          tag: `day-${day.id}`,
+                        });
+                      }}
                     >
                       Mark day complete
                     </Button>
