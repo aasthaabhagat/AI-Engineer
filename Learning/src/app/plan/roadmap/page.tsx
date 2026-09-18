@@ -8,7 +8,6 @@ import { TRACK_LABEL, type Track } from "@/data/types";
 import { useStore } from "@/lib/store";
 import { currentDay, phaseProgress } from "@/lib/progress";
 import {
-  Card,
   PageHeader,
   Pill,
   ProgressBar,
@@ -64,7 +63,7 @@ export default function RoadmapPage() {
         ))}
       </div>
 
-      <div className="space-y-3">
+      <div className="divide-y divide-line-soft overflow-hidden rounded-xl border border-line bg-panel">
         {visible.map((phase) => {
           const stats = phaseProgress(days, phase.id, state);
           const phaseDays = days.filter((d) => d.phaseId === phase.id);
@@ -77,9 +76,8 @@ export default function RoadmapPage() {
           const locked = phase.authoring === "outline" && blockers.length > 0;
 
           return (
-            <Card key={phase.id} as="article" className="overflow-hidden">
+            <article key={phase.id} id={phase.id} className="scroll-mt-20">
               <button
-                id={phase.id}
                 onClick={() => setOpen(isOpen ? null : phase.id)}
                 aria-expanded={isOpen}
                 className="flex w-full items-start gap-4 px-5 py-4 text-left transition hover:bg-raised"
@@ -94,25 +92,25 @@ export default function RoadmapPage() {
                     <TrackBadge track={phase.track} />
                     {isCurrent && <Pill tone="accent">Current</Pill>}
                     {phase.authoring === "outline" && (
-                      <span className="text-[0.65rem] uppercase tracking-wider text-faint">
+                      <span className="text-xs uppercase tracking-wider text-faint">
                         Outline
                       </span>
                     )}
                     {locked && (
-                      <span className="inline-flex items-center gap-1 text-[0.65rem] uppercase tracking-wider text-faint">
+                      <span className="inline-flex items-center gap-1 text-xs uppercase tracking-wider text-faint">
                         <Lock size={10} /> Gated
                       </span>
                     )}
                   </span>
 
-                  <span className="mt-1.5 block max-w-3xl text-xs leading-relaxed text-muted">
+                  <span className="mt-1.5 block max-w-3xl text-sm leading-relaxed text-muted">
                     {phase.summary}
                   </span>
 
                   {phaseDays.length > 0 && (
                     <span className="mt-3 block max-w-sm">
                       <ProgressBar value={stats.ratio} />
-                      <span className="mt-1.5 block text-[0.68rem] text-faint">
+                      <span className="mt-1.5 block text-xs text-faint">
                         {stats.done}/{stats.total} days complete
                       </span>
                     </span>
@@ -133,7 +131,7 @@ export default function RoadmapPage() {
                     {phase.modules.map((m) => (
                       <div key={m.id} className="bg-panel px-5 py-4">
                         <p className="text-sm font-medium">{m.title}</p>
-                        <p className="mt-1.5 text-xs leading-relaxed text-muted">
+                        <p className="mt-1.5 text-sm leading-relaxed text-muted">
                           {m.description}
                         </p>
                         <ul className="mt-2.5 space-y-1">
@@ -149,7 +147,7 @@ export default function RoadmapPage() {
 
                   {phaseDays.length > 0 && (
                     <div className="border-t border-line-soft px-5 py-4">
-                      <p className="mb-3 text-[0.68rem] font-semibold uppercase tracking-[0.14em] text-faint">
+                      <p className="mb-3 text-xs font-semibold uppercase tracking-[0.14em] text-faint">
                         Weeks
                       </p>
                       <div className="space-y-4">
@@ -167,11 +165,11 @@ export default function RoadmapPage() {
                                 <span className="text-xs font-medium">
                                   Week {week.number}: {week.title}
                                 </span>
-                                <span className="text-[0.66rem] tabular-nums text-faint">
+                                <span className="text-xs tabular-nums text-faint">
                                   {weekDone}/{weekDays.length}
                                 </span>
                               </div>
-                              <p className="mt-1 max-w-2xl text-[0.68rem] leading-relaxed text-muted">
+                              <p className="mt-1 max-w-2xl text-sm leading-relaxed text-muted">
                                 {week.outcome}
                               </p>
                               <div className="mt-2 flex flex-wrap gap-1.5">
@@ -183,7 +181,7 @@ export default function RoadmapPage() {
                                       key={d.id}
                                       href={`/day/${d.dayNumber}`}
                                       title={d.title}
-                                      className={`rounded-md border px-2 py-1 font-mono text-[0.7rem] tabular-nums transition ${
+                                      className={`rounded-md border px-2 py-1 font-mono text-xs tabular-nums transition ${
                                         current
                                           ? "border-accent bg-accent text-[#0a0b0e]"
                                           : done
@@ -225,12 +223,12 @@ export default function RoadmapPage() {
                   </div>
                 </div>
               )}
-            </Card>
+            </article>
           );
         })}
       </div>
 
-      <p className="mt-8 text-xs leading-relaxed text-faint">
+      <p className="mt-8 text-sm leading-relaxed text-faint">
         Phases marked <span className="text-muted">Outline</span> have modules,
         outcomes and milestones but no day-by-day missions yet. That is
         deliberate: writing them months in advance would lock in assumptions

@@ -177,7 +177,7 @@ export function FocusMode({ day, onExit }: { day: Day; onExit: () => void }) {
           {breakSuggested && (
             <div className="mx-auto mt-5 flex max-w-sm items-center gap-2.5 rounded-lg border border-amber/30 bg-amber/10 px-3.5 py-2.5">
               <Coffee size={15} className="shrink-0 text-amber" />
-              <p className="text-xs leading-relaxed text-muted">
+              <p className="text-sm leading-relaxed text-muted">
                 {Math.round(sessionSeconds / 60)} minutes unbroken. Take five —
                 you will debug better after.
               </p>

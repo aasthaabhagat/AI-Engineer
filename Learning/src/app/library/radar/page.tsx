@@ -49,7 +49,7 @@ export default function RadarPage() {
           />
           <ol className="space-y-2 px-5 py-4">
             {monthlyUpdateSteps.map((step, i) => (
-              <li key={step} className="flex gap-3 text-xs leading-relaxed">
+              <li key={step} className="flex gap-3 text-sm leading-relaxed">
                 <span className="font-mono tabular-nums text-faint">
                   {String(i + 1).padStart(2, "0")}
                 </span>
@@ -59,7 +59,7 @@ export default function RadarPage() {
           </ol>
           <div className="border-t border-line-soft px-5 py-3">
             <p className="text-xs font-medium text-accent">BUILD &gt; READ</p>
-            <p className="mt-1 text-[0.68rem] leading-relaxed text-faint">
+            <p className="mt-1 text-sm leading-relaxed text-faint">
               A month spent reading about agents while building nothing is a
               wasted month, however current it leaves you.
             </p>
@@ -73,12 +73,12 @@ export default function RadarPage() {
               <div key={s.id} className="flex gap-3">
                 <dt>
                   <span
-                    className={`rounded border px-2 py-0.5 text-[0.62rem] font-semibold uppercase tracking-wider ${STANCE_STYLE[s.id]}`}
+                    className={`rounded border px-2 py-0.5 text-xs font-semibold uppercase tracking-wider ${STANCE_STYLE[s.id]}`}
                   >
                     {s.label}
                   </span>
                 </dt>
-                <dd className="text-[0.68rem] leading-relaxed text-muted">
+                <dd className="text-sm leading-relaxed text-muted">
                   {s.meaning}
                 </dd>
               </div>
@@ -128,18 +128,18 @@ export default function RadarPage() {
                 <span className="min-w-0 flex-1">
                   <span className="flex flex-wrap items-center gap-2.5">
                     <span className="text-sm font-medium">{entry.name}</span>
-                    <span className="text-[0.66rem] uppercase tracking-wider text-faint">
+                    <span className="text-xs uppercase tracking-wider text-faint">
                       {entry.category}
                     </span>
                     {stance && (
                       <span
-                        className={`rounded border px-1.5 py-0.5 text-[0.6rem] font-semibold uppercase tracking-wider ${STANCE_STYLE[stance]}`}
+                        className={`rounded border px-1.5 py-0.5 text-xs font-semibold uppercase tracking-wider ${STANCE_STYLE[stance]}`}
                       >
                         {stance}
                       </span>
                     )}
                   </span>
-                  <span className="mt-1.5 block max-w-2xl text-xs leading-relaxed text-muted">
+                  <span className="mt-1.5 block max-w-2xl text-sm leading-relaxed text-muted">
                     {entry.what}
                   </span>
                 </span>
@@ -154,21 +154,21 @@ export default function RadarPage() {
               {isOpen && (
                 <div className="border-t border-line-soft">
                   <div className="px-5 py-4">
-                    <p className="text-[0.66rem] font-semibold uppercase tracking-[0.14em] text-faint">
+                    <p className="text-xs font-semibold uppercase tracking-[0.14em] text-faint">
                       Why it matters
                     </p>
-                    <p className="mt-1.5 text-xs leading-relaxed text-muted">
+                    <p className="mt-1.5 text-sm leading-relaxed text-muted">
                       {entry.whyItMatters}
                     </p>
                   </div>
 
                   <div className="border-t border-line-soft px-5 py-4">
-                    <p className="text-[0.66rem] font-semibold uppercase tracking-[0.14em] text-faint">
+                    <p className="text-xs font-semibold uppercase tracking-[0.14em] text-faint">
                       Evaluate anything new here by asking
                     </p>
                     <ul className="mt-2 space-y-1.5">
                       {entry.evaluateBy.map((q) => (
-                        <li key={q} className="text-xs leading-relaxed text-muted">
+                        <li key={q} className="text-sm leading-relaxed text-muted">
                           · {q}
                         </li>
                       ))}
@@ -176,27 +176,27 @@ export default function RadarPage() {
                   </div>
 
                   <div className="border-t border-line-soft px-5 py-4">
-                    <p className="flex items-center gap-1.5 text-[0.66rem] font-semibold uppercase tracking-[0.14em] text-amber">
+                    <p className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-[0.14em] text-amber">
                       <TriangleAlert size={11} /> The trap
                     </p>
-                    <p className="mt-1.5 text-xs leading-relaxed text-muted">
+                    <p className="mt-1.5 text-sm leading-relaxed text-muted">
                       {entry.trap}
                     </p>
                   </div>
 
                   <div className="flex flex-wrap items-center gap-2 border-t border-line-soft px-5 py-3.5">
-                    <span className="text-[0.66rem] text-faint">
+                    <span className="text-xs text-faint">
                       Relevant from: {entry.relevantFrom}
                     </span>
                     {entry.relatedSkills.map((id) => (
-                      <Link key={id} href={`/skills#${id}`}>
+                      <Link key={id} href={`/plan/skills#${id}`}>
                         <Pill>{skillById.get(id)?.name ?? id}</Pill>
                       </Link>
                     ))}
                   </div>
 
                   <div className="flex flex-wrap items-center gap-2 border-t border-line-soft px-5 py-3.5">
-                    <span className="mr-1 text-[0.66rem] uppercase tracking-wider text-faint">
+                    <span className="mr-1 text-xs uppercase tracking-wider text-faint">
                       My stance
                     </span>
                     {RADAR_STANCES.map((s) => (

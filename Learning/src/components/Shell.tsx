@@ -2,100 +2,60 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
-import {
-  BookMarked,
-  Briefcase,
-  CalendarDays,
-  ClipboardCheck,
-  Command,
-  Compass,
-  FolderGit2,
-  LayoutDashboard,
-  Layers,
-  Menu,
-  Network,
-  Radar,
-  Settings,
-  Sparkles,
-  Target,
-  Trophy,
-  X,
-} from "lucide-react";
+import { useEffect } from "react";
+import { Search, Settings } from "lucide-react";
 import { useStore } from "@/lib/store";
-import { days } from "@/data";
+import { days, phaseById, weekForDay } from "@/data";
 import { currentDay, scheduleStatus } from "@/lib/progress";
 
+/**
+ * Three destinations, not fourteen.
+ *
+ * TODAY is the working surface. PLAN is everything about where you are going.
+ * LIBRARY is reference you consult, not work you do. Settings is a gear, not a
+ * peer of the other three — you visit it twice a year.
+ */
 const NAV = [
-  { href: "/", label: "Dashboard", icon: LayoutDashboard },
-  { href: "/today", label: "Today", icon: Target },
-  { href: "/roadmap", label: "Roadmap", icon: Compass },
-  { href: "/calendar", label: "Calendar", icon: CalendarDays },
-  { href: "/skills", label: "Skills", icon: Layers },
-  { href: "/projects", label: "Projects", icon: FolderGit2 },
-  { href: "/knowledge", label: "Knowledge", icon: BookMarked },
-  { href: "/blueprints", label: "Blueprints", icon: Sparkles },
-  { href: "/system-design", label: "System Design", icon: Network },
-  { href: "/radar", label: "AI Radar", icon: Radar },
-  { href: "/portfolio", label: "Portfolio", icon: Trophy },
-  { href: "/career", label: "Career Readiness", icon: Briefcase },
-  { href: "/reviews", label: "Reviews", icon: ClipboardCheck },
-  { href: "/settings", label: "Settings", icon: Settings },
+  { href: "/", label: "Today" },
+  { href: "/plan", label: "Plan" },
+  { href: "/library", label: "Library" },
 ];
+
+function openPalette() {
+  window.dispatchEvent(new CustomEvent("palette:open"));
+}
 
 export function Shell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
-  const [open, setOpen] = useState(false);
   const { state, hydrated, storageError } = useStore();
 
-  // Theme is applied to the document root so CSS variables can switch.
   useEffect(() => {
     document.documentElement.dataset.theme = state.settings.theme;
   }, [state.settings.theme]);
 
-  useEffect(() => {
-    setOpen(false);
-  }, [pathname]);
+  // Today is a reading surface and wants a narrow measure; Plan and Library
+  // hold tables, grids and matrices and need the room.
+  const wide = pathname.startsWith("/plan") || pathname.startsWith("/library");
+  const width = wide ? "max-w-5xl" : "max-w-3xl";
 
   const today = currentDay(days, state);
   const status = scheduleStatus(days, state);
+  const phase = today ? phaseById.get(today.phaseId) : undefined;
+  const week = today ? weekForDay(today.dayNumber) : undefined;
 
   return (
-    <div className="min-h-screen lg:grid lg:grid-cols-[236px_1fr]">
-      {/* Mobile bar */}
-      <div className="flex items-center justify-between border-b border-line bg-panel px-4 py-3 lg:hidden">
-        <Link href="/" className="text-sm font-semibold tracking-tight">
-          Training OS
-        </Link>
-        <button
-          onClick={() => setOpen((v) => !v)}
-          aria-label={open ? "Close navigation" : "Open navigation"}
-          aria-expanded={open}
-          className="rounded-lg border border-line p-1.5 text-muted"
-        >
-          {open ? <X size={18} /> : <Menu size={18} />}
-        </button>
-      </div>
+    <div className="min-h-screen">
+      <header className="sticky top-0 z-30 border-b border-line-soft bg-bg/85 backdrop-blur">
+        <div className={`mx-auto flex h-14 ${width} items-center gap-1 px-5 sm:px-8`}>
+          <Link
+            href="/"
+            className="mr-4 shrink-0 text-sm font-semibold tracking-tight sm:mr-6"
+          >
+            AI Engineer
+          </Link>
 
-      <aside
-        className={`${
-          open ? "block" : "hidden"
-        } border-b border-line bg-panel lg:sticky lg:top-0 lg:block lg:h-screen lg:border-b-0 lg:border-r`}
-      >
-        <div className="flex h-full flex-col">
-          <div className="hidden px-5 py-5 lg:block">
-            <Link href="/" className="block">
-              <p className="text-[0.62rem] font-semibold uppercase tracking-[0.2em] text-faint">
-                AI Engineer
-              </p>
-              <p className="text-[0.95rem] font-semibold tracking-tight">
-                Training OS
-              </p>
-            </Link>
-          </div>
-
-          <nav className="flex-1 space-y-0.5 px-3 pb-4 lg:px-3">
-            {NAV.map(({ href, label, icon: Icon }) => {
+          <nav className="flex items-center gap-1">
+            {NAV.map(({ href, label }) => {
               const active =
                 href === "/" ? pathname === "/" : pathname.startsWith(href);
               return (
@@ -103,55 +63,62 @@ export function Shell({ children }: { children: React.ReactNode }) {
                   key={href}
                   href={href}
                   aria-current={active ? "page" : undefined}
-                  className={`flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm transition ${
+                  className={`rounded-full px-3.5 py-1.5 text-sm transition ${
                     active
-                      ? "bg-accent-soft text-accent"
-                      : "text-muted hover:bg-raised hover:text-ink"
+                      ? "bg-raised font-medium text-ink"
+                      : "text-muted hover:text-ink"
                   }`}
                 >
-                  <Icon size={16} strokeWidth={1.75} />
                   {label}
                 </Link>
               );
             })}
           </nav>
 
-          <div className="border-t border-line-soft px-5 py-4">
-            {hydrated && today ? (
-              <>
-                <p className="text-[0.62rem] font-semibold uppercase tracking-[0.16em] text-faint">
-                  Up next
-                </p>
-                <p className="mt-1 text-xs leading-snug text-muted">
-                  Day {today.dayNumber} · {today.title}
-                </p>
-              </>
-            ) : (
-              <p className="text-xs text-muted">All authored days complete.</p>
-            )}
-            {status.recoveryMode && (
-              <p className="mt-2 text-[0.68rem] leading-snug text-amber">
-                Recovery mode active
+          <div className="ml-auto flex items-center gap-1">
+            {hydrated && today && (
+              <p className="mr-2 hidden text-xs text-faint sm:block">
+                Day {today.dayNumber}
+                {week && ` · Week ${week.number}`}
+                {phase && ` · ${phase.title}`}
               </p>
             )}
-            <p className="mt-3 flex items-center gap-1.5 text-[0.68rem] text-faint">
-              <Command size={11} /> K for the command palette
-            </p>
+            <button
+              onClick={openPalette}
+              aria-label="Search everything"
+              title="Search (Ctrl K)"
+              className="rounded-full p-2 text-muted transition hover:bg-raised hover:text-ink"
+            >
+              <Search size={16} strokeWidth={1.75} />
+            </button>
+            <Link
+              href="/settings"
+              aria-label="Settings"
+              aria-current={pathname === "/settings" ? "page" : undefined}
+              className={`rounded-full p-2 transition hover:bg-raised hover:text-ink ${
+                pathname === "/settings" ? "text-ink" : "text-muted"
+              }`}
+            >
+              <Settings size={16} strokeWidth={1.75} />
+            </Link>
           </div>
         </div>
-      </aside>
+      </header>
 
-      <main className="min-w-0">
-        {storageError && (
-          <div className="border-b border-amber/30 bg-amber/10 px-6 py-2 text-xs text-amber">
-            Local storage problem: {storageError} Progress may not be saved this
-            session.
-          </div>
-        )}
-        <div className="mx-auto max-w-6xl px-5 py-8 sm:px-8 sm:py-10">
-          {children}
+      {storageError && (
+        <div className="border-b border-amber/30 bg-amber/10 px-5 py-2 text-center text-xs text-amber">
+          Local storage problem: {storageError} Progress may not be saved this
+          session.
         </div>
-      </main>
+      )}
+
+      {hydrated && status.recoveryMode && pathname === "/" && (
+        <div className="border-b border-amber/20 bg-amber/5 px-5 py-2 text-center text-xs text-amber">
+          Recovery mode — essential tasks only until the rhythm returns.
+        </div>
+      )}
+
+      <main className={`mx-auto ${width} px-5 pb-24 pt-10 sm:px-8`}>{children}</main>
     </div>
   );
 }

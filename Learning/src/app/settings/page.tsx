@@ -91,7 +91,7 @@ export default function SettingsPage() {
                 value={s.startDate}
                 onChange={(e) => updateSettings({ startDate: e.target.value })}
               />
-              <span className="mt-1 block text-[0.68rem] text-faint">
+              <span className="mt-1 block text-xs text-faint">
                 Used to compare planned schedule against actual progress.
               </span>
             </label>
@@ -164,7 +164,7 @@ export default function SettingsPage() {
                   </button>
                 ))}
               </div>
-              <p className="mt-2 text-[0.68rem] leading-relaxed text-faint">
+              <p className="mt-2 text-sm leading-relaxed text-faint">
                 Non-study days are skipped when the schedule is projected onto the
                 calendar. Rest days are part of the plan, not a failure of it.
               </p>
@@ -204,7 +204,7 @@ export default function SettingsPage() {
                     </Button>
                   )}
                 </div>
-                <p className="mt-2 text-[0.68rem] leading-relaxed text-faint">
+                <p className="mt-2 text-sm leading-relaxed text-faint">
                   {permission === "unsupported" &&
                     "This browser does not support the Notification API."}
                   {permission === "denied" &&
@@ -261,7 +261,7 @@ export default function SettingsPage() {
                 >
                   Play a test tone
                 </button>
-                <p className="mt-2 text-[0.68rem] leading-relaxed text-faint">
+                <p className="mt-2 text-sm leading-relaxed text-faint">
                   Short synthesized tones, generated with the Web Audio API. No
                   audio files, no library.
                 </p>
@@ -269,7 +269,7 @@ export default function SettingsPage() {
             </div>
 
             <div>
-              <p className="text-[0.66rem] font-semibold uppercase tracking-[0.14em] text-faint">
+              <p className="text-xs font-semibold uppercase tracking-[0.14em] text-faint">
                 Categories
               </p>
               <ul className="mt-3 space-y-2.5">
@@ -284,7 +284,7 @@ export default function SettingsPage() {
                     />
                     <span className="min-w-0">
                       <span className="block text-sm">{c.label}</span>
-                      <span className="block text-[0.68rem] leading-relaxed text-faint">
+                      <span className="block text-sm leading-relaxed text-faint">
                         {c.description}
                       </span>
                     </span>
@@ -323,7 +323,7 @@ export default function SettingsPage() {
               </label>
             </div>
 
-            <p className="rounded-lg border border-line bg-raised px-3.5 py-3 text-[0.68rem] leading-relaxed text-muted">
+            <p className="rounded-lg border border-line bg-raised px-3.5 py-3 text-sm leading-relaxed text-muted">
               <Pill tone="warn">Limitation</Pill>{" "}
               <span className="mt-1.5 block">
                 Cues only fire while this app is open in a tab. Reaching you when
@@ -383,7 +383,7 @@ export default function SettingsPage() {
         <Card className="h-fit">
           <CardHeader title="Danger zone" />
           <div className="space-y-3 px-5 py-4">
-            <p className="text-xs leading-relaxed text-muted">
+            <p className="text-sm leading-relaxed text-muted">
               Resetting clears every completed task, day, evidence tick, note,
               journal entry and review. Days 1-3 are restored to their seeded
               state. This cannot be undone — export a backup first.
@@ -416,7 +416,7 @@ export default function SettingsPage() {
 
       <Card className="mt-6">
         <CardHeader title="Not built yet" hint="Listed honestly rather than faked" />
-        <ul className="space-y-2 px-5 py-4 text-xs leading-relaxed text-muted">
+        <ul className="space-y-2 px-5 py-4 text-sm leading-relaxed text-muted">
           <li>
             · <span className="text-ink">Background notifications</span> — cues
             fire only while a tab is open. Waking you when the browser is closed

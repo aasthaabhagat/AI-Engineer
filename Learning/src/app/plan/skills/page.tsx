@@ -8,7 +8,6 @@ import { TRACK_LABEL, type SkillTier } from "@/data/types";
 import { useStore } from "@/lib/store";
 import { skillEvidenceCount, skillMaturity } from "@/lib/maturity";
 import {
-  Card,
   MaturityBadge,
   PageHeader,
   Pill,
@@ -86,10 +85,10 @@ export default function SkillsPage() {
       <div className="space-y-8">
         {grouped.map(([category, list]) => (
           <section key={category}>
-            <h2 className="mb-3 text-[0.7rem] font-semibold uppercase tracking-[0.16em] text-faint">
+            <h2 className="mb-3 text-xs font-semibold uppercase tracking-[0.16em] text-faint">
               {category}
             </h2>
-            <div className="space-y-2">
+            <div className="divide-y divide-line-soft overflow-hidden rounded-xl border border-line bg-panel">
               {list.map((skill) => {
                 const maturity = skillMaturity(skill, state.evidence);
                 const { done, total } = skillEvidenceCount(skill, state.evidence);
@@ -97,9 +96,8 @@ export default function SkillsPage() {
                 const relatedDays = daysForSkill.get(skill.id) ?? [];
 
                 return (
-                  <Card key={skill.id} as="article" className="overflow-hidden">
+                  <article key={skill.id} id={skill.id} className="scroll-mt-20">
                     <button
-                      id={skill.id}
                       onClick={() => setOpen(isOpen ? null : skill.id)}
                       aria-expanded={isOpen}
                       className="flex w-full items-start gap-4 px-5 py-3.5 text-left transition hover:bg-raised"
@@ -108,11 +106,11 @@ export default function SkillsPage() {
                         <span className="flex flex-wrap items-center gap-x-3 gap-y-1.5">
                           <span className="text-sm font-medium">{skill.name}</span>
                           <MaturityBadge maturity={maturity} />
-                          <span className="text-[0.65rem] uppercase tracking-wider text-faint">
+                          <span className="text-xs uppercase tracking-wider text-faint">
                             {TIER_LABEL[skill.tier]}
                           </span>
                         </span>
-                        <span className="mt-1.5 block max-w-2xl text-xs leading-relaxed text-muted">
+                        <span className="mt-1.5 block max-w-2xl text-sm leading-relaxed text-muted">
                           {skill.summary}
                         </span>
                         <span className="mt-2.5 block max-w-xs">
@@ -120,7 +118,7 @@ export default function SkillsPage() {
                             value={total === 0 ? 0 : done / total}
                             tone={done === total ? "teal" : "accent"}
                           />
-                          <span className="mt-1 block text-[0.66rem] text-faint">
+                          <span className="mt-1 block text-xs text-faint">
                             {done}/{total} evidence
                           </span>
                         </span>
@@ -137,18 +135,18 @@ export default function SkillsPage() {
                       <div className="border-t border-line-soft">
                         <div className="grid gap-px bg-line-soft sm:grid-cols-2">
                           <div className="bg-panel px-5 py-4">
-                            <p className="text-[0.66rem] font-semibold uppercase tracking-[0.14em] text-faint">
+                            <p className="text-xs font-semibold uppercase tracking-[0.14em] text-faint">
                               Why it exists
                             </p>
-                            <p className="mt-1.5 text-xs leading-relaxed text-muted">
+                            <p className="mt-1.5 text-sm leading-relaxed text-muted">
                               {skill.whyItExists}
                             </p>
                           </div>
                           <div className="bg-panel px-5 py-4">
-                            <p className="text-[0.66rem] font-semibold uppercase tracking-[0.14em] text-faint">
+                            <p className="text-xs font-semibold uppercase tracking-[0.14em] text-faint">
                               When not to use it
                             </p>
-                            <p className="mt-1.5 text-xs leading-relaxed text-muted">
+                            <p className="mt-1.5 text-sm leading-relaxed text-muted">
                               {skill.whenNotToUse ??
                                 "No strong counter-indication — but never reach for it without a problem that needs it."}
                             </p>
@@ -156,7 +154,7 @@ export default function SkillsPage() {
                         </div>
 
                         <div className="border-t border-line-soft px-5 py-4">
-                          <p className="mb-3 text-[0.66rem] font-semibold uppercase tracking-[0.14em] text-faint">
+                          <p className="mb-3 text-xs font-semibold uppercase tracking-[0.14em] text-faint">
                             Evidence ladder
                           </p>
                           <ul className="space-y-2.5">
@@ -196,7 +194,7 @@ export default function SkillsPage() {
                                 <Link
                                   key={n}
                                   href={`/day/${n}`}
-                                  className="rounded border border-line bg-raised px-1.5 py-0.5 font-mono text-[0.68rem] text-muted transition hover:text-ink"
+                                  className="rounded border border-line bg-raised px-1.5 py-0.5 font-mono text-xs text-muted transition hover:text-ink"
                                 >
                                   {n}
                                 </Link>
@@ -206,7 +204,7 @@ export default function SkillsPage() {
                           {skill.relatedProjects.length > 0 && (
                             <span className="flex flex-wrap items-center gap-1.5">
                               {skill.relatedProjects.map((p) => (
-                                <Link key={p} href={`/projects#${p}`}>
+                                <Link key={p} href={`/plan/projects#${p}`}>
                                   <Pill>{p}</Pill>
                                 </Link>
                               ))}
@@ -215,7 +213,7 @@ export default function SkillsPage() {
                         </div>
                       </div>
                     )}
-                  </Card>
+                  </article>
                 );
               })}
             </div>

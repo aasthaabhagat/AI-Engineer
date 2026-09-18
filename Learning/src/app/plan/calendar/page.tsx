@@ -90,7 +90,7 @@ export default function CalendarPage() {
           {WEEKDAYS.map((d) => (
             <div
               key={d}
-              className="px-2 py-2 text-center text-[0.62rem] font-semibold uppercase tracking-wider text-faint"
+              className="px-2 py-2 text-center text-xs font-semibold uppercase tracking-wider text-faint"
             >
               {d}
             </div>
@@ -126,12 +126,12 @@ export default function CalendarPage() {
                     {date.getDate()}
                   </span>
                   {!studyDay && inMonth && (
-                    <span className="text-[0.6rem] uppercase text-faint">off</span>
+                    <span className="text-xs uppercase text-faint">off</span>
                   )}
                 </div>
 
                 {completed && (
-                  <span className="rounded bg-ok/15 px-1.5 py-0.5 text-[0.62rem] text-ok">
+                  <span className="rounded bg-ok/15 px-1.5 py-0.5 text-xs text-ok">
                     {completed.length > 1
                       ? `${completed.length} days done`
                       : "Completed"}
@@ -140,7 +140,7 @@ export default function CalendarPage() {
 
                 {!completed && planned !== undefined && (
                   <span
-                    className={`rounded px-1.5 py-0.5 text-[0.62rem] ${
+                    className={`rounded px-1.5 py-0.5 text-xs ${
                       missed
                         ? "bg-amber/15 text-amber"
                         : active?.dayNumber === planned

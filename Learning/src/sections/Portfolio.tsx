@@ -16,7 +16,7 @@ import {
   Card,
   CardHeader,
   MaturityBadge,
-  PageHeader,
+  SectionHeader,
   Pill,
   ProgressBar,
 } from "@/components/ui";
@@ -28,7 +28,7 @@ const LEVEL_TONE: Record<string, string> = {
   "can-build-production": "text-ok",
 };
 
-export default function PortfolioPage() {
+export function PortfolioSection() {
   const { state } = useStore();
 
   const assessments = capabilities.map((c) =>
@@ -64,7 +64,7 @@ export default function PortfolioPage() {
 
   return (
     <div>
-      <PageHeader
+      <SectionHeader
         eyebrow="What can I actually show?"
         title="Portfolio"
         description="An honest answer to the only question a hiring manager asks: what have you built, what proves it works, and what is still missing."
@@ -79,7 +79,7 @@ export default function PortfolioPage() {
           {demonstrable.length === 0 ? (
             <div className="px-5 py-6">
               <p className="text-sm">Nothing is portfolio-ready yet.</p>
-              <p className="mt-2 max-w-2xl text-xs leading-relaxed text-muted">
+              <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted">
                 That is the correct answer this early, and stating it honestly is
                 the point of this page. The Expense Tracker becomes a credible
                 craft artifact at day 34; the first real AI portfolio project
@@ -90,7 +90,7 @@ export default function PortfolioPage() {
             <ul className="divide-y divide-line-soft">
               {demonstrable.map((p) => (
                 <li key={p.id} className="px-5 py-3">
-                  <Link href={`/projects#${p.id}`} className="text-sm hover:underline">
+                  <Link href={`/plan/projects#${p.id}`} className="text-sm hover:underline">
                     {p.name}
                   </Link>
                   <p className="mt-1 text-xs text-muted">{p.description}</p>
@@ -122,7 +122,7 @@ export default function PortfolioPage() {
                   tone={a.level === "can-build-production" ? "teal" : "accent"}
                 />
                 {a.gaps.length > 0 && (
-                  <p className="mt-2 text-[0.68rem] leading-relaxed text-faint">
+                  <p className="mt-2 text-sm leading-relaxed text-faint">
                     Weakest: {a.gaps.slice(0, 4).map((g) => skillById.get(g.skillId)?.name ?? g.skillId).join(", ")}
                   </p>
                 )}
@@ -142,7 +142,7 @@ export default function PortfolioPage() {
               return (
                 <li key={skill.id} className="px-5 py-4">
                   <div className="flex flex-wrap items-center justify-between gap-3">
-                    <Link href={`/skills#${skill.id}`} className="text-sm hover:underline">
+                    <Link href={`/plan/skills#${skill.id}`} className="text-sm hover:underline">
                       {skill.name}
                     </Link>
                     <div className="flex items-center gap-2">
@@ -151,7 +151,7 @@ export default function PortfolioPage() {
                     </div>
                   </div>
                   {missing.length > 0 && (
-                    <p className="mt-2 text-xs leading-relaxed text-muted">
+                    <p className="mt-2 text-sm leading-relaxed text-muted">
                       Next evidence needed: {missing[0].label}
                     </p>
                   )}
@@ -161,7 +161,7 @@ export default function PortfolioPage() {
           </ul>
           {nextAction && (
             <div className="border-t border-line-soft px-5 py-4">
-              <p className="text-[0.66rem] font-semibold uppercase tracking-[0.14em] text-faint">
+              <p className="text-xs font-semibold uppercase tracking-[0.14em] text-faint">
                 Next best training action
               </p>
               <Link
@@ -189,7 +189,7 @@ export default function PortfolioPage() {
             <div className="overflow-x-auto">
               <table className="w-full min-w-[560px] text-left text-sm">
                 <thead>
-                  <tr className="border-b border-line-soft text-[0.64rem] uppercase tracking-[0.14em] text-faint">
+                  <tr className="border-b border-line-soft text-xs uppercase tracking-[0.14em] text-faint">
                     <th className="px-5 py-2.5 font-semibold">Skill</th>
                     <th className="px-5 py-2.5 font-semibold">Projects</th>
                     <th className="px-5 py-2.5 font-semibold">Evidence</th>
@@ -200,7 +200,7 @@ export default function PortfolioPage() {
                   {matrix.map(({ skill, maturity, done, total, projects: ps }) => (
                     <tr key={skill.id} className="border-b border-line-soft last:border-b-0">
                       <td className="px-5 py-3">
-                        <Link href={`/skills#${skill.id}`} className="hover:underline">
+                        <Link href={`/plan/skills#${skill.id}`} className="hover:underline">
                           {skill.name}
                         </Link>
                       </td>
@@ -225,7 +225,7 @@ export default function PortfolioPage() {
 
         <Card>
           <CardHeader title="Portfolio strategy" />
-          <div className="space-y-3 px-5 py-4 text-xs leading-relaxed text-muted">
+          <div className="space-y-3 px-5 py-4 text-sm leading-relaxed text-muted">
             <p>
               Two to four deep projects, not twenty shallow ones. At least one
               serious AI product, one demonstrating RAG, one demonstrating
@@ -235,7 +235,7 @@ export default function PortfolioPage() {
             <ul className="space-y-1.5">
               {portfolioProjects.map((p) => (
                 <li key={p.id}>
-                  <Link href={`/projects#${p.id}`} className="text-ink hover:underline">
+                  <Link href={`/plan/projects#${p.id}`} className="text-ink hover:underline">
                     {p.name}
                   </Link>{" "}
                   — level {p.level},{" "}

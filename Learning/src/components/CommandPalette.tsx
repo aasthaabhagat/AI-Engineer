@@ -33,8 +33,16 @@ export function CommandPalette() {
       }
       if (e.key === "Escape") setOpen(false);
     };
+    // The search button in the header has no reference to this component,
+    // so it asks for the palette through an event instead.
+    const onRequest = () => setOpen(true);
+
     window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
+    window.addEventListener("palette:open", onRequest);
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      window.removeEventListener("palette:open", onRequest);
+    };
   }, []);
 
   useEffect(() => {
@@ -51,21 +59,19 @@ export function CommandPalette() {
     };
 
     const nav: Item[] = [
-      { id: "n-today", label: "Go to Today", group: "Navigate", run: go("/today") },
-      { id: "n-dash", label: "Go to Dashboard", group: "Navigate", run: go("/") },
-      { id: "n-road", label: "Go to Roadmap", group: "Navigate", run: go("/roadmap") },
-      { id: "n-cal", label: "Go to Calendar", group: "Navigate", run: go("/calendar") },
-      { id: "n-skills", label: "Go to Skills", group: "Navigate", run: go("/skills") },
-      { id: "n-proj", label: "Go to Projects", group: "Navigate", run: go("/projects") },
-      { id: "n-know", label: "Go to Knowledge", group: "Navigate", run: go("/knowledge") },
-      { id: "n-bp", label: "Go to Blueprints", group: "Navigate", run: go("/blueprints") },
-      { id: "n-sd", label: "Go to System Design", group: "Navigate", run: go("/system-design") },
-      { id: "n-radar", label: "Go to AI Radar", group: "Navigate", run: go("/radar") },
-      { id: "n-port", label: "Go to Portfolio", group: "Navigate", run: go("/portfolio") },
-      { id: "n-career", label: "Go to Career Readiness", group: "Navigate", run: go("/career") },
-      { id: "n-rev", label: "Go to Reviews", group: "Navigate", run: go("/reviews") },
-      { id: "n-set", label: "Go to Settings", group: "Navigate", run: go("/settings") },
-      { id: "n-focus", label: "Start Focus Mode", group: "Actions", run: go("/today?focus=1") },
+      { id: "n-today", label: "Today", group: "Go to", run: go("/") },
+      { id: "n-road", label: "Plan · Roadmap", group: "Go to", run: go("/plan/roadmap") },
+      { id: "n-cal", label: "Plan · Calendar", group: "Go to", run: go("/plan/calendar") },
+      { id: "n-skills", label: "Plan · Skills", group: "Go to", run: go("/plan/skills") },
+      { id: "n-proj", label: "Plan · Projects", group: "Go to", run: go("/plan/projects") },
+      { id: "n-ready", label: "Plan · Readiness", group: "Go to", run: go("/plan/readiness") },
+      { id: "n-rev", label: "Plan · Reviews", group: "Go to", run: go("/plan/reviews") },
+      { id: "n-bp", label: "Library · Patterns", group: "Go to", run: go("/library/patterns") },
+      { id: "n-sd", label: "Library · System Design", group: "Go to", run: go("/library/system-design") },
+      { id: "n-radar", label: "Library · AI Radar", group: "Go to", run: go("/library/radar") },
+      { id: "n-know", label: "Library · Journal", group: "Go to", run: go("/library/journal") },
+      { id: "n-set", label: "Settings", group: "Go to", run: go("/settings") },
+      { id: "n-focus", label: "Start focus mode", group: "Actions", run: go("/?focus=1") },
     ];
 
     const dayItems: Item[] = days.map((d) => ({
@@ -81,7 +87,7 @@ export function CommandPalette() {
       label: s.name,
       group: "Skills",
       hint: s.category,
-      run: go(`/skills#${s.id}`),
+      run: go(`/plan/skills#${s.id}`),
     }));
 
     const projectItems: Item[] = projects.map((p) => ({
@@ -89,14 +95,14 @@ export function CommandPalette() {
       label: p.name,
       group: "Projects",
       hint: p.repoPath,
-      run: go(`/projects#${p.id}`),
+      run: go(`/plan/projects#${p.id}`),
     }));
 
     const phaseItems: Item[] = phases.map((p) => ({
       id: `ph-${p.id}`,
       label: `Phase ${p.order}: ${p.title}`,
       group: "Phases",
-      run: go(`/roadmap#${p.id}`),
+      run: go(`/plan/roadmap#${p.id}`),
     }));
 
     const blueprintItems: Item[] = blueprints.map((b) => ({
@@ -104,14 +110,14 @@ export function CommandPalette() {
       label: b.name,
       group: "Blueprints",
       hint: b.category,
-      run: go(`/blueprints#${b.id}`),
+      run: go(`/library/patterns#${b.id}`),
     }));
 
     const designItems: Item[] = designBriefs.map((d) => ({
       id: `sd-${d.id}`,
       label: d.title,
       group: "System design",
-      run: go(`/system-design#${d.id}`),
+      run: go(`/library/system-design#${d.id}`),
     }));
 
     const radarItems: Item[] = radarEntries.map((r) => ({
@@ -119,14 +125,14 @@ export function CommandPalette() {
       label: r.name,
       group: "Radar",
       hint: r.category,
-      run: go(`/radar#${r.id}`),
+      run: go(`/library/radar#${r.id}`),
     }));
 
     const careerItems: Item[] = careerAreas.map((c) => ({
       id: `ca-${c.id}`,
       label: c.name,
       group: "Career",
-      run: go(`/career#${c.id}`),
+      run: go(`/plan/readiness#${c.id}`),
     }));
 
     const noteItems: Item[] = state.notes.map((n) => ({
@@ -134,7 +140,7 @@ export function CommandPalette() {
       label: n.title,
       group: "Notes",
       hint: n.kind,
-      run: go("/knowledge"),
+      run: go("/library/journal"),
     }));
 
     return [
@@ -221,7 +227,7 @@ export function CommandPalette() {
                 }`}
               >
                 <span className="truncate">{item.label}</span>
-                <span className="shrink-0 text-[0.68rem] uppercase tracking-wider text-faint">
+                <span className="shrink-0 text-xs uppercase tracking-wider text-faint">
                   {item.hint ?? item.group}
                 </span>
               </button>
