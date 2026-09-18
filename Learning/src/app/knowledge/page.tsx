@@ -157,11 +157,11 @@ export default function KnowledgePage() {
                         <Pill>{n.kind}</Pill>
                       </div>
                       {n.body && (
-                        <p className="mt-2 whitespace-pre-wrap text-xs leading-relaxed text-muted">
+                        <p className="mt-2 whitespace-pre-wrap text-sm leading-relaxed text-muted">
                           {n.body}
                         </p>
                       )}
-                      <div className="mt-2.5 flex flex-wrap items-center gap-2 text-[0.66rem] text-faint">
+                      <div className="mt-2.5 flex flex-wrap items-center gap-2 text-xs text-faint">
                         <span>
                           {new Date(n.createdAt).toLocaleDateString(undefined, {
                             day: "numeric",
@@ -254,16 +254,16 @@ export default function KnowledgePage() {
                           .filter(([, v]) => v)
                           .map(([k, v]) => (
                             <div key={k}>
-                              <dt className="text-[0.64rem] font-semibold uppercase tracking-[0.14em] text-faint">
+                              <dt className="text-xs font-semibold uppercase tracking-[0.14em] text-faint">
                                 {k}
                               </dt>
-                              <dd className="mt-0.5 text-xs leading-relaxed text-muted">
+                              <dd className="mt-0.5 text-sm leading-relaxed text-muted">
                                 {v}
                               </dd>
                             </div>
                           ))}
                       </dl>
-                      <p className="mt-3 text-[0.66rem] text-faint">
+                      <p className="mt-3 text-xs text-faint">
                         {new Date(j.createdAt).toLocaleDateString(undefined, {
                           day: "numeric",
                           month: "short",

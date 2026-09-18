@@ -31,7 +31,7 @@ export default function BlueprintsPage() {
                     <span className="text-[0.95rem] font-medium">{bp.name}</span>
                     <Pill>{bp.category}</Pill>
                   </span>
-                  <span className="mt-1.5 block max-w-3xl text-xs leading-relaxed text-muted">
+                  <span className="mt-1.5 block max-w-3xl text-sm leading-relaxed text-muted">
                     {bp.problem}
                   </span>
                 </span>
@@ -47,25 +47,25 @@ export default function BlueprintsPage() {
                 <div className="border-t border-line-soft">
                   <div className="grid gap-px bg-line-soft sm:grid-cols-2">
                     <div className="bg-panel px-5 py-4">
-                      <p className="text-[0.66rem] font-semibold uppercase tracking-[0.14em] text-ok">
+                      <p className="text-xs font-semibold uppercase tracking-[0.14em] text-ok">
                         When to use
                       </p>
-                      <p className="mt-1.5 text-xs leading-relaxed text-muted">
+                      <p className="mt-1.5 text-sm leading-relaxed text-muted">
                         {bp.whenToUse}
                       </p>
                     </div>
                     <div className="bg-panel px-5 py-4">
-                      <p className="text-[0.66rem] font-semibold uppercase tracking-[0.14em] text-amber">
+                      <p className="text-xs font-semibold uppercase tracking-[0.14em] text-amber">
                         When not to
                       </p>
-                      <p className="mt-1.5 text-xs leading-relaxed text-muted">
+                      <p className="mt-1.5 text-sm leading-relaxed text-muted">
                         {bp.whenNotToUse}
                       </p>
                     </div>
                   </div>
 
                   <div className="border-t border-line-soft px-5 py-4">
-                    <p className="mb-3 text-[0.66rem] font-semibold uppercase tracking-[0.14em] text-faint">
+                    <p className="mb-3 text-xs font-semibold uppercase tracking-[0.14em] text-faint">
                       Data flow
                     </p>
                     <ol className="space-y-1.5">
@@ -81,14 +81,14 @@ export default function BlueprintsPage() {
                   </div>
 
                   <div className="border-t border-line-soft px-5 py-4">
-                    <p className="mb-3 text-[0.66rem] font-semibold uppercase tracking-[0.14em] text-faint">
+                    <p className="mb-3 text-xs font-semibold uppercase tracking-[0.14em] text-faint">
                       Components
                     </p>
                     <dl className="grid gap-3 sm:grid-cols-2">
                       {bp.components.map((c) => (
                         <div key={c.name}>
                           <dt className="text-xs font-medium">{c.name}</dt>
-                          <dd className="mt-0.5 text-xs leading-relaxed text-muted">
+                          <dd className="mt-0.5 text-sm leading-relaxed text-muted">
                             {c.role}
                           </dd>
                         </div>
@@ -98,24 +98,24 @@ export default function BlueprintsPage() {
 
                   <div className="grid gap-px border-t border-line-soft bg-line-soft sm:grid-cols-2">
                     <div className="bg-panel px-5 py-4">
-                      <p className="text-[0.66rem] font-semibold uppercase tracking-[0.14em] text-faint">
+                      <p className="text-xs font-semibold uppercase tracking-[0.14em] text-faint">
                         Tradeoffs
                       </p>
                       <ul className="mt-2 space-y-1.5">
                         {bp.tradeoffs.map((t) => (
-                          <li key={t} className="text-xs leading-relaxed text-muted">
+                          <li key={t} className="text-sm leading-relaxed text-muted">
                             · {t}
                           </li>
                         ))}
                       </ul>
                     </div>
                     <div className="bg-panel px-5 py-4">
-                      <p className="text-[0.66rem] font-semibold uppercase tracking-[0.14em] text-danger">
+                      <p className="text-xs font-semibold uppercase tracking-[0.14em] text-danger">
                         Failure points
                       </p>
                       <ul className="mt-2 space-y-1.5">
                         {bp.failurePoints.map((f) => (
-                          <li key={f} className="text-xs leading-relaxed text-muted">
+                          <li key={f} className="text-sm leading-relaxed text-muted">
                             · {f}
                           </li>
                         ))}
@@ -125,12 +125,12 @@ export default function BlueprintsPage() {
 
                   <div className="grid gap-px border-t border-line-soft bg-line-soft sm:grid-cols-2">
                     <div className="bg-panel px-5 py-4">
-                      <p className="text-[0.66rem] font-semibold uppercase tracking-[0.14em] text-faint">
+                      <p className="text-xs font-semibold uppercase tracking-[0.14em] text-faint">
                         How to evaluate it
                       </p>
                       <ul className="mt-2 space-y-1.5">
                         {bp.evaluation.map((e) => (
-                          <li key={e} className="text-xs leading-relaxed text-muted">
+                          <li key={e} className="text-sm leading-relaxed text-muted">
                             · {e}
                           </li>
                         ))}
@@ -138,12 +138,12 @@ export default function BlueprintsPage() {
                     </div>
                     {bp.security && (
                       <div className="bg-panel px-5 py-4">
-                        <p className="text-[0.66rem] font-semibold uppercase tracking-[0.14em] text-faint">
+                        <p className="text-xs font-semibold uppercase tracking-[0.14em] text-faint">
                           Security
                         </p>
                         <ul className="mt-2 space-y-1.5">
                           {bp.security.map((s) => (
-                            <li key={s} className="text-xs leading-relaxed text-muted">
+                            <li key={s} className="text-sm leading-relaxed text-muted">
                               · {s}
                             </li>
                           ))}

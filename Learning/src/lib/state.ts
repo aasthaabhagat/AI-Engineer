@@ -7,7 +7,7 @@ import {
 } from "./notifications";
 
 /** v2 added notification preferences and cue bookkeeping. */
-export const STATE_VERSION = 2;
+export const STATE_VERSION = 3;
 export const STORAGE_KEY = "ai-engineer-training-os";
 
 export interface Settings {
@@ -105,7 +105,7 @@ export const defaultSettings: Settings = {
   weekdayMinutes: 120,
   weekendMinutes: 240,
   studyDays: [0, 1, 2, 3, 4, 5, 6],
-  theme: "dark",
+  theme: "light",
 };
 
 /**
@@ -168,9 +168,18 @@ export function migrateState(raw: unknown): PersistedState {
   const isRecord = (v: unknown): v is Record<string, string> =>
     !!v && typeof v === "object" && !Array.isArray(v);
 
+  const settings = { ...base.settings, ...(input.settings ?? {}) };
+
+  // v3 changed the default theme from dark to light. Everyone who had used
+  // the app already had "dark" written to storage by the first save, so the
+  // new default would never be seen. Adopt it once, on the way to v3; after
+  // that the theme is the user's own choice and is never touched again.
+  const fromVersion = typeof input.version === "number" ? input.version : 0;
+  if (fromVersion < 3) settings.theme = base.settings.theme;
+
   return {
     version: STATE_VERSION,
-    settings: { ...base.settings, ...(input.settings ?? {}) },
+    settings,
     // v1 state has no notifications key; normalizePrefs supplies safe defaults
     // (notifications and sound both OFF) rather than assuming consent.
     notifications: normalizePrefs(input.notifications),

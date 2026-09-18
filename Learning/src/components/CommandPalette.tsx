@@ -168,14 +168,14 @@ export function CommandPalette() {
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-start justify-center bg-black/60 px-4 pt-[12vh] backdrop-blur-sm"
+      className="fixed inset-0 z-50 flex items-start justify-center bg-ink/25 px-4 pt-[12vh] backdrop-blur-sm"
       onClick={() => setOpen(false)}
       role="dialog"
       aria-modal="true"
       aria-label="Command palette"
     >
       <div
-        className="w-full max-w-xl overflow-hidden rounded-xl border border-line bg-panel shadow-2xl"
+        className="w-full max-w-xl overflow-hidden rounded-xl border border-line bg-panel shadow-pop"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center gap-2.5 border-b border-line-soft px-4">
@@ -221,7 +221,7 @@ export function CommandPalette() {
                 }`}
               >
                 <span className="truncate">{item.label}</span>
-                <span className="shrink-0 text-[0.68rem] uppercase tracking-wider text-faint">
+                <span className="shrink-0 text-xs uppercase tracking-wider text-faint">
                   {item.hint ?? item.group}
                 </span>
               </button>

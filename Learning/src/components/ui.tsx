@@ -17,7 +17,7 @@ export function Card({
   return (
     <Tag
       id={id}
-      className={`scroll-mt-6 rounded-xl border border-line bg-panel ${className}`}
+      className={`scroll-mt-6 rounded-xl border border-line bg-panel shadow-card ${className}`}
     >
       {children}
     </Tag>
@@ -36,7 +36,7 @@ export function CardHeader({
   return (
     <div className="flex items-start justify-between gap-4 border-b border-line-soft px-5 py-3.5">
       <div>
-        <h2 className="text-[0.7rem] font-semibold uppercase tracking-[0.14em] text-faint">
+        <h2 className="text-xs font-semibold uppercase tracking-[0.14em] text-faint">
           {title}
         </h2>
         {hint && <p className="mt-1 text-xs text-muted">{hint}</p>}
@@ -61,7 +61,7 @@ export function PageHeader({
     <header className="mb-8 flex flex-wrap items-end justify-between gap-4">
       <div>
         {eyebrow && (
-          <p className="mb-1.5 text-[0.7rem] font-semibold uppercase tracking-[0.18em] text-accent">
+          <p className="mb-1.5 text-xs font-semibold uppercase tracking-[0.18em] text-accent">
             {eyebrow}
           </p>
         )}
@@ -118,7 +118,7 @@ export function Stat({
 }) {
   return (
     <div className="px-5 py-4">
-      <p className="text-[0.68rem] font-semibold uppercase tracking-[0.14em] text-faint">
+      <p className="text-xs font-semibold uppercase tracking-[0.14em] text-faint">
         {label}
       </p>
       <p className="mt-1.5 text-xl font-semibold tabular-nums tracking-tight">
@@ -138,7 +138,7 @@ const PRIORITY_STYLE: Record<Priority, string> = {
 export function PriorityTag({ priority }: { priority: Priority }) {
   return (
     <span
-      className={`rounded border px-1.5 py-0.5 text-[0.62rem] font-semibold uppercase tracking-wider ${PRIORITY_STYLE[priority]}`}
+      className={`rounded border px-1.5 py-0.5 text-xs font-semibold uppercase tracking-wider ${PRIORITY_STYLE[priority]}`}
     >
       {priority}
     </span>
@@ -167,7 +167,7 @@ export function TrackBadge({ track }: { track: Track }) {
     career: "Career",
   }[track];
   return (
-    <span className="inline-flex items-center gap-1.5 text-[0.68rem] font-medium uppercase tracking-wider text-muted">
+    <span className="inline-flex items-center gap-1.5 text-xs font-medium uppercase tracking-wider text-muted">
       <span className={`h-1.5 w-1.5 rounded-full ${TRACK_DOT[track]}`} />
       {label}
     </span>
@@ -188,7 +188,7 @@ const MATURITY_STYLE: Record<Maturity, string> = {
 export function MaturityBadge({ maturity }: { maturity: Maturity }) {
   return (
     <span
-      className={`rounded border px-2 py-0.5 text-[0.65rem] font-semibold uppercase tracking-wider ${MATURITY_STYLE[maturity]}`}
+      className={`rounded border px-2 py-0.5 text-xs font-semibold uppercase tracking-wider ${MATURITY_STYLE[maturity]}`}
     >
       {MATURITY_LABEL[maturity]}
     </span>
@@ -219,7 +219,7 @@ export function Pill({
 
 export function RepoPath({ path }: { path: string }) {
   return (
-    <code className="rounded bg-raised px-1.5 py-0.5 font-mono text-[0.72rem] text-teal">
+    <code className="rounded bg-raised px-1.5 py-0.5 font-mono text-xs text-teal">
       {path}
     </code>
   );
@@ -235,7 +235,7 @@ export function EmptyState({
   return (
     <div className="px-5 py-10 text-center">
       <p className="text-sm font-medium">{title}</p>
-      <p className="mx-auto mt-1.5 max-w-sm text-xs leading-relaxed text-muted">
+      <p className="mx-auto mt-1.5 max-w-sm text-sm leading-relaxed text-muted">
         {description}
       </p>
     </div>
@@ -259,9 +259,9 @@ export function Button({
 }) {
   const style = {
     primary:
-      "bg-accent text-[#0a0b0e] hover:brightness-110 disabled:opacity-40",
+      "bg-accent text-on-accent shadow-card hover:brightness-110 active:translate-y-px disabled:opacity-40 disabled:shadow-none",
     ghost:
-      "border border-line bg-raised text-ink hover:border-accent/50 disabled:opacity-40",
+      "border border-line bg-panel text-ink hover:border-accent/50 hover:bg-raised active:translate-y-px disabled:opacity-40",
     danger:
       "border border-danger/40 bg-transparent text-danger hover:bg-danger/10",
   }[variant];

@@ -21,7 +21,7 @@ export default function DayPage({
       <Card>
         <div className="px-5 py-12 text-center">
           <p className="text-sm font-medium">Day {dayNumber} is not authored yet.</p>
-          <p className="mx-auto mt-2 max-w-md text-xs leading-relaxed text-muted">
+          <p className="mx-auto mt-2 max-w-md text-sm leading-relaxed text-muted">
             Days exist for phases 1 and 2. Later phases are outlined on the
             roadmap and get written as you approach them.
           </p>

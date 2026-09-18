@@ -83,7 +83,7 @@ export default function ProjectsPage() {
                   </div>
 
                   <label className="text-xs">
-                    <span className="mb-1 block text-[0.66rem] uppercase tracking-wider text-faint">
+                    <span className="mb-1 block text-xs uppercase tracking-wider text-faint">
                       Status
                     </span>
                     <select
@@ -104,18 +104,18 @@ export default function ProjectsPage() {
 
                 <div className="mt-4 grid gap-4 sm:grid-cols-2">
                   <div>
-                    <p className="text-[0.66rem] font-semibold uppercase tracking-[0.14em] text-faint">
+                    <p className="text-xs font-semibold uppercase tracking-[0.14em] text-faint">
                       Problem
                     </p>
-                    <p className="mt-1 text-xs leading-relaxed text-muted">
+                    <p className="mt-1 text-sm leading-relaxed text-muted">
                       {project.problem}
                     </p>
                   </div>
                   <div>
-                    <p className="text-[0.66rem] font-semibold uppercase tracking-[0.14em] text-faint">
+                    <p className="text-xs font-semibold uppercase tracking-[0.14em] text-faint">
                       Target user
                     </p>
-                    <p className="mt-1 text-xs leading-relaxed text-muted">
+                    <p className="mt-1 text-sm leading-relaxed text-muted">
                       {project.targetUser}
                     </p>
                   </div>
@@ -123,10 +123,10 @@ export default function ProjectsPage() {
 
                 {project.aiComponent && (
                   <div className="mt-4">
-                    <p className="text-[0.66rem] font-semibold uppercase tracking-[0.14em] text-faint">
+                    <p className="text-xs font-semibold uppercase tracking-[0.14em] text-faint">
                       AI component
                     </p>
-                    <p className="mt-1 text-xs leading-relaxed text-muted">
+                    <p className="mt-1 text-sm leading-relaxed text-muted">
                       {project.aiComponent}
                     </p>
                   </div>
@@ -145,7 +145,7 @@ export default function ProjectsPage() {
                   <CardHeader title="Milestones" />
                   <div className="px-5 pb-4 pt-3">
                     <ProgressBar value={ratio} />
-                    <p className="mt-1.5 text-[0.68rem] text-faint">
+                    <p className="mt-1.5 text-xs text-faint">
                       {doneMilestones.length}/{project.milestones.length} complete
                     </p>
                     <ul className="mt-3 space-y-2">
@@ -169,7 +169,7 @@ export default function ProjectsPage() {
                                 {m.title}
                               </span>
                               {m.detail && (
-                                <span className="block text-[0.68rem] text-faint">
+                                <span className="block text-xs text-faint">
                                   {m.detail}
                                 </span>
                               )}
@@ -199,7 +199,7 @@ export default function ProjectsPage() {
 
                     <div className="space-y-2">
                       <label className="block">
-                        <span className="text-[0.66rem] uppercase tracking-wider text-faint">
+                        <span className="text-xs uppercase tracking-wider text-faint">
                           GitHub URL
                         </span>
                         <input
@@ -212,7 +212,7 @@ export default function ProjectsPage() {
                         />
                       </label>
                       <label className="block">
-                        <span className="text-[0.66rem] uppercase tracking-wider text-faint">
+                        <span className="text-xs uppercase tracking-wider text-faint">
                           Deployment URL
                         </span>
                         <input
@@ -243,7 +243,7 @@ export default function ProjectsPage() {
                       </li>
                     ))}
                   </ul>
-                  <p className="mt-3 text-[0.68rem] leading-relaxed text-faint">
+                  <p className="mt-3 text-sm leading-relaxed text-faint">
                     Track these per project when you get there — a running system
                     is the beginning of portfolio readiness, not the end.
                   </p>

@@ -12,7 +12,11 @@ import {
   type NotificationPrefs,
   type ReviewKind,
 } from "@/lib/notifications";
-import { createInitialState, migrateState } from "@/lib/state";
+import {
+  STATE_VERSION,
+  createInitialState,
+  migrateState,
+} from "@/lib/state";
 
 const prefs = (patch: Partial<NotificationPrefs> = {}): NotificationPrefs => ({
   ...defaultNotificationPrefs,
@@ -173,7 +177,7 @@ describe("formatDuration", () => {
   });
 });
 
-describe("state migration to v2", () => {
+describe("state migration", () => {
   it("gives v1 state notification defaults without enabling anything", () => {
     const v1 = {
       version: 1,
@@ -181,13 +185,33 @@ describe("state migration to v2", () => {
       completedTasks: { "d01-t1": "2026-01-01T00:00:00.000Z" },
     };
     const migrated = migrateState(v1);
-    expect(migrated.version).toBe(2);
+    expect(migrated.version).toBe(STATE_VERSION);
     expect(migrated.notifications.enabled).toBe(false);
     expect(migrated.notifications.sound).toBe(false);
     expect(migrated.cues).toEqual({});
     // Existing progress survives the migration.
     expect(migrated.completedTasks["d01-t1"]).toBeDefined();
     expect(migrated.settings.weekdayMinutes).toBe(90);
+  });
+
+  it("adopts the new default theme once, when coming from before v3", () => {
+    // Everyone who used v1 or v2 had "dark" written to storage by the first
+    // save, so the new light default would otherwise never be seen.
+    const migrated = migrateState({
+      version: 2,
+      settings: { theme: "dark", weekdayMinutes: 120 },
+    });
+    expect(migrated.settings.theme).toBe("light");
+    // Everything else about the settings survives.
+    expect(migrated.settings.weekdayMinutes).toBe(120);
+  });
+
+  it("never overrides a theme chosen at v3 or later", () => {
+    const migrated = migrateState({
+      version: STATE_VERSION,
+      settings: { theme: "dark" },
+    });
+    expect(migrated.settings.theme).toBe("dark");
   });
 
   it("repairs a corrupt cue log rather than crashing", () => {

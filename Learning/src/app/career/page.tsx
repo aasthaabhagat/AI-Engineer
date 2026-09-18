@@ -77,7 +77,7 @@ export default function CareerPage() {
             </p>
           </div>
           <ProgressBar value={overallRatio} className="mt-3" />
-          <p className="mt-3 max-w-3xl text-xs leading-relaxed text-muted">
+          <p className="mt-3 max-w-3xl text-sm leading-relaxed text-muted">
             This is a measure of evidence recorded, not of talent or potential.
             Early in the year it should be low — if it were high, the ladder
             would be measuring the wrong things.
@@ -92,7 +92,7 @@ export default function CareerPage() {
 
           return (
             <section key={group}>
-              <h2 className="mb-3 text-[0.7rem] font-semibold uppercase tracking-[0.16em] text-faint">
+              <h2 className="mb-3 text-xs font-semibold uppercase tracking-[0.16em] text-faint">
                 {group}
               </h2>
               <div className="space-y-2">
@@ -125,12 +125,12 @@ export default function CareerPage() {
                             <span className="text-sm font-medium">{area.name}</span>
                             <MaturityBadge maturity={maturity} />
                             {weakest && maturity !== "strong" && (
-                              <span className="text-[0.66rem] text-faint">
+                              <span className="text-xs text-faint">
                                 limited by {weakest}
                               </span>
                             )}
                           </span>
-                          <span className="mt-1.5 block max-w-2xl text-xs leading-relaxed text-muted">
+                          <span className="mt-1.5 block max-w-2xl text-sm leading-relaxed text-muted">
                             {area.expected}
                           </span>
                           <span className="mt-2.5 block max-w-xs">
@@ -149,24 +149,24 @@ export default function CareerPage() {
                         <div className="border-t border-line-soft">
                           <div className="grid gap-px bg-line-soft sm:grid-cols-2">
                             <div className="bg-panel px-5 py-4">
-                              <p className="text-[0.66rem] font-semibold uppercase tracking-[0.14em] text-faint">
+                              <p className="text-xs font-semibold uppercase tracking-[0.14em] text-faint">
                                 What proves it
                               </p>
                               <ul className="mt-2 space-y-1.5">
                                 {area.provenBy.map((p) => (
-                                  <li key={p} className="text-xs leading-relaxed text-muted">
+                                  <li key={p} className="text-sm leading-relaxed text-muted">
                                     · {p}
                                   </li>
                                 ))}
                               </ul>
                             </div>
                             <div className="bg-panel px-5 py-4">
-                              <p className="text-[0.66rem] font-semibold uppercase tracking-[0.14em] text-faint">
+                              <p className="text-xs font-semibold uppercase tracking-[0.14em] text-faint">
                                 You will be asked
                               </p>
                               <ul className="mt-2 space-y-1.5">
                                 {area.probes.map((p) => (
-                                  <li key={p} className="text-xs leading-relaxed text-muted">
+                                  <li key={p} className="text-sm leading-relaxed text-muted">
                                     · {p}
                                   </li>
                                 ))}
@@ -176,7 +176,7 @@ export default function CareerPage() {
 
                           {gaps.length > 0 && (
                             <div className="border-t border-line-soft px-5 py-4">
-                              <p className="text-[0.66rem] font-semibold uppercase tracking-[0.14em] text-faint">
+                              <p className="text-xs font-semibold uppercase tracking-[0.14em] text-faint">
                                 Missing evidence
                               </p>
                               <ul className="mt-2 space-y-1.5">

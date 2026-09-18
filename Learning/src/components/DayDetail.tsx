@@ -200,7 +200,7 @@ export function DayDetail({ day, focusOnLoad = false }: { day: Day; focusOnLoad?
                       .
                     </p>
                     {record?.reflection && (
-                      <p className="rounded-lg border border-line bg-raised px-3 py-2.5 text-xs leading-relaxed text-muted">
+                      <p className="rounded-lg border border-line bg-raised px-3 py-2.5 text-sm leading-relaxed text-muted">
                         {record.reflection}
                       </p>
                     )}
@@ -213,7 +213,7 @@ export function DayDetail({ day, focusOnLoad = false }: { day: Day; focusOnLoad?
                 ) : (
                   <>
                     <label className="block">
-                      <span className="text-[0.68rem] font-semibold uppercase tracking-[0.14em] text-faint">
+                      <span className="text-xs font-semibold uppercase tracking-[0.14em] text-faint">
                         Evidence produced
                       </span>
                       <input
@@ -224,7 +224,7 @@ export function DayDetail({ day, focusOnLoad = false }: { day: Day; focusOnLoad?
                       />
                     </label>
                     <label className="block">
-                      <span className="text-[0.68rem] font-semibold uppercase tracking-[0.14em] text-faint">
+                      <span className="text-xs font-semibold uppercase tracking-[0.14em] text-faint">
                         Reflection
                       </span>
                       <textarea
@@ -252,7 +252,7 @@ export function DayDetail({ day, focusOnLoad = false }: { day: Day; focusOnLoad?
                     >
                       Mark day complete
                     </Button>
-                    <p className="text-[0.68rem] leading-relaxed text-faint">
+                    <p className="text-sm leading-relaxed text-faint">
                       This marks the essential tasks and the day&apos;s declared skill
                       evidence as done. Only do it if that is actually true.
                     </p>

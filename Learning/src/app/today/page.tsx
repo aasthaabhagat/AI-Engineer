@@ -25,7 +25,7 @@ function TodayContent() {
           <p className="text-sm font-medium">
             Nothing scheduled — you have completed all {authoredThrough} authored days.
           </p>
-          <p className="mx-auto mt-2 max-w-md text-xs leading-relaxed text-muted">
+          <p className="mx-auto mt-2 max-w-md text-sm leading-relaxed text-muted">
             The next phase gets authored when you reach it, so it can reflect
             what you have actually built. Run a capability audit first.
           </p>

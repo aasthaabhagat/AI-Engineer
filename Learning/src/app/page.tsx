@@ -74,7 +74,7 @@ export default function DashboardPage() {
     <div className="space-y-6">
       <header className="flex flex-wrap items-end justify-between gap-4">
         <div>
-          <p className="text-[0.7rem] font-semibold uppercase tracking-[0.2em] text-accent">
+          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-accent">
             AI Engineer Training System
           </p>
           <h1 className="mt-1.5 text-2xl font-semibold tracking-tight sm:text-3xl">
@@ -98,7 +98,7 @@ export default function DashboardPage() {
         {today && (
           <Link
             href="/today"
-            className="inline-flex items-center gap-2 rounded-lg bg-accent px-4 py-2.5 text-sm font-medium text-[#0a0b0e] transition hover:brightness-110"
+            className="inline-flex items-center gap-2 rounded-lg bg-accent px-4 py-2.5 text-sm font-medium text-on-accent transition hover:brightness-110"
           >
             Start day {today.dayNumber} <ArrowRight size={15} />
           </Link>
@@ -110,7 +110,7 @@ export default function DashboardPage() {
           <TriangleAlert size={17} className="mt-0.5 shrink-0 text-amber" />
           <div>
             <p className="text-sm font-medium text-amber">Recovery mode</p>
-            <p className="mt-1 text-xs leading-relaxed text-muted">{status.message}</p>
+            <p className="mt-1 text-sm leading-relaxed text-muted">{status.message}</p>
           </div>
         </div>
       )}
@@ -199,7 +199,7 @@ export default function DashboardPage() {
                 <CardHeader title="Current project" />
                 <div className="px-5 py-4">
                   <p className="text-sm font-medium">{project.name}</p>
-                  <p className="mt-1.5 text-xs leading-relaxed text-muted">
+                  <p className="mt-1.5 text-sm leading-relaxed text-muted">
                     {project.description}
                   </p>
                   {project.repoPath && (
@@ -226,7 +226,7 @@ export default function DashboardPage() {
                         <MaturityBadge maturity={maturity} />
                       </div>
                       <ProgressBar value={done / total} className="mt-2" />
-                      <p className="mt-1.5 text-[0.68rem] text-faint">
+                      <p className="mt-1.5 text-xs text-faint">
                         {done}/{total} evidence
                       </p>
                     </li>
@@ -244,7 +244,7 @@ export default function DashboardPage() {
                       href={`/day/${d.dayNumber}`}
                       className="block px-5 py-3 transition hover:bg-raised"
                     >
-                      <p className="text-[0.68rem] uppercase tracking-wider text-faint">
+                      <p className="text-xs uppercase tracking-wider text-faint">
                         Day {d.dayNumber}
                       </p>
                       <p className="mt-0.5 text-sm">{d.title}</p>
@@ -261,7 +261,7 @@ export default function DashboardPage() {
             <p className="text-sm font-medium">
               Every authored day is complete. Day {authoredThrough} was the last one.
             </p>
-            <p className="mx-auto mt-2 max-w-md text-xs leading-relaxed text-muted">
+            <p className="mx-auto mt-2 max-w-md text-sm leading-relaxed text-muted">
               Phases 3 onward are outlined but not yet written day by day — by
               design, so they can match the pace and the code you actually have.
               Run a quarterly capability audit, then author the next phase.
