@@ -387,6 +387,9 @@ config or dependency exists. `npm run check` runs typecheck + test + build.
 - State v3 adopts the light default once for anyone whose saved state predates
   it, because the first save had already written "dark" to storage. After v3
   the theme is the user's own and is never overridden.
+- `npm run build` writes to the same `.next` folder `npm run dev` uses, so
+  building while the owner's dev server is running leaves it returning 500 on
+  every page. Afterwards, stop the dev server, delete `.next` and restart it.
 - Deleting routes leaves stale files in `.next/types`, which make
   `tsc --noEmit` fail. Delete `.next` and rebuild.
 - After many file edits the dev server can throw
