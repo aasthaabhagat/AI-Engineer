@@ -1,28 +1,19 @@
 import type { Phase } from "./types";
 
 /**
- * The 24-phase curriculum.
+ * The 24-phase curriculum: phases, and the study topics (modules) inside each.
  *
- * Phases are NOT a waterfall. Order is the suggested centre of gravity, but the
- * four tracks run in parallel: production and career work start early (CI in
- * Phase 2) and keep growing, rather than being saved for the final months.
- *
- * authoring: "detailed" phases have day-by-day missions in /src/data/days.
- * "outline" phases are authored on approach so they adapt to real pace.
+ * authoring: "detailed" phases have daily tasks in /src/data/days.
+ * "outline" phases get daily tasks written on approach so they adapt to real pace.
  */
 export const phases: Phase[] = [
   {
     id: "p01-python",
     order: 1,
     title: "Python Engineering Foundations",
-    track: "software",
     summary:
       "Move from writing scripts that work to writing Python another engineer would accept: modules, error handling, types, tests, logging and project structure.",
-    estimatedDays: 34,
-    dependsOn: [],
     authoring: "detailed",
-    milestone:
-      "Expense Tracker becomes a tested, typed, logged, installable CLI package with a real README.",
     modules: [
       {
         id: "m-py-files",
@@ -35,7 +26,6 @@ export const phases: Phase[] = [
           "Distinguish missing file, empty file and corrupt file, and handle each differently",
           "Write data without risking loss on a partial write",
         ],
-        skills: ["python-core", "python-errors"],
       },
       {
         id: "m-py-structure",
@@ -48,7 +38,6 @@ export const phases: Phase[] = [
           "Understand imports, __init__.py and why __pycache__ exists",
           "Explain why a function belongs in one module and not another",
         ],
-        skills: ["python-core", "code-architecture"],
       },
       {
         id: "m-py-errors",
@@ -61,7 +50,6 @@ export const phases: Phase[] = [
           "Write and raise custom exception types",
           "Explain why a bare except is a bug",
         ],
-        skills: ["python-errors", "reliability"],
       },
       {
         id: "m-py-datamodel",
@@ -74,7 +62,6 @@ export const phases: Phase[] = [
           "Use type hints a checker can verify",
           "Implement the magic methods that make objects behave naturally",
         ],
-        skills: ["python-oop", "python-typing"],
       },
       {
         id: "m-py-testing",
@@ -87,7 +74,6 @@ export const phases: Phase[] = [
           "Use fixtures and tmp_path to test file I/O safely",
           "Explain what your tests do not cover",
         ],
-        skills: ["python-testing"],
       },
       {
         id: "m-py-craft",
@@ -100,7 +86,6 @@ export const phases: Phase[] = [
           "Replace print debugging with real logging",
           "Read configuration from environment variables, not hard-coded constants",
         ],
-        skills: ["python-core", "cli-apps", "observability"],
       },
       {
         id: "m-py-advanced",
@@ -113,7 +98,6 @@ export const phases: Phase[] = [
           "Write a decorator that adds retry or timing behaviour",
           "Write a context manager that guarantees cleanup",
         ],
-        skills: ["python-core", "python-advanced"],
       },
     ],
   },
@@ -121,14 +105,9 @@ export const phases: Phase[] = [
     id: "p02-git",
     order: 2,
     title: "Git, GitHub and Developer Workflow",
-    track: "software",
     summary:
       "Git as a daily engineering practice: branches, pull requests, review, conflict resolution and a history someone else can read. Ends with your first CI pipeline.",
-    estimatedDays: 12,
-    dependsOn: ["p01-python"],
     authoring: "detailed",
-    milestone:
-      "A feature shipped through a branch and a self-reviewed pull request, with CI running your tests on every push.",
     modules: [
       {
         id: "m-git-core",
@@ -141,7 +120,6 @@ export const phases: Phase[] = [
           "Write commit messages that explain why, not what",
           "Recover from common mistakes without panic",
         ],
-        skills: ["git"],
       },
       {
         id: "m-git-branching",
@@ -154,7 +132,6 @@ export const phases: Phase[] = [
           "Resolve a merge conflict deliberately",
           "Explain merge vs rebase and when each is appropriate",
         ],
-        skills: ["git"],
       },
       {
         id: "m-git-collab",
@@ -167,7 +144,6 @@ export const phases: Phase[] = [
           "Review your own diff critically before merging",
           "Track work with issues instead of memory",
         ],
-        skills: ["git", "code-review"],
       },
       {
         id: "m-git-ci",
@@ -180,7 +156,6 @@ export const phases: Phase[] = [
           "Run lint and pytest automatically on push",
           "Read a failing CI log and fix the cause",
         ],
-        skills: ["github-actions", "cicd", "python-testing"],
       },
     ],
   },
@@ -188,14 +163,9 @@ export const phases: Phase[] = [
     id: "p03-cs",
     order: 3,
     title: "Computer Science Foundations",
-    track: "software",
     summary:
       "Data structures, algorithms and complexity, practised continuously rather than crammed. Plus the OS and networking concepts production work assumes.",
-    estimatedDays: 40,
-    dependsOn: ["p01-python"],
     authoring: "outline",
-    milestone:
-      "A sustained DSA practice habit, plus the ability to reason about the cost of your own code.",
     modules: [
       {
         id: "m-cs-complexity",
@@ -206,7 +176,6 @@ export const phases: Phase[] = [
           "State the time and space cost of code you wrote",
           "Choose the structure that makes the hot operation cheap",
         ],
-        skills: ["dsa"],
       },
       {
         id: "m-cs-algorithms",
@@ -218,7 +187,6 @@ export const phases: Phase[] = [
           "Implement traversal and search from scratch",
           "Recognise which family a new problem belongs to",
         ],
-        skills: ["dsa"],
       },
       {
         id: "m-cs-systems",
@@ -229,7 +197,6 @@ export const phases: Phase[] = [
           "Explain concurrency vs parallelism and the GIL's real effect",
           "Choose threads, processes or async for a given workload",
         ],
-        skills: ["cs-systems", "python-async"],
       },
       {
         id: "m-cs-network",
@@ -240,7 +207,6 @@ export const phases: Phase[] = [
           "Trace an HTTP request end to end",
           "Read status codes, headers and payloads fluently",
         ],
-        skills: ["cs-networking", "api-design"],
       },
       {
         id: "m-cs-design",
@@ -251,7 +217,6 @@ export const phases: Phase[] = [
           "Identify which principle a painful refactor violated",
           "Apply a pattern because it fits, not to look sophisticated",
         ],
-        skills: ["code-architecture"],
       },
     ],
   },
@@ -259,14 +224,9 @@ export const phases: Phase[] = [
     id: "p04-math",
     order: 4,
     title: "Mathematics and Statistics for AI",
-    track: "ai",
     summary:
       "Linear algebra, probability, statistics and calculus taught against real ML code, so the maths explains model behaviour instead of sitting beside it.",
-    estimatedDays: 30,
-    dependsOn: ["p01-python"],
     authoring: "outline",
-    milestone:
-      "Able to explain gradient descent, a covariance matrix and a p-value in terms of code you have run.",
     modules: [
       {
         id: "m-math-linalg",
@@ -277,7 +237,6 @@ export const phases: Phase[] = [
           "Express a model's forward pass as matrix operations",
           "Explain what an embedding's dimensions mean geometrically",
         ],
-        skills: ["math-linalg", "numpy"],
       },
       {
         id: "m-math-prob",
@@ -289,7 +248,6 @@ export const phases: Phase[] = [
           "Reason about a classifier's confidence honestly",
           "Apply Bayes to a real base-rate problem",
         ],
-        skills: ["math-prob"],
       },
       {
         id: "m-math-stats",
@@ -301,7 +259,6 @@ export const phases: Phase[] = [
           "Say whether a measured improvement is real",
           "Avoid concluding causation from correlation in your own analysis",
         ],
-        skills: ["math-stats"],
       },
       {
         id: "m-math-calc",
@@ -312,7 +269,6 @@ export const phases: Phase[] = [
           "Derive backpropagation for a tiny network by hand",
           "Explain why a learning rate can diverge",
         ],
-        skills: ["math-calc"],
       },
     ],
   },
@@ -320,14 +276,9 @@ export const phases: Phase[] = [
     id: "p05-data",
     order: 5,
     title: "Data Engineering Basics: NumPy, Pandas, SQL",
-    track: "software",
     summary:
       "Getting data in, cleaning it, and querying it properly. The unglamorous work most AI failures trace back to.",
-    estimatedDays: 28,
-    dependsOn: ["p01-python"],
     authoring: "outline",
-    milestone:
-      "Expense Tracker's JSON store replaced by PostgreSQL, with analysis done in SQL and pandas.",
     modules: [
       {
         id: "m-data-numpy",
@@ -338,7 +289,6 @@ export const phases: Phase[] = [
           "Replace loops with vectorised operations",
           "Debug a shape mismatch confidently",
         ],
-        skills: ["numpy", "math-linalg"],
       },
       {
         id: "m-data-pandas",
@@ -350,7 +300,6 @@ export const phases: Phase[] = [
           "Handle missing and malformed values on purpose",
           "Explain what a groupby actually computed",
         ],
-        skills: ["pandas"],
       },
       {
         id: "m-data-sql",
@@ -361,7 +310,6 @@ export const phases: Phase[] = [
           "Design a normalised schema for a real application",
           "Explain why a query is slow and fix it with an index",
         ],
-        skills: ["sql", "postgres"],
       },
     ],
   },
@@ -369,14 +317,9 @@ export const phases: Phase[] = [
     id: "p06-ml",
     order: 6,
     title: "Classical Machine Learning",
-    track: "ai",
     summary:
       "Supervised and unsupervised learning with honest evaluation. The judgement to say when ML is the wrong tool starts here.",
-    estimatedDays: 40,
-    dependsOn: ["p05-data", "p04-math"],
     authoring: "outline",
-    milestone:
-      "An end-to-end ML project with a defensible metric choice, a leakage check, and a written explanation of why the model is appropriate.",
     modules: [
       {
         id: "m-ml-prep",
@@ -385,7 +328,6 @@ export const phases: Phase[] = [
         description:
           "Missing values, encoding, scaling, splits, cross-validation.",
         outcomes: ["Build a leak-free pipeline", "Justify every transformation"],
-        skills: ["ml-core"],
       },
       {
         id: "m-ml-supervised",
@@ -397,7 +339,6 @@ export const phases: Phase[] = [
           "Pick a model family for a reason",
           "Tune hyperparameters without fooling yourself",
         ],
-        skills: ["ml-core"],
       },
       {
         id: "m-ml-unsupervised",
@@ -408,7 +349,6 @@ export const phases: Phase[] = [
           "Evaluate clusters without labels",
           "Use PCA without treating it as magic",
         ],
-        skills: ["ml-core", "math-linalg"],
       },
       {
         id: "m-ml-eval",
@@ -420,7 +360,6 @@ export const phases: Phase[] = [
           "Choose a metric from the cost of each error type",
           "Detect data leakage before it reaches production",
         ],
-        skills: ["ml-eval"],
       },
     ],
   },
@@ -428,14 +367,9 @@ export const phases: Phase[] = [
     id: "p07-dl",
     order: 7,
     title: "Deep Learning and PyTorch",
-    track: "ai",
     summary:
       "Neural networks understood from the gradient up, then built properly with PyTorch.",
-    estimatedDays: 35,
-    dependsOn: ["p06-ml"],
     authoring: "outline",
-    milestone:
-      "A network implemented from scratch once, then a trained PyTorch model with checkpoints and a validation curve you can interpret.",
     modules: [
       {
         id: "m-dl-fundamentals",
@@ -447,7 +381,6 @@ export const phases: Phase[] = [
           "Implement backprop without a framework once",
           "Explain a dead or exploding gradient",
         ],
-        skills: ["dl-core", "math-calc"],
       },
       {
         id: "m-dl-pytorch",
@@ -459,7 +392,6 @@ export const phases: Phase[] = [
           "Write a training loop from memory",
           "Diagnose overfitting from the curves",
         ],
-        skills: ["pytorch"],
       },
       {
         id: "m-dl-arch",
@@ -471,7 +403,6 @@ export const phases: Phase[] = [
           "Fine-tune rather than train from zero",
           "Explain why attention replaced recurrence",
         ],
-        skills: ["dl-core", "pytorch"],
       },
     ],
   },
@@ -479,13 +410,9 @@ export const phases: Phase[] = [
     id: "p08-cv",
     order: 8,
     title: "Computer Vision",
-    track: "ai",
     summary:
       "Image data, convolutional models, transfer learning and vision-language models. Kept proportionate: deep enough to build, not a specialisation.",
-    estimatedDays: 18,
-    dependsOn: ["p07-dl"],
     authoring: "outline",
-    milestone: "An image task solved with transfer learning and evaluated honestly.",
     modules: [
       {
         id: "m-cv-core",
@@ -493,7 +420,6 @@ export const phases: Phase[] = [
         title: "Image Pipelines and CNNs",
         description: "Loading, augmentation, training, evaluation.",
         outcomes: ["Build an image classifier that generalises"],
-        skills: ["cv", "pytorch"],
       },
       {
         id: "m-cv-modern",
@@ -504,7 +430,6 @@ export const phases: Phase[] = [
         outcomes: [
           "Choose between a small fine-tuned model and a large multimodal one",
         ],
-        skills: ["cv", "llm-eng"],
       },
     ],
   },
@@ -512,14 +437,9 @@ export const phases: Phase[] = [
     id: "p09-nlp",
     order: 9,
     title: "Natural Language Processing",
-    track: "ai",
     summary:
       "Text as data: tokenisation, classical representations, embeddings and sequence modelling — the ground LLMs stand on.",
-    estimatedDays: 22,
-    dependsOn: ["p07-dl"],
     authoring: "outline",
-    milestone:
-      "A text classification system built twice — once with TF-IDF, once with embeddings — with the tradeoff written up.",
     modules: [
       {
         id: "m-nlp-classical",
@@ -529,7 +449,6 @@ export const phases: Phase[] = [
         outcomes: [
           "Beat an LLM on cost and latency for a simple classification task",
         ],
-        skills: ["nlp"],
       },
       {
         id: "m-nlp-embeddings",
@@ -540,7 +459,6 @@ export const phases: Phase[] = [
         outcomes: [
           "Explain what cosine similarity does and does not capture",
         ],
-        skills: ["nlp", "embeddings"],
       },
       {
         id: "m-nlp-hf",
@@ -548,7 +466,6 @@ export const phases: Phase[] = [
         title: "Hugging Face and Pretrained Models",
         description: "Using, fine-tuning and evaluating encoder models.",
         outcomes: ["Fine-tune a BERT-style model for a real task"],
-        skills: ["nlp", "transformers"],
       },
     ],
   },
@@ -556,14 +473,9 @@ export const phases: Phase[] = [
     id: "p10-transformers",
     order: 10,
     title: "Transformers",
-    track: "ai",
     summary:
       "Attention, self-attention, positional information and the full architecture — implemented small before being used large.",
-    estimatedDays: 18,
-    dependsOn: ["p09-nlp"],
     authoring: "outline",
-    milestone:
-      "Self-attention implemented from scratch, and the ability to explain a context window's cost in terms of the maths.",
     modules: [
       {
         id: "m-tf-attention",
@@ -575,7 +487,6 @@ export const phases: Phase[] = [
           "Implement scaled dot-product attention",
           "Explain quadratic cost in context length",
         ],
-        skills: ["transformers", "math-linalg"],
       },
       {
         id: "m-tf-arch",
@@ -583,7 +494,6 @@ export const phases: Phase[] = [
         title: "Architecture and Inference",
         description: "Encoder, decoder, tokenisation, sampling, KV cache.",
         outcomes: ["Explain what temperature and top-p actually change"],
-        skills: ["transformers", "llm-eng"],
       },
     ],
   },
@@ -591,14 +501,9 @@ export const phases: Phase[] = [
     id: "p11-llm",
     order: 11,
     title: "LLM Engineering",
-    track: "ai",
     summary:
       "The deepest phase. Building reliable systems on top of models that are non-deterministic, rate-limited, expensive and occasionally wrong.",
-    estimatedDays: 45,
-    dependsOn: ["p10-transformers", "p14-backend"],
     authoring: "outline",
-    milestone:
-      "An LLM feature in production shape: structured output, retries, fallbacks, caching, tracked cost and latency, and an evaluation suite that catches regressions.",
     modules: [
       {
         id: "m-llm-api",
@@ -610,7 +515,6 @@ export const phases: Phase[] = [
           "Handle every failure mode an API call has",
           "Track cost per request",
         ],
-        skills: ["llm-eng"],
       },
       {
         id: "m-llm-prompt",
@@ -622,7 +526,6 @@ export const phases: Phase[] = [
           "Get reliably parseable output and validate it",
           "Version prompts like code, with tests",
         ],
-        skills: ["prompt-eng", "structured-output"],
       },
       {
         id: "m-llm-selection",
@@ -633,7 +536,6 @@ export const phases: Phase[] = [
         outcomes: [
           "Choose a model from measured cost, latency and quality, not reputation",
         ],
-        skills: ["llm-eng", "open-models"],
       },
       {
         id: "m-llm-reliability",
@@ -642,7 +544,6 @@ export const phases: Phase[] = [
         description:
           "Timeouts, backoff, circuit breakers, exact and semantic caching, graceful degradation.",
         outcomes: ["Keep a feature usable when the model provider is down"],
-        skills: ["llm-eng", "reliability", "redis"],
       },
       {
         id: "m-llm-eval",
@@ -654,7 +555,6 @@ export const phases: Phase[] = [
           "Prove a prompt change was an improvement",
           "Catch a regression before shipping",
         ],
-        skills: ["ai-eval"],
       },
     ],
   },
@@ -662,14 +562,9 @@ export const phases: Phase[] = [
     id: "p12-rag",
     order: 12,
     title: "RAG and Knowledge Systems",
-    track: "ai",
     summary:
       "Retrieval built up in layers, with retrieval quality measured separately from answer quality. Most RAG systems fail at retrieval, not generation.",
-    estimatedDays: 35,
-    dependsOn: ["p11-llm"],
     authoring: "outline",
-    milestone:
-      "A serious RAG system with hybrid retrieval, reranking, citations, a retrieval evaluation set, and measured groundedness.",
     modules: [
       {
         id: "m-rag-basic",
@@ -678,7 +573,6 @@ export const phases: Phase[] = [
         description:
           "Chunking, embedding, vector search, context assembly, citation.",
         outcomes: ["Ship a working document Q&A, then find where it fails"],
-        skills: ["rag", "embeddings", "vector-db"],
       },
       {
         id: "m-rag-retrieval",
@@ -690,7 +584,6 @@ export const phases: Phase[] = [
           "Justify chunk size from measurement, not folklore",
           "Improve recall@k and prove it",
         ],
-        skills: ["rag", "retrieval-eval"],
       },
       {
         id: "m-rag-eval",
@@ -702,7 +595,6 @@ export const phases: Phase[] = [
           "Measure hallucination rate",
           "Diagnose whether a bad answer was retrieval or generation",
         ],
-        skills: ["retrieval-eval", "ai-eval"],
       },
       {
         id: "m-rag-prod",
@@ -714,7 +606,6 @@ export const phases: Phase[] = [
           "Keep an index fresh without reprocessing everything",
           "Enforce per-user document access",
         ],
-        skills: ["rag", "ai-security", "observability"],
       },
     ],
   },
@@ -722,14 +613,9 @@ export const phases: Phase[] = [
     id: "p13-agents",
     order: 13,
     title: "AI Agents and Agentic Systems",
-    track: "ai",
     summary:
       "Built up through 13 levels from a single tool call to a production agent — and always weighed against the simpler deterministic workflow.",
-    estimatedDays: 45,
-    dependsOn: ["p12-rag"],
     authoring: "outline",
-    milestone:
-      "A production-shaped agent: tools, planning, memory, guardrails, human approval, tracing and an evaluation suite.",
     modules: [
       {
         id: "m-agent-tools",
@@ -741,7 +627,6 @@ export const phases: Phase[] = [
           "Write a tool an LLM uses correctly",
           "Debug a wrong tool choice",
         ],
-        skills: ["agents", "tool-calling"],
       },
       {
         id: "m-agent-state",
@@ -752,7 +637,6 @@ export const phases: Phase[] = [
         outcomes: [
           "Keep an agent coherent across many steps without blowing the context window",
         ],
-        skills: ["agents", "rag"],
       },
       {
         id: "m-agent-safety",
@@ -761,7 +645,6 @@ export const phases: Phase[] = [
         description:
           "Human-in-the-loop, retries, guardrails, permissions, tracing every step.",
         outcomes: ["Make an agent's actions reversible and auditable"],
-        skills: ["agents", "ai-security", "observability"],
       },
       {
         id: "m-agent-prod",
@@ -773,7 +656,6 @@ export const phases: Phase[] = [
           "Measure agent reliability numerically",
           "Argue honestly for a workflow instead of an agent when that is correct",
         ],
-        skills: ["agents", "agent-eval", "system-design"],
       },
     ],
   },
@@ -781,14 +663,9 @@ export const phases: Phase[] = [
     id: "p14-backend",
     order: 14,
     title: "Backend Engineering with FastAPI",
-    track: "software",
     summary:
       "The layer that turns a model into a service: APIs, validation, auth, async, background work and tests.",
-    estimatedDays: 30,
-    dependsOn: ["p05-data", "p02-git"],
     authoring: "outline",
-    milestone:
-      "A tested, authenticated, documented API serving a model, with async endpoints and background jobs.",
     modules: [
       {
         id: "m-be-fastapi",
@@ -800,7 +677,6 @@ export const phases: Phase[] = [
           "Design an API contract before implementing it",
           "Reject bad input at the boundary",
         ],
-        skills: ["fastapi", "api-design"],
       },
       {
         id: "m-be-auth",
@@ -811,7 +687,6 @@ export const phases: Phase[] = [
         outcomes: [
           "Explain the difference between authn and authz in your own code",
         ],
-        skills: ["auth", "ai-security"],
       },
       {
         id: "m-be-async",
@@ -820,7 +695,6 @@ export const phases: Phase[] = [
         description:
           "asyncio, long-running AI calls, task queues, webhooks, streaming responses.",
         outcomes: ["Keep a request fast when the model call is slow"],
-        skills: ["python-async", "queues", "fastapi"],
       },
       {
         id: "m-be-test",
@@ -828,7 +702,6 @@ export const phases: Phase[] = [
         title: "API Testing and Error Handling",
         description: "Test clients, fixtures, error contracts, logging.",
         outcomes: ["Test an endpoint without calling a real model provider"],
-        skills: ["python-testing", "reliability"],
       },
     ],
   },
@@ -836,14 +709,9 @@ export const phases: Phase[] = [
     id: "p15-fullstack",
     order: 15,
     title: "Full-Stack AI Engineering",
-    track: "software",
     summary:
       "Enough frontend to make AI systems usable: React, TypeScript, Next.js, streaming chat interfaces and dashboards.",
-    estimatedDays: 30,
-    dependsOn: ["p14-backend"],
     authoring: "outline",
-    milestone:
-      "A full-stack AI application: React frontend, FastAPI backend, database, streaming responses, auth.",
     modules: [
       {
         id: "m-fs-ts",
@@ -852,7 +720,6 @@ export const phases: Phase[] = [
         description:
           "The language, the type system, and why types matter at a boundary.",
         outcomes: ["Type an API response end to end"],
-        skills: ["typescript"],
       },
       {
         id: "m-fs-react",
@@ -863,7 +730,6 @@ export const phases: Phase[] = [
         outcomes: [
           "Build a UI that handles loading, error and empty states properly",
         ],
-        skills: ["react", "nextjs"],
       },
       {
         id: "m-fs-ai-ux",
@@ -874,7 +740,6 @@ export const phases: Phase[] = [
         outcomes: [
           "Design an interface that stays honest when the model is uncertain",
         ],
-        skills: ["react", "ai-product"],
       },
     ],
   },
@@ -882,14 +747,9 @@ export const phases: Phase[] = [
     id: "p16-data-systems",
     order: 16,
     title: "Databases, Caching and Async Systems",
-    track: "production",
     summary:
       "The state layer under an AI product: Postgres in anger, Redis caching, queues for expensive work.",
-    estimatedDays: 20,
-    dependsOn: ["p14-backend"],
     authoring: "outline",
-    milestone:
-      "An AI service whose expensive calls are cached and whose slow work runs on a queue.",
     modules: [
       {
         id: "m-ds-postgres",
@@ -898,7 +758,6 @@ export const phases: Phase[] = [
         description:
           "Migrations, indexes, transactions, connection pools, query plans, pgvector.",
         outcomes: ["Read an EXPLAIN plan", "Run a schema migration safely"],
-        skills: ["postgres", "vector-db"],
       },
       {
         id: "m-ds-redis",
@@ -910,7 +769,6 @@ export const phases: Phase[] = [
           "Cut LLM spend measurably with a cache",
           "Explain your invalidation strategy",
         ],
-        skills: ["redis"],
       },
       {
         id: "m-ds-queues",
@@ -918,7 +776,6 @@ export const phases: Phase[] = [
         title: "Queues and Async Processing",
         description: "Workers, retries, dead letters, idempotency, backpressure.",
         outcomes: ["Process a long AI job without holding an HTTP request open"],
-        skills: ["queues", "reliability"],
       },
     ],
   },
@@ -926,14 +783,9 @@ export const phases: Phase[] = [
     id: "p17-devops",
     order: 17,
     title: "Linux, Docker, Cloud and CI/CD",
-    track: "production",
     summary:
       "Packaging and shipping. Started early in Phase 2 with CI, completed here into real deployment.",
-    estimatedDays: 30,
-    dependsOn: ["p02-git", "p14-backend"],
     authoring: "outline",
-    milestone:
-      "An AI application containerised, built by CI, deployed to a cloud provider with health checks and secrets handled properly.",
     modules: [
       {
         id: "m-ops-linux",
@@ -942,7 +794,6 @@ export const phases: Phase[] = [
         description:
           "Filesystem, permissions, processes, env vars, shell, pipes, logs, ssh.",
         outcomes: ["Debug a running service from a shell"],
-        skills: ["linux"],
       },
       {
         id: "m-ops-docker",
@@ -954,7 +805,6 @@ export const phases: Phase[] = [
           "Containerise an AI service",
           "Explain why your image is 2GB and fix it",
         ],
-        skills: ["docker"],
       },
       {
         id: "m-ops-cicd",
@@ -963,7 +813,6 @@ export const phases: Phase[] = [
         description:
           "Test, lint, build, image push, deploy, health check, rollback.",
         outcomes: ["Ship by merging, not by copying files to a server"],
-        skills: ["github-actions", "cicd"],
       },
       {
         id: "m-ops-cloud",
@@ -975,7 +824,6 @@ export const phases: Phase[] = [
           "Deploy and operate a real service",
           "Explain your IAM and secret handling",
         ],
-        skills: ["cloud"],
       },
     ],
   },
@@ -983,14 +831,9 @@ export const phases: Phase[] = [
     id: "p18-mlops",
     order: 18,
     title: "MLOps, LLMOps and AI Observability",
-    track: "production",
     summary:
       "The lifecycle after 'it works on my machine': versioning, serving, tracing, cost tracking and regression testing for AI systems.",
-    estimatedDays: 25,
-    dependsOn: ["p17-devops", "p11-llm"],
     authoring: "outline",
-    milestone:
-      "An AI system with traced model calls, tracked token cost, versioned prompts and automated evaluation running in CI.",
     modules: [
       {
         id: "m-mlops-lifecycle",
@@ -999,7 +842,6 @@ export const phases: Phase[] = [
         description:
           "Data, training, artifacts, versioning, serving, monitoring, drift.",
         outcomes: ["Reproduce a model result months later"],
-        skills: ["mlops"],
       },
       {
         id: "m-mlops-obs",
@@ -1008,7 +850,6 @@ export const phases: Phase[] = [
         description:
           "Logs, metrics, traces, token usage, latency, tool calls, retrieval traces.",
         outcomes: ["Answer 'why did it do that?' from traces, not guesses"],
-        skills: ["observability", "llmops"],
       },
       {
         id: "m-mlops-regression",
@@ -1016,7 +857,6 @@ export const phases: Phase[] = [
         title: "Evaluation in CI",
         description: "Golden sets, thresholds, regression gates, cost budgets.",
         outcomes: ["Block a merge that makes the AI worse"],
-        skills: ["ai-eval", "cicd"],
       },
     ],
   },
@@ -1024,14 +864,9 @@ export const phases: Phase[] = [
     id: "p19-security",
     order: 19,
     title: "AI Security and Reliability",
-    track: "production",
     summary:
       "Prompt injection, tool abuse, data leakage, and the engineering that keeps an AI system trustworthy when things fail.",
-    estimatedDays: 18,
-    dependsOn: ["p13-agents", "p14-backend"],
     authoring: "outline",
-    milestone:
-      "An agent whose tools are permission-scoped and audited, with a written threat model.",
     modules: [
       {
         id: "m-sec-ai",
@@ -1040,7 +875,6 @@ export const phases: Phase[] = [
         description:
           "Prompt injection, indirect injection, data exfiltration, tool abuse, jailbreaks.",
         outcomes: ["Attack your own agent successfully, then fix it"],
-        skills: ["ai-security", "agents"],
       },
       {
         id: "m-sec-app",
@@ -1049,7 +883,6 @@ export const phases: Phase[] = [
         description:
           "Secrets, authn/authz, input and output validation, sandboxing, audit logs.",
         outcomes: ["Keep credentials out of prompts, logs and git history"],
-        skills: ["ai-security", "auth"],
       },
       {
         id: "m-sec-reliability",
@@ -1058,7 +891,6 @@ export const phases: Phase[] = [
         description:
           "Retries, timeouts, fallbacks, circuit breakers, idempotency, graceful degradation, rollback.",
         outcomes: ["Design a feature that degrades instead of breaking"],
-        skills: ["reliability"],
       },
     ],
   },
@@ -1066,14 +898,9 @@ export const phases: Phase[] = [
     id: "p20-integration",
     order: 20,
     title: "AI Into Existing Systems",
-    track: "career",
     summary:
       "The highest-leverage career skill: finding where AI creates real value inside software that already exists, and retrofitting it safely.",
-    estimatedDays: 25,
-    dependsOn: ["p12-rag", "p14-backend"],
     authoring: "outline",
-    milestone:
-      "A conventional application retrofitted stage by stage: classification, summarisation, retrieval, suggested actions, tool calling, human approval, evaluation, deployment.",
     modules: [
       {
         id: "m-int-opportunity",
@@ -1085,7 +912,6 @@ export const phases: Phase[] = [
           "Write an AI opportunity assessment for a real system",
           "Say no to AI where a rule or a query is better",
         ],
-        skills: ["ai-product", "ai-integration"],
       },
       {
         id: "m-int-retrofit",
@@ -1094,7 +920,6 @@ export const phases: Phase[] = [
         description:
           "Adding AI incrementally without destabilising the existing system.",
         outcomes: ["Ship an AI feature behind a flag with a measurable baseline"],
-        skills: ["ai-integration", "reliability"],
       },
       {
         id: "m-int-impact",
@@ -1103,7 +928,6 @@ export const phases: Phase[] = [
         description:
           "Baseline, success metrics, business value, monitoring after launch.",
         outcomes: ["State the impact of your AI feature in business terms"],
-        skills: ["ai-product", "ai-eval"],
       },
     ],
   },
@@ -1111,14 +935,9 @@ export const phases: Phase[] = [
     id: "p21-system-design",
     order: 21,
     title: "AI System Design",
-    track: "career",
     summary:
       "Designing complete AI systems on a whiteboard: requirements, components, data flow, scaling, failure, cost and security.",
-    estimatedDays: 25,
-    dependsOn: ["p17-devops", "p13-agents"],
     authoring: "outline",
-    milestone:
-      "Ten AI system designs written up, each with tradeoffs, failure modes and cost analysis.",
     modules: [
       {
         id: "m-sd-fundamentals",
@@ -1127,7 +946,6 @@ export const phases: Phase[] = [
         description:
           "Requirements, constraints, components, data flow, scaling, caching, queues.",
         outcomes: ["Drive a design conversation from requirements, not technologies"],
-        skills: ["system-design"],
       },
       {
         id: "m-sd-ai",
@@ -1136,7 +954,6 @@ export const phases: Phase[] = [
         description:
           "Chatbot, RAG platform, AI search, document intelligence, agent platform, multi-tenant AI SaaS.",
         outcomes: ["Design a multi-tenant RAG platform with per-tenant isolation"],
-        skills: ["system-design", "rag", "agents"],
       },
       {
         id: "m-sd-tradeoffs",
@@ -1145,7 +962,6 @@ export const phases: Phase[] = [
         description:
           "Token economics, caching strategy, model tiering, batching, autoscaling.",
         outcomes: ["Estimate the monthly cost of a design before building it"],
-        skills: ["system-design", "llmops"],
       },
     ],
   },
@@ -1153,14 +969,9 @@ export const phases: Phase[] = [
     id: "p22-production",
     order: 22,
     title: "Production AI: The Capstone",
-    track: "career",
     summary:
       "Assembling everything into one serious system, built from capabilities already proven in earlier projects.",
-    estimatedDays: 45,
-    dependsOn: ["p18-mlops", "p19-security", "p15-fullstack"],
     authoring: "outline",
-    milestone:
-      "A deployed AI product: frontend, backend, database, auth, LLM, RAG, tools, evaluation, Docker, CI/CD, observability.",
     modules: [
       {
         id: "m-cap-design",
@@ -1169,7 +980,6 @@ export const phases: Phase[] = [
         description:
           "Problem, users, requirements, architecture, decision records, milestones.",
         outcomes: ["Write a design document before writing code"],
-        skills: ["system-design", "ai-product"],
       },
       {
         id: "m-cap-build",
@@ -1178,7 +988,6 @@ export const phases: Phase[] = [
         description:
           "Implementation, tests, security, reliability, evaluation, observability.",
         outcomes: ["Pass every production readiness gate deliberately"],
-        skills: ["ai-integration", "reliability", "observability"],
       },
       {
         id: "m-cap-operate",
@@ -1187,7 +996,6 @@ export const phases: Phase[] = [
         description:
           "Deployment, monitoring, cost control, incident handling, iteration.",
         outcomes: ["Run your own system and fix it when it breaks"],
-        skills: ["cloud", "cicd", "observability"],
       },
     ],
   },
@@ -1195,14 +1003,9 @@ export const phases: Phase[] = [
     id: "p23-portfolio",
     order: 23,
     title: "Portfolio Engineering",
-    track: "career",
     summary:
       "Turning built systems into evidence an employer can evaluate in five minutes.",
-    estimatedDays: 15,
-    dependsOn: ["p22-production"],
     authoring: "outline",
-    milestone:
-      "Two to four deep projects, each with architecture, evaluation results, a demo and a written technical explanation.",
     modules: [
       {
         id: "m-port-projects",
@@ -1211,7 +1014,6 @@ export const phases: Phase[] = [
         description:
           "READMEs, architecture diagrams, demos, evaluation results, limitations.",
         outcomes: ["Make a reviewer understand the system without running it"],
-        skills: ["portfolio"],
       },
       {
         id: "m-port-profile",
@@ -1222,7 +1024,6 @@ export const phases: Phase[] = [
         outcomes: [
           "Describe each project in three resume lines that survive scrutiny",
         ],
-        skills: ["portfolio"],
       },
     ],
   },
@@ -1230,14 +1031,9 @@ export const phases: Phase[] = [
     id: "p24-interview",
     order: 24,
     title: "Interview and Career Preparation",
-    track: "career",
     summary:
       "Explaining what you built, under questioning, plus the DSA, ML and system design rounds.",
-    estimatedDays: 30,
-    dependsOn: ["p23-portfolio"],
     authoring: "outline",
-    milestone:
-      "Able to defend every architectural decision in your projects and pass a mock loop.",
     modules: [
       {
         id: "m-iv-technical",
@@ -1245,7 +1041,6 @@ export const phases: Phase[] = [
         title: "Technical Rounds",
         description: "DSA, Python, SQL, ML fundamentals, LLM and RAG questions.",
         outcomes: ["Solve and explain, not just solve"],
-        skills: ["interview", "dsa"],
       },
       {
         id: "m-iv-design",
@@ -1253,7 +1048,6 @@ export const phases: Phase[] = [
         title: "AI System Design Rounds",
         description: "Designing under questioning, defending tradeoffs.",
         outcomes: ["Handle 'why not just use X?' calmly and specifically"],
-        skills: ["interview", "system-design"],
       },
       {
         id: "m-iv-project",
@@ -1261,7 +1055,6 @@ export const phases: Phase[] = [
         title: "Project Deep Dives",
         description: "Walking through your own systems, failures included.",
         outcomes: ["Tell the story of a bug you fixed and what it taught you"],
-        skills: ["interview", "portfolio"],
       },
     ],
   },

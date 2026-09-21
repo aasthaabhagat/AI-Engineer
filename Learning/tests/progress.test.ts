@@ -8,15 +8,9 @@ import {
 } from "@/lib/state";
 import {
   currentDay,
-  currentStreak,
   dayTaskProgress,
-  elapsedStudyDays,
   essentialTasksComplete,
-  overallProgress,
-  planForTime,
-  scheduledDate,
-  scheduleStatus,
-  dateKey,
+  phaseProgress,
 } from "@/lib/progress";
 
 const task = (id: string, minutes: number, priority: Task["priority"]): Task => ({
@@ -27,53 +21,21 @@ const task = (id: string, minutes: number, priority: Task["priority"]): Task => 
   priority,
 });
 
-const makeDay = (n: number, tasks: Task[]): Day => ({
+const makeDay = (n: number, tasks: Task[], phaseId = "p01-python"): Day => ({
   id: `day-${String(n).padStart(3, "0")}`,
   dayNumber: n,
-  phaseId: "p01-python",
+  phaseId,
   moduleId: "m-py-files",
   title: `Day ${n}`,
   objective: "",
-  whyItMatters: "",
-  careerConnection: "",
   estimatedMinutes: tasks.reduce((s, t) => s + t.minutes, 0),
   tasks,
-  deliverables: [],
-  definitionOfDone: [],
-  skills: [],
 });
 
 const emptyState = (): PersistedState => ({
   ...createInitialState(),
   completedTasks: {},
   completedDays: {},
-  evidence: {},
-});
-
-describe("planForTime", () => {
-  const day = makeDay(1, [
-    task("t1", 60, "essential"),
-    task("t2", 45, "essential"),
-    task("t3", 30, "important"),
-    task("t4", 30, "optional"),
-  ]);
-
-  it("keeps every essential task even when they exceed the budget", () => {
-    const { included, deferred } = planForTime(day, 30);
-    expect(included.map((t) => t.id)).toEqual(["t1", "t2"]);
-    expect(deferred.map((t) => t.id)).toEqual(["t3", "t4"]);
-  });
-
-  it("adds lower-priority work when time allows", () => {
-    const { included, deferred } = planForTime(day, 180);
-    expect(included).toHaveLength(4);
-    expect(deferred).toHaveLength(0);
-  });
-
-  it("fills in priority order, not declaration order", () => {
-    const { included } = planForTime(day, 140);
-    expect(included.map((t) => t.id)).toEqual(["t1", "t2", "t3"]);
-  });
 });
 
 describe("day completion", () => {
@@ -101,6 +63,11 @@ describe("day completion", () => {
     expect(essentialTasksComplete(day, state)).toBe(true);
     expect(dayTaskProgress(day, state).ratio).toBeCloseTo(2 / 3);
   });
+
+  it("never counts a day with no essential tasks as done", () => {
+    const optionalOnly = makeDay(2, [task("o1", 10, "optional")]);
+    expect(essentialTasksComplete(optionalOnly, emptyState())).toBe(false);
+  });
 });
 
 describe("currentDay", () => {
@@ -114,13 +81,13 @@ describe("currentDay", () => {
     expect(currentDay(days, state)?.dayNumber).toBe(2);
   });
 
-  it("skips ahead over out-of-order completions", () => {
+  it("returns an earlier day left open after later ones were finished", () => {
     const state = emptyState();
     state.completedDays = {
       "day-001": { completedAt: "2026-01-01T00:00:00.000Z" },
-      "day-002": { completedAt: "2026-01-02T00:00:00.000Z" },
+      "day-003": { completedAt: "2026-01-02T00:00:00.000Z" },
     };
-    expect(currentDay(days, state)?.dayNumber).toBe(3);
+    expect(currentDay(days, state)?.dayNumber).toBe(2);
   });
 
   it("returns undefined when everything is done", () => {
@@ -129,125 +96,61 @@ describe("currentDay", () => {
       state.completedDays[d.id] = { completedAt: "2026-01-01T00:00:00.000Z" };
     }
     expect(currentDay(days, state)).toBeUndefined();
-    expect(overallProgress(days, state).ratio).toBe(1);
   });
 });
 
-describe("currentStreak", () => {
-  const dayAgo = (n: number) => {
-    const d = new Date(2026, 0, 10);
-    d.setDate(d.getDate() - n);
-    return d.toISOString();
-  };
-  const today = new Date(2026, 0, 10);
-
-  it("counts consecutive days ending today", () => {
+describe("phaseProgress", () => {
+  it("counts only the days of the given phase", () => {
+    const days = [makeDay(1, []), makeDay(2, []), makeDay(3, [], "p02-git")];
     const state = emptyState();
     state.completedDays = {
-      a: { completedAt: dayAgo(0) },
-      b: { completedAt: dayAgo(1) },
-      c: { completedAt: dayAgo(2) },
+      "day-001": { completedAt: "2026-01-01T00:00:00.000Z" },
+      "day-003": { completedAt: "2026-01-01T00:00:00.000Z" },
     };
-    expect(currentStreak(state, today)).toBe(3);
+    expect(phaseProgress(days, "p01-python", state)).toEqual({
+      done: 1,
+      total: 2,
+      ratio: 0.5,
+    });
   });
 
-  it("allows one grace day so an unstarted today does not break it", () => {
-    const state = emptyState();
-    state.completedDays = {
-      b: { completedAt: dayAgo(1) },
-      c: { completedAt: dayAgo(2) },
-    };
-    expect(currentStreak(state, today)).toBe(2);
-  });
-
-  it("breaks after a two-day gap", () => {
-    const state = emptyState();
-    state.completedDays = {
-      c: { completedAt: dayAgo(2) },
-      d: { completedAt: dayAgo(3) },
-    };
-    expect(currentStreak(state, today)).toBe(0);
-  });
-
-  it("is zero with no completions", () => {
-    expect(currentStreak(emptyState(), today)).toBe(0);
-  });
-});
-
-describe("elapsedStudyDays", () => {
-  it("counts only configured study days", () => {
-    const state = emptyState();
-    // 2026-01-05 is a Monday.
-    state.settings.startDate = "2026-01-05";
-    state.settings.studyDays = [1, 2, 3, 4, 5];
-    // Through Sunday 2026-01-11: five weekdays.
-    expect(elapsedStudyDays(state.settings, new Date(2026, 0, 11))).toBe(5);
-  });
-
-  it("never returns less than one", () => {
-    const state = emptyState();
-    state.settings.startDate = "2026-06-01";
-    expect(elapsedStudyDays(state.settings, new Date(2026, 0, 1))).toBe(1);
-  });
-});
-
-describe("scheduleStatus", () => {
-  const days = Array.from({ length: 20 }, (_, i) => makeDay(i + 1, []));
-
-  it("enters recovery mode once three or more days behind", () => {
-    const state = emptyState();
-    state.settings.startDate = "2026-01-05";
-    state.settings.studyDays = [0, 1, 2, 3, 4, 5, 6];
-    // Ten days elapsed, none completed.
-    const status = scheduleStatus(days, state, new Date(2026, 0, 14));
-    expect(status.expected).toBe(10);
-    expect(status.actual).toBe(1);
-    expect(status.recoveryMode).toBe(true);
-    expect(status.message).toBeDefined();
-  });
-
-  it("stays calm when on schedule", () => {
-    const state = emptyState();
-    state.settings.startDate = "2026-01-05";
-    for (let i = 1; i <= 9; i++) {
-      state.completedDays[`day-${String(i).padStart(3, "0")}`] = {
-        completedAt: "2026-01-10T00:00:00.000Z",
-      };
-    }
-    const status = scheduleStatus(days, state, new Date(2026, 0, 14));
-    expect(status.recoveryMode).toBe(false);
-    expect(status.behind).toBe(0);
-  });
-});
-
-describe("scheduledDate", () => {
-  it("skips non-study days when projecting onto the calendar", () => {
-    const settings = { ...emptyState().settings, startDate: "2026-01-05", studyDays: [1, 2, 3, 4, 5] };
-    // Day 1 Mon 5th, day 5 Fri 9th, day 6 skips the weekend to Mon 12th.
-    expect(dateKey(scheduledDate(1, settings))).toBe("2026-01-05");
-    expect(dateKey(scheduledDate(5, settings))).toBe("2026-01-09");
-    expect(dateKey(scheduledDate(6, settings))).toBe("2026-01-12");
+  it("reports zero rather than NaN for a phase with no days", () => {
+    expect(phaseProgress([], "p24-career", emptyState()).ratio).toBe(0);
   });
 });
 
 describe("migrateState", () => {
   it("returns usable defaults for junk input", () => {
     expect(migrateState(null).version).toBe(STATE_VERSION);
-    expect(migrateState("not an object").settings).toBeDefined();
-    expect(migrateState(42).notes).toEqual([]);
+    expect(migrateState("not an object").settings.theme).toBe("light");
+    expect(migrateState(42).completedDays).toBeDefined();
+    expect(migrateState([]).completedTasks).toBeDefined();
   });
 
   it("keeps readable fields and replaces unreadable ones", () => {
     const result = migrateState({
+      version: 3,
       completedTasks: { "d01-t1": "2026-01-01T00:00:00.000Z" },
-      notes: "corrupted, should not be a string",
-      settings: { weekdayMinutes: 45 },
+      completedDays: "corrupted",
+      settings: { theme: "dark" },
     });
     expect(result.completedTasks["d01-t1"]).toBeDefined();
-    expect(result.notes).toEqual([]);
-    expect(result.settings.weekdayMinutes).toBe(45);
-    // Untouched settings keep their defaults rather than becoming undefined.
-    expect(result.settings.weekendMinutes).toBe(240);
+    expect(result.completedDays["day-001"]).toBeDefined();
+    expect(result.settings.theme).toBe("dark");
+  });
+
+  it("rejects an invalid theme without losing the rest", () => {
+    const result = migrateState({ version: 4, settings: { theme: "neon" } });
+    expect(result.settings.theme).toBe("light");
+  });
+
+  it("carries data from earlier versions forward instead of deleting it", () => {
+    const notes = [{ id: "n1", title: "kept" }];
+    const result = migrateState({ version: 3, notes }) as PersistedState & {
+      notes?: unknown;
+    };
+    expect(result.notes).toEqual(notes);
+    expect(result.version).toBe(STATE_VERSION);
   });
 });
 

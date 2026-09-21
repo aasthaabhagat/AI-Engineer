@@ -36,10 +36,6 @@
   --color-danger: #c0353a;
   --color-ok: #23743a;
 
-  --color-track-ai: #6d42d9;
-  --color-track-software: #3550cf;
-  --color-track-production: #0c8478;
-  --color-track-career: #9a6a08;
 
   /* Light needs shadow for depth; dark gets depth from its borders. */
   --shadow-card: 0 1px 2px rgb(20 22 27 / 0.04), 0 1px 3px rgb(20 22 27 / 0.06);
@@ -72,10 +68,6 @@
   --color-danger: #e8767a;
   --color-ok: #6bc98a;
 
-  --color-track-ai: #a78bfa;
-  --color-track-software: #8aa4ff;
-  --color-track-production: #4fd1c5;
-  --color-track-career: #e6b055;
 
   /* Shadows read as dirt on a dark ground. Borders carry the depth instead. */
   --shadow-card: none;

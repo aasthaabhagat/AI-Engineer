@@ -3,71 +3,14 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import {
-  BookMarked,
-  Briefcase,
-  CalendarDays,
-  ClipboardCheck,
-  Command,
-  Compass,
-  FolderGit2,
-  LayoutDashboard,
-  Layers,
-  Menu,
-  Moon,
-  Network,
-  Radar,
-  Settings,
-  Sparkles,
-  Sun,
-  Target,
-  Trophy,
-  X,
-} from "lucide-react";
+import { BookOpen, Menu, Moon, Sun, Target, X } from "lucide-react";
 import { useStore } from "@/lib/store";
 import { days } from "@/data";
-import { currentDay, scheduleStatus } from "@/lib/progress";
+import { currentDay } from "@/lib/progress";
 
-/**
- * Every destination stays one click away. The group labels are presentation
- * only — they give the fourteen links a shape to scan instead of one long
- * undifferentiated list.
- */
-const NAV: { group: string; items: { href: string; label: string; icon: typeof Target }[] }[] = [
-  {
-    group: "Daily",
-    items: [
-      { href: "/", label: "Dashboard", icon: LayoutDashboard },
-      { href: "/today", label: "Today", icon: Target },
-    ],
-  },
-  {
-    group: "Plan",
-    items: [
-      { href: "/roadmap", label: "Roadmap", icon: Compass },
-      { href: "/calendar", label: "Calendar", icon: CalendarDays },
-      { href: "/skills", label: "Skills", icon: Layers },
-      { href: "/projects", label: "Projects", icon: FolderGit2 },
-    ],
-  },
-  {
-    group: "Library",
-    items: [
-      { href: "/knowledge", label: "Knowledge", icon: BookMarked },
-      { href: "/blueprints", label: "Blueprints", icon: Sparkles },
-      { href: "/system-design", label: "System Design", icon: Network },
-      { href: "/radar", label: "AI Radar", icon: Radar },
-    ],
-  },
-  {
-    group: "Progress",
-    items: [
-      { href: "/portfolio", label: "Portfolio", icon: Trophy },
-      { href: "/career", label: "Career Readiness", icon: Briefcase },
-      { href: "/reviews", label: "Reviews", icon: ClipboardCheck },
-      { href: "/settings", label: "Settings", icon: Settings },
-    ],
-  },
+const NAV = [
+  { href: "/", label: "Today", icon: Target },
+  { href: "/topics", label: "Topics", icon: BookOpen },
 ];
 
 function ThemeToggle() {
@@ -104,14 +47,13 @@ export function Shell({ children }: { children: React.ReactNode }) {
   }, [pathname]);
 
   const today = currentDay(days, state);
-  const status = scheduleStatus(days, state);
 
   return (
     <div className="min-h-screen lg:grid lg:grid-cols-[248px_1fr]">
       {/* Mobile bar */}
       <div className="sticky top-0 z-30 flex items-center justify-between border-b border-line bg-panel/90 px-4 py-3 backdrop-blur lg:hidden">
         <Link href="/" className="text-sm font-semibold tracking-tight">
-          Training OS
+          Study Plan
         </Link>
         <div className="flex items-center gap-2">
           <ThemeToggle />
@@ -145,48 +87,43 @@ export function Shell({ children }: { children: React.ReactNode }) {
                   AI Engineer
                 </span>
                 <span className="block text-[0.95rem] font-semibold tracking-tight">
-                  Training OS
+                  Study Plan
                 </span>
               </span>
             </Link>
           </div>
 
           <nav className="flex-1 overflow-y-auto px-3 pb-4">
-            {NAV.map(({ group, items }) => (
-              <div key={group} className="mb-4 last:mb-0">
-                <p className="px-3 pb-1.5 text-xs font-semibold uppercase tracking-[0.16em] text-faint">
-                  {group}
-                </p>
-                <ul className="space-y-0.5">
-                  {items.map(({ href, label, icon: Icon }) => {
-                    const active =
-                      href === "/" ? pathname === "/" : pathname.startsWith(href);
-                    return (
-                      <li key={href}>
-                        <Link
-                          href={href}
-                          aria-current={active ? "page" : undefined}
-                          className={`relative flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm transition ${
-                            active
-                              ? "bg-accent-soft font-medium text-accent"
-                              : "text-muted hover:bg-raised hover:text-ink"
-                          }`}
-                        >
-                          {active && (
-                            <span
-                              className="absolute left-0 top-1/2 h-4 w-0.5 -translate-y-1/2 rounded-full bg-accent"
-                              aria-hidden
-                            />
-                          )}
-                          <Icon size={16} strokeWidth={1.75} aria-hidden />
-                          {label}
-                        </Link>
-                      </li>
-                    );
-                  })}
-                </ul>
-              </div>
-            ))}
+            <ul className="space-y-0.5">
+              {NAV.map(({ href, label, icon: Icon }) => {
+                const active =
+                  href === "/"
+                    ? pathname === "/" || pathname.startsWith("/day")
+                    : pathname.startsWith(href);
+                return (
+                  <li key={href}>
+                    <Link
+                      href={href}
+                      aria-current={active ? "page" : undefined}
+                      className={`relative flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm transition ${
+                        active
+                          ? "bg-accent-soft font-medium text-accent"
+                          : "text-muted hover:bg-raised hover:text-ink"
+                      }`}
+                    >
+                      {active && (
+                        <span
+                          className="absolute left-0 top-1/2 h-4 w-0.5 -translate-y-1/2 rounded-full bg-accent"
+                          aria-hidden
+                        />
+                      )}
+                      <Icon size={16} strokeWidth={1.75} aria-hidden />
+                      {label}
+                    </Link>
+                  </li>
+                );
+              })}
+            </ul>
           </nav>
 
           <div className="border-t border-line-soft px-5 py-4">
@@ -200,18 +137,10 @@ export function Shell({ children }: { children: React.ReactNode }) {
                 </p>
               </>
             ) : (
-              <p className="text-sm text-muted">All authored days complete.</p>
-            )}
-            {hydrated && status.recoveryMode && (
-              <p className="mt-2 text-xs leading-snug text-amber">
-                Recovery mode active
-              </p>
+              <p className="text-sm text-muted">All written days complete.</p>
             )}
 
-            <div className="mt-4 flex items-center justify-between gap-2">
-              <span className="flex items-center gap-1.5 text-xs text-faint">
-                <Command size={11} aria-hidden /> K
-              </span>
+            <div className="mt-4 flex items-center justify-end gap-2">
               <div className="hidden lg:block">
                 <ThemeToggle />
               </div>

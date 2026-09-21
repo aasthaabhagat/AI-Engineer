@@ -19,15 +19,7 @@ export const pyFoundationDays: Day[] = [
     title: "Expense Tracker CLI v0.1",
     objective:
       "Build a CLI that stores expenses in JSON and survives being closed and reopened.",
-    whyItMatters:
-      "Persistence is the first thing that turns a script into an application. Everything you build later — databases, vector stores, model checkpoints — is this same problem with more layers.",
-    careerConnection:
-      "Every backend system you will build reads and writes state safely.",
     estimatedMinutes: 150,
-    projectId: "expense-tracker",
-    repoPath: REPO,
-    skills: ["python-core", "python-errors", "cli-apps"],
-    evidence: ["ev-py-1", "ev-py-3", "ev-cli-1", "ev-git-1"],
     tasks: [
       {
         id: "d01-t1",
@@ -60,20 +52,6 @@ export const pyFoundationDays: Day[] = [
         priority: "essential",
       },
     ],
-    deliverables: ["Working CLI", "expenses.json persisting between runs", "README"],
-    definitionOfDone: [
-      "Data survives restarting the program",
-      "Invalid amount does not crash the program",
-      "Invalid menu option is handled",
-      "Missing expenses.json is handled",
-      "README written",
-      "Committed to git",
-    ],
-    gitTask: { commitMessage: "Build expense tracker CLI v0.1" },
-    resources: [
-      { label: "pathlib", kind: "docs", ref: "https://docs.python.org/3/library/pathlib.html" },
-      { label: "json", kind: "docs", ref: "https://docs.python.org/3/library/json.html" },
-    ],
   },
   {
     id: "day-002",
@@ -83,15 +61,7 @@ export const pyFoundationDays: Day[] = [
     title: "Turtle Graphics and Randomness",
     objective:
       "Practise loops, functions and randomness with a visual feedback loop.",
-    whyItMatters:
-      "Immediate visual output makes loop and function bugs obvious, which is why it is a good place to practise them.",
-    careerConnection:
-      "Low stakes, but function decomposition and parameterisation are the same skills at any scale.",
     estimatedMinutes: 90,
-    projectId: "dot-spot-painting",
-    repoPath: "01-Python-Foundations/projects/dot-spot-painting",
-    skills: ["python-core"],
-    evidence: ["ev-py-1"],
     tasks: [
       {
         id: "d02-t1",
@@ -116,9 +86,6 @@ export const pyFoundationDays: Day[] = [
         priority: "essential",
       },
     ],
-    deliverables: ["Running turtle program committed to the repo"],
-    definitionOfDone: ["Program runs", "Shape drawing is a reusable function", "Committed"],
-    gitTask: { commitMessage: "Add dot spot painting project" },
   },
   {
     id: "day-003",
@@ -128,15 +95,7 @@ export const pyFoundationDays: Day[] = [
     title: "Refactor Into Modules",
     objective:
       "Split the tracker into data access, analysis and interface, and understand imports.",
-    whyItMatters:
-      "One file stops scaling the moment a project has more than one responsibility. Separation of concerns is the foundation of every architecture you will learn later.",
-    careerConnection:
-      "The same layering — storage, logic, interface — reappears in FastAPI services, RAG pipelines and agent systems.",
     estimatedMinutes: 120,
-    projectId: "expense-tracker",
-    repoPath: REPO,
-    skills: ["python-core", "code-architecture"],
-    evidence: ["ev-py-2", "ev-arch-1"],
     tasks: [
       {
         id: "d03-t1",
@@ -161,14 +120,6 @@ export const pyFoundationDays: Day[] = [
         priority: "essential",
       },
     ],
-    deliverables: ["data.py", "analyzer.py", "main.py"],
-    definitionOfDone: [
-      "Each module has one clear responsibility",
-      "Application still runs",
-      "__pycache__ ignored by git",
-      "Committed",
-    ],
-    gitTask: { commitMessage: "Refactor expense tracker into modules" },
   },
   {
     id: "day-004",
@@ -178,15 +129,7 @@ export const pyFoundationDays: Day[] = [
     title: "The Refactor Lost a Feature, and Two Real Bugs",
     objective:
       "Audit your own refactor: find what it dropped, find the path bug, and find the silent data-loss bug.",
-    whyItMatters:
-      "A refactor that quietly removes behaviour is the most common way working software breaks. Learning to audit your own change is worth more than any new syntax.",
-    careerConnection:
-      "Reviewing a diff for lost behaviour is the core of professional code review.",
     estimatedMinutes: 120,
-    projectId: "expense-tracker",
-    repoPath: REPO,
-    skills: ["python-errors", "code-architecture", "code-review"],
-    evidence: ["ev-err-1", "ev-err-4", "ev-cr-1"],
     tasks: [
       {
         id: "d04-t1",
@@ -234,18 +177,6 @@ export const pyFoundationDays: Day[] = [
         priority: "important",
       },
     ],
-    deliverables: ["DEFECTS.md listing what the refactor lost and the two bugs"],
-    definitionOfDone: [
-      "Missing features listed",
-      "Path behaviour tested from two different working directories",
-      "Data-loss scenario described in writing",
-      "Encoding specified on file operations",
-      "Committed",
-    ],
-    gitTask: {
-      commitMessage: "Document defects found in modular refactor",
-      note: "Commit the audit before the fix. The history should show you found it, then fixed it.",
-    },
   },
   {
     id: "day-005",
@@ -255,15 +186,7 @@ export const pyFoundationDays: Day[] = [
     title: "Safe Writes: Never Destroy Good Data",
     objective:
       "Restore Add Expense in the modular app, and make saving safe against corruption and crashes.",
-    whyItMatters:
-      "open(path, 'w') truncates the file immediately. If your program dies mid-write — or if you write over data you failed to read — the user's data is gone. Atomic writes are how real systems avoid this.",
-    careerConnection:
-      "Database transactions, checkpoint files and index rebuilds all solve this same problem.",
     estimatedMinutes: 120,
-    projectId: "expense-tracker",
-    repoPath: REPO,
-    skills: ["python-errors", "python-core", "reliability"],
-    evidence: ["ev-err-4", "ev-py-3", "ev-rel-4"],
     tasks: [
       {
         id: "d05-t1",
@@ -309,15 +232,6 @@ export const pyFoundationDays: Day[] = [
         priority: "essential",
       },
     ],
-    deliverables: ["Safe save_expenses", "Add Expense restored", "Corruption handled deliberately"],
-    definitionOfDone: [
-      "Adding an expense persists it",
-      "Deliberately corrupted JSON does not result in lost data",
-      "Empty file and missing file both start cleanly",
-      "Old expense_tracker.py either removed or clearly marked as superseded",
-      "Committed",
-    ],
-    gitTask: { commitMessage: "Add safe expense saving and restore add-expense flow" },
   },
   {
     id: "day-006",
@@ -327,15 +241,7 @@ export const pyFoundationDays: Day[] = [
     title: "Validation at the Boundary",
     objective:
       "Push all input validation to the edge of the system so the logic can trust its data.",
-    whyItMatters:
-      "analyzer.py currently assumes every record has a numeric 'amount'. One malformed row crashes it. Validating at the boundary means the core never has to defend itself.",
-    careerConnection:
-      "This is exactly what Pydantic does for FastAPI request bodies and LLM structured output — the same principle, one layer up.",
     estimatedMinutes: 110,
-    projectId: "expense-tracker",
-    repoPath: REPO,
-    skills: ["python-errors", "code-architecture"],
-    evidence: ["ev-err-2", "ev-arch-1"],
     tasks: [
       {
         id: "d06-t1",
@@ -378,14 +284,6 @@ export const pyFoundationDays: Day[] = [
         priority: "essential",
       },
     ],
-    deliverables: ["validate_expense", "Category normalisation"],
-    definitionOfDone: [
-      "Malformed record no longer crashes any menu option",
-      "Validation lives at the boundary, not scattered through the analyser",
-      "Category summary aggregates case variants together",
-      "Committed",
-    ],
-    gitTask: { commitMessage: "Validate expense records at the data boundary" },
   },
   {
     id: "day-007",
@@ -395,15 +293,7 @@ export const pyFoundationDays: Day[] = [
     title: "Custom Exceptions",
     objective:
       "Define domain-specific exception types and let errors carry meaning instead of strings.",
-    whyItMatters:
-      "A caller can handle CorruptDataError differently from InvalidExpenseError. It cannot do anything useful with a generic ValueError or a printed message.",
-    careerConnection:
-      "API error contracts, agent tool failures and retry logic all depend on distinguishing error types programmatically.",
     estimatedMinutes: 100,
-    projectId: "expense-tracker",
-    repoPath: REPO,
-    skills: ["python-errors", "python-oop"],
-    evidence: ["ev-err-3", "ev-err-1"],
     tasks: [
       {
         id: "d07-t1",
@@ -438,14 +328,6 @@ export const pyFoundationDays: Day[] = [
         priority: "important",
       },
     ],
-    deliverables: ["errors.py with a real exception hierarchy"],
-    definitionOfDone: [
-      "Custom exceptions defined and raised",
-      "Only the interface layer prints",
-      "No bare except anywhere",
-      "Committed",
-    ],
-    gitTask: { commitMessage: "Add domain exceptions and layer error handling" },
   },
   {
     id: "day-008",
@@ -455,15 +337,7 @@ export const pyFoundationDays: Day[] = [
     title: "Dataclasses and Type Hints",
     objective:
       "Replace loose dictionaries with an Expense dataclass and annotate every function.",
-    whyItMatters:
-      "expense['amuont'] fails at runtime, in production, silently. expense.amuont fails immediately, and a type checker catches it before you even run.",
-    careerConnection:
-      "Typed models are the interface language of FastAPI, Pydantic and every LLM structured-output schema you will write.",
     estimatedMinutes: 120,
-    projectId: "expense-tracker",
-    repoPath: REPO,
-    skills: ["python-oop", "python-typing"],
-    evidence: ["ev-oop-1", "ev-ty-1", "ev-ty-2"],
     tasks: [
       {
         id: "d08-t1",
@@ -499,15 +373,6 @@ export const pyFoundationDays: Day[] = [
         priority: "important",
       },
     ],
-    deliverables: ["models.py with an Expense dataclass", "Fully annotated functions"],
-    definitionOfDone: [
-      "Expense is a dataclass, not a dict, inside the application",
-      "Serialisation happens only at the storage boundary",
-      "Every function has type hints",
-      "Application still runs",
-      "Committed",
-    ],
-    gitTask: { commitMessage: "Model expenses as a typed dataclass" },
   },
   {
     id: "day-009",
@@ -517,15 +382,7 @@ export const pyFoundationDays: Day[] = [
     title: "Virtual Environment and Dependencies",
     objective:
       "Put the project in a venv with pinned dependencies and a documented setup.",
-    whyItMatters:
-      "'It works on my machine' starts here. An environment you cannot recreate is an application you cannot deploy.",
-    careerConnection:
-      "Every Docker image, CI run and cloud deployment reproduces an environment from a dependency file.",
     estimatedMinutes: 90,
-    projectId: "expense-tracker",
-    repoPath: REPO,
-    skills: ["python-core", "cli-apps"],
-    evidence: ["ev-py-5"],
     tasks: [
       {
         id: "d09-t1",
@@ -557,13 +414,5 @@ export const pyFoundationDays: Day[] = [
         repoPath: `${REPO}/README.md`,
       },
     ],
-    deliverables: ["Working venv", "requirements.txt", "Setup section in README"],
-    definitionOfDone: [
-      "Project runs from inside the venv",
-      ".venv/ is ignored by git",
-      "A stranger could set the project up from the README alone",
-      "Committed",
-    ],
-    gitTask: { commitMessage: "Add virtual environment setup and requirements" },
   },
 ];

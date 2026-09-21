@@ -1,268 +1,182 @@
 "use client";
 
-import { useState } from "react";
-import Link from "next/link";
-import { CheckCircle2, ExternalLink, RotateCcw, Timer } from "lucide-react";
-import type { Day } from "@/data/types";
-import { moduleById, phaseById, projectById, skillById, weekForDay } from "@/data";
-import { useStore } from "@/lib/store";
-import { availableMinutes, dayTaskProgress, planForTime } from "@/lib/progress";
-import { useAudioUnlock, useCue } from "@/lib/useCue";
+import { useEffect, useRef, useState } from "react";
 import {
-  Button,
-  Card,
-  CardHeader,
-  Pill,
-  ProgressBar,
-  RepoPath,
-  TrackBadge,
-} from "./ui";
-import { Deliverables, DefinitionOfDone, TaskList, WhyItMatters } from "./mission";
-import { FocusMode } from "./FocusMode";
+  BookOpen,
+  Boxes,
+  CheckCircle2,
+  Dumbbell,
+  FileText,
+  FlaskConical,
+  GitCommitHorizontal,
+  Rocket,
+  RotateCcw,
+  ScanSearch,
+} from "lucide-react";
+import type { Day, Task, TaskType } from "@/data/types";
+import { moduleById, phaseById } from "@/data";
+import { useStore } from "@/lib/store";
+import { dayTaskProgress, essentialTasksComplete } from "@/lib/progress";
+import { Button, Card, CardHeader, Pill, PriorityTag, ProgressBar, RepoPath } from "./ui";
 
-export function DayDetail({ day, focusOnLoad = false }: { day: Day; focusOnLoad?: boolean }) {
+const TASK_ICON: Record<TaskType, typeof BookOpen> = {
+  learn: BookOpen,
+  practice: Dumbbell,
+  build: Boxes,
+  test: FlaskConical,
+  document: FileText,
+  git: GitCommitHorizontal,
+  deploy: Rocket,
+  evaluate: ScanSearch,
+  review: ScanSearch,
+};
+
+function TaskRow({ task }: { task: Task }) {
+  const { state, toggleTask } = useStore();
+  const done = Boolean(state.completedTasks[task.id]);
+  const Icon = TASK_ICON[task.type];
+
+  // Flash only on the transition into "done" — not on mount, and not on undo.
+  const [justDone, setJustDone] = useState(false);
+  const wasDone = useRef(done);
+  useEffect(() => {
+    if (done && !wasDone.current) {
+      setJustDone(true);
+      const timer = window.setTimeout(() => setJustDone(false), 900);
+      wasDone.current = done;
+      return () => window.clearTimeout(timer);
+    }
+    wasDone.current = done;
+  }, [done]);
+
+  return (
+    <li
+      className={`task-row border-b border-line-soft last:border-b-0 ${
+        justDone ? "task-row-just-done" : ""
+      }`}
+    >
+      <label className="flex cursor-pointer gap-3 px-5 py-3">
+        <input
+          type="checkbox"
+          className="checkbox mt-0.5"
+          checked={done}
+          onChange={() => toggleTask(task.id)}
+        />
+        <span className="min-w-0 flex-1">
+          <span className="flex flex-wrap items-center gap-x-2.5 gap-y-1">
+            <Icon size={13} className="shrink-0 text-faint" strokeWidth={1.75} aria-hidden />
+            <span
+              className={`task-label text-sm ${done ? "task-label-done text-faint" : "text-ink"}`}
+            >
+              {task.title}
+            </span>
+            <PriorityTag priority={task.priority} />
+            <span className="text-xs tabular-nums text-faint">{task.minutes}m</span>
+          </span>
+          {task.detail && (
+            <span className="mt-1.5 block text-sm leading-relaxed text-muted">
+              {task.detail}
+            </span>
+          )}
+          {task.repoPath && (
+            <span className="mt-1.5 block">
+              <RepoPath path={task.repoPath} />
+            </span>
+          )}
+        </span>
+      </label>
+    </li>
+  );
+}
+
+export function DayDetail({ day }: { day: Day }) {
   const { state, completeDay, reopenDay } = useStore();
-  const cue = useCue();
-  const unlockAudio = useAudioUnlock();
-  const [focus, setFocus] = useState(focusOnLoad);
-  const [reflection, setReflection] = useState("");
-  const [evidenceNote, setEvidenceNote] = useState("");
-  const [showAll, setShowAll] = useState(false);
 
   const record = state.completedDays[day.id];
   const complete = Boolean(record);
   const progress = dayTaskProgress(day, state);
-  const minutes = availableMinutes(new Date(), state.settings);
-  const plan = planForTime(day, minutes);
-  const visibleTasks = showAll ? day.tasks : plan.included;
+  const essentialsDone = essentialTasksComplete(day, state);
 
   const phase = phaseById.get(day.phaseId);
   const mod = moduleById.get(day.moduleId);
-  const project = day.projectId ? projectById.get(day.projectId) : undefined;
-  const week = weekForDay(day.dayNumber);
 
   return (
-    <>
-      {focus && <FocusMode day={day} onExit={() => setFocus(false)} />}
-
-      <div className="space-y-6">
-        <header>
-          <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
-            {phase && <TrackBadge track={phase.track} />}
-            <Pill tone="accent">Day {day.dayNumber}</Pill>
-            <Pill>{day.estimatedMinutes} min</Pill>
-            {complete && (
-              <Pill tone="ok">
-                <CheckCircle2 size={12} /> Complete
-              </Pill>
-            )}
-          </div>
-
-          <h1 className="mt-3 text-2xl font-semibold tracking-tight sm:text-[1.7rem]">
-            {day.title}
-          </h1>
-          <p className="mt-2 max-w-3xl text-sm leading-relaxed text-muted">
-            {day.objective}
-          </p>
-
-          {phase && (
-            <p className="mt-3 text-xs text-faint">
-              Phase {phase.order}: {phase.title}
-              {mod && ` · ${mod.title}`}
-              {week && ` · Week ${week.number}`}
-            </p>
+    <div className="mx-auto max-w-3xl space-y-6">
+      <header>
+        <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
+          <Pill tone="accent">Day {day.dayNumber}</Pill>
+          <Pill>{day.estimatedMinutes} min</Pill>
+          {complete && (
+            <Pill tone="ok">
+              <CheckCircle2 size={12} /> Complete
+            </Pill>
           )}
-
-          <div className="mt-5 flex flex-wrap items-center gap-3">
-            {!complete && (
-              <Button
-                onClick={() => {
-                  // Audio must start inside the gesture, not in an effect.
-                  unlockAudio();
-                  setFocus(true);
-                }}
-              >
-                <span className="flex items-center gap-2">
-                  <Timer size={15} /> Focus mode
-                </span>
-              </Button>
-            )}
-            {day.repoPath && <RepoPath path={day.repoPath} />}
-            {project && (
-              <Link
-                href={`/projects#${project.id}`}
-                className="inline-flex items-center gap-1.5 text-xs text-accent hover:underline"
-              >
-                {project.name} <ExternalLink size={11} />
-              </Link>
-            )}
-          </div>
-
-          <div className="mt-5">
-            <div className="flex items-center justify-between text-xs text-muted">
-              <span>
-                {progress.done}/{progress.total} tasks
-              </span>
-              <span className="tabular-nums">
-                {Math.round(progress.ratio * 100)}%
-              </span>
-            </div>
-            <ProgressBar value={progress.ratio} className="mt-2" />
-          </div>
-        </header>
-
-        <div className="grid gap-6 lg:grid-cols-[1.6fr_1fr]">
-          <div className="space-y-6">
-            <Card>
-              <CardHeader
-                title="Tasks"
-                hint={
-                  showAll
-                    ? `All ${day.tasks.length} tasks`
-                    : `Fitted to ${minutes} minutes available today`
-                }
-                action={
-                  plan.deferred.length > 0 && (
-                    <button
-                      onClick={() => setShowAll((v) => !v)}
-                      className="text-xs text-accent hover:underline"
-                    >
-                      {showAll ? "Fit to my time" : `Show all (${day.tasks.length})`}
-                    </button>
-                  )
-                }
-              />
-              <TaskList tasks={visibleTasks} />
-            </Card>
-
-            <Card>
-              <CardHeader title="Definition of done" />
-              <DefinitionOfDone day={day} />
-            </Card>
-
-            <Card>
-              <CardHeader title="Why this day exists" />
-              <WhyItMatters day={day} />
-            </Card>
-          </div>
-
-          <div className="space-y-6">
-            <Card>
-              <CardHeader title="Deliverables" />
-              <Deliverables day={day} />
-            </Card>
-
-            {day.skills.length > 0 && (
-              <Card>
-                <CardHeader title="Skills advanced" />
-                <ul className="flex flex-wrap gap-2 px-5 py-4">
-                  {day.skills.map((id) => {
-                    const skill = skillById.get(id);
-                    if (!skill) return null;
-                    return (
-                      <li key={id}>
-                        <Link href={`/skills#${id}`}>
-                          <Pill>{skill.name}</Pill>
-                        </Link>
-                      </li>
-                    );
-                  })}
-                </ul>
-              </Card>
-            )}
-
-            {day.resources && day.resources.length > 0 && (
-              <Card>
-                <CardHeader title="Resources" />
-                <ul className="space-y-2 px-5 py-4">
-                  {day.resources.map((r) => (
-                    <li key={r.ref} className="text-xs">
-                      <span className="text-ink">{r.label}</span>
-                      <span className="ml-2 break-all text-faint">{r.ref}</span>
-                    </li>
-                  ))}
-                </ul>
-              </Card>
-            )}
-
-            <Card>
-              <CardHeader title={complete ? "Mission complete" : "Finish the day"} />
-              <div className="space-y-3 px-5 py-4">
-                {complete ? (
-                  <>
-                    <p className="text-xs text-muted">
-                      Completed{" "}
-                      {new Date(record!.completedAt).toLocaleDateString(undefined, {
-                        day: "numeric",
-                        month: "short",
-                        year: "numeric",
-                      })}
-                      .
-                    </p>
-                    {record?.reflection && (
-                      <p className="rounded-lg border border-line bg-raised px-3 py-2.5 text-sm leading-relaxed text-muted">
-                        {record.reflection}
-                      </p>
-                    )}
-                    <Button variant="ghost" onClick={() => reopenDay(day.id)}>
-                      <span className="flex items-center gap-2">
-                        <RotateCcw size={14} /> Reopen day
-                      </span>
-                    </Button>
-                  </>
-                ) : (
-                  <>
-                    <label className="block">
-                      <span className="text-xs font-semibold uppercase tracking-[0.14em] text-faint">
-                        Evidence produced
-                      </span>
-                      <input
-                        className="field mt-1.5"
-                        placeholder="Commit SHA, file, test count…"
-                        value={evidenceNote}
-                        onChange={(e) => setEvidenceNote(e.target.value)}
-                      />
-                    </label>
-                    <label className="block">
-                      <span className="text-xs font-semibold uppercase tracking-[0.14em] text-faint">
-                        Reflection
-                      </span>
-                      <textarea
-                        className="field mt-1.5 min-h-20 resize-y"
-                        placeholder="What was hard? What surprised you?"
-                        value={reflection}
-                        onChange={(e) => setReflection(e.target.value)}
-                      />
-                    </label>
-                    <Button
-                      className="w-full"
-                      onClick={() => {
-                        unlockAudio();
-                        completeDay(day.id, {
-                          reflection: reflection.trim() || undefined,
-                          evidenceNote: evidenceNote.trim() || undefined,
-                        });
-                        cue({
-                          category: "milestone",
-                          title: `Day ${day.dayNumber} complete`,
-                          body: day.deliverables[0] ?? day.title,
-                          tag: `day-${day.id}`,
-                        });
-                      }}
-                    >
-                      Mark day complete
-                    </Button>
-                    <p className="text-sm leading-relaxed text-faint">
-                      This marks the essential tasks and the day&apos;s declared skill
-                      evidence as done. Only do it if that is actually true.
-                    </p>
-                  </>
-                )}
-              </div>
-            </Card>
-          </div>
         </div>
+
+        <h1 className="mt-3 text-2xl font-semibold tracking-tight sm:text-[1.7rem]">
+          {day.title}
+        </h1>
+        <p className="mt-2 text-sm leading-relaxed text-muted">{day.objective}</p>
+
+        {phase && (
+          <p className="mt-3 text-xs text-faint">
+            Phase {phase.order}: {phase.title}
+            {mod && ` · ${mod.title}`}
+          </p>
+        )}
+
+        <div className="mt-5">
+          <div className="flex items-center justify-between text-xs text-muted">
+            <span>
+              {progress.done}/{progress.total} tasks
+            </span>
+            <span className="tabular-nums">{Math.round(progress.ratio * 100)}%</span>
+          </div>
+          <ProgressBar value={progress.ratio} className="mt-2" />
+        </div>
+      </header>
+
+      <Card>
+        <CardHeader
+          title="Tasks"
+          hint="Essential tasks are enough for the day to count."
+        />
+        <ul>
+          {day.tasks.map((t) => (
+            <TaskRow key={t.id} task={t} />
+          ))}
+        </ul>
+      </Card>
+
+      <div className="flex flex-wrap items-center gap-3">
+        {complete ? (
+          <>
+            <p className="text-sm text-muted">
+              Completed{" "}
+              {new Date(record!.completedAt).toLocaleDateString(undefined, {
+                day: "numeric",
+                month: "short",
+                year: "numeric",
+              })}
+              .
+            </p>
+            <Button variant="ghost" onClick={() => reopenDay(day.id)}>
+              <span className="flex items-center gap-2">
+                <RotateCcw size={14} /> Reopen day
+              </span>
+            </Button>
+          </>
+        ) : (
+          <>
+            <Button onClick={() => completeDay(day.id)}>Mark day complete</Button>
+            {!essentialsDone && (
+              <p className="text-sm text-faint">
+                This also ticks any essential tasks still open.
+              </p>
+            )}
+          </>
+        )}
       </div>
-    </>
+    </div>
   );
 }

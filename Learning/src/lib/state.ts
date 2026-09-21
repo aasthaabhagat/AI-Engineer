@@ -1,110 +1,30 @@
-import type { ProjectStatus } from "@/data/types";
-import type { RadarStance } from "@/data/radar";
-import {
-  defaultNotificationPrefs,
-  normalizePrefs,
-  type NotificationPrefs,
-} from "./notifications";
-
-/** v2 added notification preferences and cue bookkeeping. */
-export const STATE_VERSION = 3;
+/**
+ * v4 reduced the app to study topics and daily tasks. Fields written by
+ * earlier versions (notes, journal, reviews, projects…) are carried forward
+ * untouched rather than deleted — they are no longer shown, but they are the
+ * owner's data.
+ */
+export const STATE_VERSION = 4;
 export const STORAGE_KEY = "ai-engineer-training-os";
 
 export interface Settings {
-  name: string;
-  /** ISO date (YYYY-MM-DD) the programme started. */
-  startDate: string;
-  weekdayMinutes: number;
-  weekendMinutes: number;
-  /** Days of the week available to study. 0 = Sunday. */
-  studyDays: number[];
   theme: "dark" | "light";
 }
 
 export interface DayRecord {
   completedAt: string;
-  reflection?: string;
-  /** Free-text notes on evidence produced, e.g. a commit SHA. */
-  evidenceNote?: string;
-}
-
-export interface ProjectState {
-  status?: ProjectStatus;
-  milestonesDone: string[];
-  githubUrl?: string;
-  deploymentUrl?: string;
-  notes?: string;
-}
-
-export interface Note {
-  id: string;
-  createdAt: string;
-  title: string;
-  body: string;
-  /** "concept" | "mistake" | "decision" | "snippet" | "question" */
-  kind: string;
-  tags: string[];
-  skillId?: string;
-  projectId?: string;
-}
-
-export interface JournalEntry {
-  id: string;
-  createdAt: string;
-  title: string;
-  /** What happened, what caused it, how it was fixed, what it taught. */
-  problem: string;
-  cause: string;
-  fix: string;
-  lesson: string;
-  dayId?: string;
-  projectId?: string;
-}
-
-export interface Review {
-  id: string;
-  createdAt: string;
-  kind: "daily" | "weekly" | "monthly" | "quarterly";
-  /** Question id -> answer. Questions live in lib/reviews.ts. */
-  answers: Record<string, string>;
-}
-
-/** Dedupe bookkeeping so a cue fires once, not on every render. */
-export interface CueLog {
-  /** Local date key of the last daily mission reminder. */
-  dailyReminder?: string;
-  /** Highest streak milestone already announced. */
-  streakMilestone?: number;
-  /** Local date key of the last recovery-mode notice. */
-  recoveryNotice?: string;
 }
 
 export interface PersistedState {
   version: number;
   settings: Settings;
-  notifications: NotificationPrefs;
-  cues: CueLog;
   /** taskId -> ISO completion timestamp. */
   completedTasks: Record<string, string>;
   /** dayId -> record. */
   completedDays: Record<string, DayRecord>;
-  /** evidenceId -> ISO timestamp. */
-  evidence: Record<string, string>;
-  projects: Record<string, ProjectState>;
-  /** Radar entry id -> your stance on it. */
-  radar: Record<string, RadarStance>;
-  notes: Note[];
-  journal: JournalEntry[];
-  reviews: Review[];
 }
 
 export const defaultSettings: Settings = {
-  name: "",
-  // Seeded from the first commit in the repository.
-  startDate: "2026-09-13",
-  weekdayMinutes: 120,
-  weekendMinutes: 240,
-  studyDays: [0, 1, 2, 3, 4, 5, 6],
   theme: "light",
 };
 
@@ -120,15 +40,6 @@ const seededDays: Record<string, DayRecord> = {
   "day-003": { completedAt: "2026-09-16T20:00:00.000Z" },
 };
 
-const seededEvidence: Record<string, string> = {
-  "ev-py-1": "2026-09-13T20:00:00.000Z",
-  "ev-py-3": "2026-09-13T20:00:00.000Z",
-  "ev-cli-1": "2026-09-13T20:00:00.000Z",
-  "ev-git-1": "2026-09-13T20:00:00.000Z",
-  "ev-py-2": "2026-09-16T20:00:00.000Z",
-  "ev-arch-1": "2026-09-16T20:00:00.000Z",
-};
-
 export function createInitialState(): PersistedState {
   const completedTasks: Record<string, string> = {};
   for (const dayId of Object.keys(seededDays)) {
@@ -142,18 +53,13 @@ export function createInitialState(): PersistedState {
   return {
     version: STATE_VERSION,
     settings: { ...defaultSettings },
-    notifications: { ...defaultNotificationPrefs },
-    cues: {},
     completedTasks,
     completedDays: { ...seededDays },
-    evidence: { ...seededEvidence },
-    projects: {},
-    radar: {},
-    notes: [],
-    journal: [],
-    reviews: [],
   };
 }
+
+const isRecord = (v: unknown): v is Record<string, unknown> =>
+  !!v && typeof v === "object" && !Array.isArray(v);
 
 /**
  * Accepts anything and returns valid state. Corrupt or partial data must never
@@ -162,13 +68,16 @@ export function createInitialState(): PersistedState {
  */
 export function migrateState(raw: unknown): PersistedState {
   const base = createInitialState();
-  if (!raw || typeof raw !== "object") return base;
+  if (!isRecord(raw)) return base;
 
-  const input = raw as Partial<PersistedState>;
-  const isRecord = (v: unknown): v is Record<string, string> =>
-    !!v && typeof v === "object" && !Array.isArray(v);
-
-  const settings = { ...base.settings, ...(input.settings ?? {}) };
+  const input = raw as Partial<PersistedState> & Record<string, unknown>;
+  const settings: Settings = {
+    ...base.settings,
+    ...(isRecord(input.settings) ? input.settings : {}),
+  };
+  if (settings.theme !== "dark" && settings.theme !== "light") {
+    settings.theme = base.settings.theme;
+  }
 
   // v3 changed the default theme from dark to light. Everyone who had used
   // the app already had "dark" written to storage by the first save, so the
@@ -178,33 +87,15 @@ export function migrateState(raw: unknown): PersistedState {
   if (fromVersion < 3) settings.theme = base.settings.theme;
 
   return {
+    // Keys from older versions ride along so nothing readable is destroyed.
+    ...input,
     version: STATE_VERSION,
     settings,
-    // v1 state has no notifications key; normalizePrefs supplies safe defaults
-    // (notifications and sound both OFF) rather than assuming consent.
-    notifications: normalizePrefs(input.notifications),
-    cues:
-      input.cues && typeof input.cues === "object" && !Array.isArray(input.cues)
-        ? (input.cues as CueLog)
-        : {},
     completedTasks: isRecord(input.completedTasks)
-      ? input.completedTasks
+      ? (input.completedTasks as Record<string, string>)
       : base.completedTasks,
-    completedDays:
-      input.completedDays && typeof input.completedDays === "object"
-        ? (input.completedDays as Record<string, DayRecord>)
-        : base.completedDays,
-    evidence: isRecord(input.evidence) ? input.evidence : base.evidence,
-    projects:
-      input.projects && typeof input.projects === "object"
-        ? (input.projects as Record<string, ProjectState>)
-        : {},
-    radar:
-      input.radar && typeof input.radar === "object" && !Array.isArray(input.radar)
-        ? (input.radar as Record<string, RadarStance>)
-        : {},
-    notes: Array.isArray(input.notes) ? input.notes : [],
-    journal: Array.isArray(input.journal) ? input.journal : [],
-    reviews: Array.isArray(input.reviews) ? input.reviews : [],
+    completedDays: isRecord(input.completedDays)
+      ? (input.completedDays as Record<string, DayRecord>)
+      : base.completedDays,
   };
 }

@@ -20,13 +20,13 @@ export default function DayPage({
     return (
       <Card>
         <div className="px-5 py-12 text-center">
-          <p className="text-sm font-medium">Day {dayNumber} is not authored yet.</p>
+          <p className="text-sm font-medium">Day {dayNumber} is not written yet.</p>
           <p className="mx-auto mt-2 max-w-md text-sm leading-relaxed text-muted">
-            Days exist for phases 1 and 2. Later phases are outlined on the
-            roadmap and get written as you approach them.
+            Daily tasks exist for phases 1 and 2. Later phases list their topics
+            and get daily tasks as you approach them.
           </p>
-          <Link href="/roadmap" className="mt-4 inline-block text-sm text-accent hover:underline">
-            Open the roadmap →
+          <Link href="/topics" className="mt-4 inline-block text-sm text-accent hover:underline">
+            Open the topics →
           </Link>
         </div>
       </Card>
@@ -40,7 +40,7 @@ export default function DayPage({
     <div className="space-y-8">
       <DayDetail day={day} />
 
-      <nav className="flex items-center justify-between border-t border-line-soft pt-5 text-sm">
+      <nav className="mx-auto flex max-w-3xl items-center justify-between border-t border-line-soft pt-5 text-sm">
         {prev ? (
           <Link
             href={`/day/${prev.dayNumber}`}

@@ -3,13 +3,11 @@ import "./globals.css";
 import { STORAGE_KEY } from "@/lib/state";
 import { StoreProvider } from "@/lib/store";
 import { Shell } from "@/components/Shell";
-import { CommandPalette } from "@/components/CommandPalette";
-import { CueRunner } from "@/components/CueRunner";
 
 export const metadata: Metadata = {
-  title: "AI Engineer Training OS",
+  title: "AI Engineer Study Plan",
   description:
-    "Personal training system: what to learn, build, test, commit and ship today.",
+    "Study topics and daily tasks for becoming an AI engineer.",
 };
 
 /**
@@ -35,8 +33,6 @@ export default function RootLayout({
       <body className="min-h-screen bg-bg text-ink antialiased">
         <StoreProvider>
           <Shell>{children}</Shell>
-          <CommandPalette />
-          <CueRunner />
         </StoreProvider>
       </body>
     </html>

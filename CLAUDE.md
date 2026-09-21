@@ -35,15 +35,14 @@ engineering and career work appear throughout, not only at the end.
 
 ## 2. What The Learning Website Is
 
-`AI-Engineer/Learning/` is the owner's **personal AI Engineer Training
-Operating System**. It is not a roadmap brochure. It answers one question every
-evening, after a full day of work:
+`AI-Engineer/Learning/` is the owner's **AI Engineer study plan**. It holds
+exactly two things, by the owner's decision (2026-09-21): **study topics** and
+**daily tasks**. It answers one question every evening, after a full day of work:
 
 > **What exactly should I do today to become the engineer I want to become?**
 
-It must tell the owner what to learn, practise, build, test, document, commit
-and deploy; why it matters; and what evidence proves competency. Wherever
-possible it links learning tasks to **real projects in this repository**.
+It tells the owner what to study and which tasks to do today. Wherever
+possible tasks link to **real projects in this repository**.
 
 Example of the intended coupling:
 
@@ -175,45 +174,26 @@ Currently declared in `Learning/package.json`:
 
 ---
 
-## 8. Notifications and Sound Requirements
+## 8. Notifications and Sound — Removed
 
-The Learning app should support training notifications, using **native browser
-APIs**, no library:
-
-- daily mission reminder
-- task completion
-- focus-session completion
-- break reminders
-- timer completion
-- missed-day / recovery reminders
-- review reminders (weekly, monthly, quarterly)
-- streak and progress milestones
-
-Rules:
-
-- Browser notifications only after **explicit permission** via a user gesture.
-  Never request permission on page load.
-- Sound is **off by default**; respect autoplay restrictions; initialise
-  `AudioContext` only from a user gesture. Never play unexpected audio.
-- Settings must control: notifications on/off, sound on/off, per-category
-  toggles, and volume.
-- Preferences persist locally with the rest of the app state.
-- Useful, not nagging. No streak-shaming, no anxiety mechanics.
+Notifications, sound, focus mode and the timer were removed on 2026-09-21 when
+the owner narrowed the app to topics and daily tasks. Do not bring them back
+unless asked. If they ever return: permission only from a user gesture, sound
+off by default, no streak-shaming.
 
 ---
 
 ## 9. Roadmap Requirements
 
-Hierarchy: **Year → Phase → Module → Week → Day → Task → Deliverable →
-Evidence.**
+Hierarchy: **Phase → Module (study topic) → Day → Task.**
 
-Every day carries: objective, why it matters, career connection, estimated
-time, essential / important / optional tasks, practice, build, test,
-documentation, git task, definition of done, evidence, next step, and the
-repository path it touches where applicable.
+Every day carries only: title, objective, estimated time, and its tasks
+(essential / important / optional, each with type, minutes and, where it
+applies, the repository path it touches). Why-it-matters, career connection,
+deliverables, definition of done, git task, resources, skills and evidence were
+deliberately removed — do not re-add them to the data or the UI.
 
-**Time budget** (configurable in Settings): weekdays 1.5–2.5h, weekends 3–5h.
-If only the essentials fit, the day still counts as done.
+If only the essential tasks are done, the day still counts as done.
 
 **Curriculum — 24 phases:**
 
@@ -233,10 +213,9 @@ phases stay outlined until the owner approaches them, so they can adapt to real
 pace and to code that actually exists. Never pad an outlined phase with generic
 filler to make it look complete — the UI states the distinction plainly.
 
-**Adaptive behaviour:** finish early → extension work; struggle → reinforcement;
-demonstrated competence → acceleration; several days missed → **recovery mode**
-(essentials only until the rhythm returns). Never accumulate an impossible
-backlog, and never use guilt as a mechanic.
+**Pace:** never accumulate an impossible backlog, and never use guilt as a
+mechanic. (Recovery mode, streaks and the schedule comparison were removed with
+the rest of the app on 2026-09-21.)
 
 **RAG progression:** basic RAG → chunking → embeddings → vector search →
 metadata filtering → hybrid retrieval → reranking → query transformation →
@@ -276,13 +255,6 @@ lecture is not evidence. Evidence is: code, a project, a test, a git commit, a
 deployment, an evaluation, documentation, an architecture, a technical
 explanation, a debugging or failure analysis.
 
-**Skill maturity ladder** — Not Started · Awareness · Understanding ·
-Practicing · Implementing · Applied · Engineering · Strong.
-
-Maturity is **derived from ticked evidence, never self-declared**. Keep the
-distinction between *completing a learning task* and *demonstrating a skill*.
-Never mark an advanced skill as mastered because it appears in the roadmap.
-
 ---
 
 ## 11. Technical Requirements
@@ -292,54 +264,28 @@ Lucide icons. Add nothing else without approval.
 
 **Data-driven architecture — non-negotiable.** Curriculum content lives in
 `Learning/src/data/` as typed plain data. UI components must never hard-code
-roadmap content. Typed entities: phases, modules, days, tasks, skills, evidence,
-projects, milestones, resources, blueprints, capabilities, reviews.
+roadmap content. Typed entities: phases, modules, days, tasks — nothing else.
 
-**Persistence:** V1 is local — `localStorage`, IndexedDB where it earns its
-place. Persist progress, task completion, settings, notes, journal, projects,
-skills, reviews, roadmap state, notification preferences. **Corrupt or partial
-data must degrade gracefully, never crash and never silently destroy readable
-data.** Keep persistence isolated (`src/lib/state.ts`, `src/lib/store.tsx`) so a
-future FastAPI + PostgreSQL + auth backend replaces those files, not the pages.
+**Persistence:** local — `localStorage`. Persists task completion, day
+completion and the theme. **Corrupt or partial data must degrade gracefully,
+never crash and never silently destroy readable data**: keys written by older
+versions (notes, journal, reviews, projects…) are carried forward untouched by
+`migrateState`, even though nothing displays them now. Keep persistence
+isolated in `src/lib/state.ts` and `src/lib/store.tsx`.
 
-**Pages:** Dashboard · Today · Roadmap · Calendar · Skills · Projects ·
-Portfolio · Knowledge / Engineering Journal · AI Patterns / Blueprints ·
-System Design · Reviews · Career Readiness · Settings.
-Plus: Focus Mode, timer, progress tracking, recovery mode, capability checks,
-skill matrix, gap analysis, command palette / global search.
+**Pages — the owner's decision, 2026-09-21: study topics and daily tasks only.**
 
-**Dashboard:** today's mission is the dominant element. Header shows
-`AI ENGINEER TRAINING SYSTEM`, day X, current phase, current module, progress,
-streak. Mission shows objective, estimated time, why it matters, required
-output, learn / practice / build / test / ship, definition of done. Then current
-project, skills in progress, up next. Do not overload it.
+- `/` — **Today**: the first day not yet completed, its tasks, mark complete.
+- `/topics` — **Topics**: the 24 phases, their modules and points, and links to
+  the days that cover each module.
+- `/day/[n]` — any single day, reached from Topics, with prev/next.
 
-**Projects & portfolio engine:** purpose, required skills, milestones, quality
-gates, tests, docs, deployment, evidence, repository path, GitHub link.
-Portfolio shows **capability**, not project titles: capability checks, skill
-gaps, portfolio readiness, evidence mapping. Target 2–4 deep projects
-demonstrating serious AI product engineering, RAG, agentic AI, and AI integrated
-into an existing software system.
-
-**Capability checker** — "Can I build this?" is limited by the **weakest**
-required skill, not the average. A RAG system with no evaluation is not a
-production RAG system.
-
-**Blueprints:** RAG, AI Agent, AI Copilot, AI Search, Document Intelligence, AI
-Workflow, Multi-Agent, AI SaaS, Model Serving, Evaluation Pipeline. Each with
-architecture, components, tradeoffs, **failure points**, security, evaluation.
-
-**Engineering journal:** bugs, causes, fixes, lessons, architecture decisions,
-tradeoffs, AI failures, retrieval failures, agent failures, deployment failures.
-Failure is evidence of engineering learning.
-
-**Reviews:** daily, weekly, monthly, quarterly capability audit.
-
-**Navigation is settled — do not restructure it.** The left sidebar with all
-fourteen destinations is what the owner wants. A three-destination version was
-built and rejected (commits `3bb4387`, reverted by `afff9f3`); Dashboard and
-Today stay as separate pages even though they overlap. Improve the visual
-design, never the information architecture, unless the owner asks.
+The sidebar has exactly those two destinations (Today, Topics) plus the theme
+toggle. Dashboard, Calendar, Skills, Projects, Portfolio, Knowledge/Journal,
+Blueprints, System Design, AI Radar, Career, Reviews, Settings, focus mode,
+command palette and notifications were all removed. **Do not re-add any page,
+panel or feature beyond topics and daily tasks unless the owner asks.** The
+removed code is in git history before this change if it is ever wanted back.
 
 **Theming.** Light is the default and is designed first; dark is a real second
 design over the same variables, not an inversion. Both palettes live in
@@ -349,11 +295,9 @@ Components must use semantic tokens only (`bg-panel`, `text-muted`,
 of the two themes. Shadows carry depth on light and are switched off on dark,
 where borders do that job. The saved theme is applied by an inline script in
 `layout.tsx` before first paint, so there is no flash — keep that script in
-step with the storage shape. The toggle lives in the sidebar; Settings keeps
-its control too.
+step with the storage shape. The toggle lives in the sidebar.
 
-**UI:** premium AI engineering command centre. Modern, minimal, technical,
-focused, professional. Strong typography, subtle borders, generous
+**UI:** modern, minimal, technical, focused, professional. Strong typography, subtle borders, generous
 spacing, restrained motion. Avoid childish gamification, neon, heavy
 glassmorphism, large decorative graphics, meaningless statistics and card soup.
 Responsive down to phone width; accessible — semantic HTML, keyboard
@@ -382,15 +326,12 @@ On failure: read the error → find the root cause → fix it → rerun → cont
 until verified. Do not paper over an error by loosening types or deleting a test.
 
 **Test the logic that matters:** task completion, progress calculation,
-persistence and corrupt-data recovery, skill progression, project state,
-recovery mode, roadmap logic, reset, notification preferences, timer logic, and
-curriculum data integrity (ids referenced by days must exist; day numbers
-contiguous; every day has an essential task and a definition of done).
+persistence and corrupt-data recovery, and curriculum data integrity (ids
+referenced by days must exist; day numbers contiguous; every day has an
+essential task).
 
-**No fake features.** Do not fake GitHub sync, cloud sync, an AI mentor,
-external integrations, analytics or agent execution. No buttons that do nothing.
-Unimplemented functionality is **labelled as not implemented, in the UI**, with
-the reason. An honest empty state beats a plausible fabricated number.
+**No fake features.** No buttons that do nothing, no fabricated numbers. An
+honest empty state beats a plausible fabricated number.
 
 ---
 
@@ -412,46 +353,42 @@ AI-Engineer/
 │       │                      expenses.json, README.md
 │       └── dot-spot-painting/ main.py, experiments.ipynb (0 bytes — invalid),
 │                              image.jpg
-└── Learning/                  IN SCOPE — the Training OS
+└── Learning/                  IN SCOPE — the study plan
 ```
 
 **Environment: installed and verified.** Node.js 24.19.0 LTS and npm 11.17.0
 (installed via winget with the owner's approval). `Learning/node_modules/`
 present, `package-lock.json` committed. Python remains Anaconda 3.13.
 
-**Learning app — 57 files, ~14,700 lines, VERIFIED**
+**Learning app — topics and daily tasks only, VERIFIED**
 
-`src/data/`: types, 24 phases, 8 weeks, 56 skills with evidence ladders, 8
-projects, 10 blueprints, 8 capability checks, 8 system design briefs, 18 career
-areas, 12 radar entries, 46 authored days for phases 1-2.
-`src/lib/`: state (v3), store, progress, maturity, reviews, notifications,
-notifier, useCue.
-`src/components/`: ui, Shell, CommandPalette, mission, DayDetail, FocusMode,
-CueRunner.
-`src/app/`: dashboard, today, day/[n], roadmap, calendar, skills, projects,
-knowledge, blueprints, system-design, radar, portfolio, career, reviews,
-settings.
-`tests/`: four vitest suites, 84 tests.
+`src/data/`: types, 24 phases with their modules, 46 authored days for
+phases 1-2 (`days/`).
+`src/lib/`: state (v4), store, progress.
+`src/components/`: ui, Shell, DayDetail.
+`src/app/`: `/` (Today), `topics`, `day/[dayNumber]`.
+`tests/`: two vitest suites, 22 tests.
 
 **Verification status (re-run after every change):**
 
-- `npm test` — 84 passing
+- `npm test` — 22 passing
 - `npm run typecheck` — clean
-- `npm run build` — succeeds, 17 routes
-- `npm run dev` — all 17 routes return 200, and both palettes plus the task
-  animations are present in the served stylesheet
+- `npm run build` — succeeds (`/`, `/topics`, `/day/[dayNumber]`)
+- `npm run dev` — `/`, `/topics`, `/day/4`, `/day/46`, `/day/999` return 200;
+  removed routes 404
 
 There is no `lint` script. `next lint` is deprecated in Next 15 and no ESLint
-config or dependency exists, so the dead script was removed rather than left
-pretending to work. `npm run check` runs typecheck + test + build.
+config or dependency exists. `npm run check` runs typecheck + test + build.
 
 **Known behaviours worth remembering:**
 
-- The dashboard renders a loading state during SSR because progress lives in
+- Today (`/`) renders a loading state during SSR because progress lives in
   localStorage. Not a bug.
 - State v3 adopts the light default once for anyone whose saved state predates
   it, because the first save had already written "dark" to storage. After v3
   the theme is the user's own and is never overridden.
+- Deleting routes leaves stale files in `.next/types`, which make
+  `tsc --noEmit` fail. Delete `.next` and rebuild.
 - After many file edits the dev server can throw
   `__webpack_modules__[moduleId] is not a function`. It is a stale HMR cache:
   stop node, delete `.next`, restart. It is not a code fault.
@@ -459,28 +396,22 @@ pretending to work. `npm run check` runs typecheck + test + build.
 
 **Still outstanding:**
 
-- Client-side rendering is unverified. Route HTML, SSR output and the served
-  stylesheet are checked, but no browser drives the app, so hydration, clicks,
-  the theme toggle, focus mode, the timer, the cue wiring and the task
-  completion animations have never been exercised end to end. This needs
-  either jsdom + Testing Library or Playwright — both are new dependencies and
-  need approval.
-- IndexedDB — localStorage only. It is sufficient at this data size; revisit if
-  state grows past a few MB.
-- Days for phases 3–24 (deliberately outlined until approached).
-- Background notifications (needs a service worker and push infrastructure).
-- GitHub sync, cloud sync, AI mentor — all labelled as not implemented in the
-  Settings UI.
+- Client-side rendering is unverified. Route HTML and SSR output are checked,
+  but no browser drives the app, so hydration, ticking tasks, the theme toggle
+  and "mark day complete" have not been exercised end to end. This needs jsdom +
+  Testing Library or Playwright — new dependencies, need approval.
+- Daily tasks for phases 3–24 (written as the owner approaches them).
 
-**Git:** `c0ce264`. Commits so far: `ba231c0` (app + CLAUDE.md), `c96571d`
+**Git:** Commits so far: `ba231c0` (app + CLAUDE.md), `c96571d`
 (notifications, sound, system design, career, radar), `7478e0b` (weeks,
 blueprints, integrity tests), `c95367b` (state update), `3bb4387` + `c1bd7e1`
 (three-destination restructure — **rejected**), `afff9f3` (revert of it),
-`c0ce264` (light theme, theme toggle, visual pass). Nothing pushed — push
+`c0ce264` (light theme, theme toggle, visual pass), `db4c713` (docs), then the
+reduction to topics + daily tasks. Nothing pushed — push
 always needs approval.
 
-**Immediate next step:** decide on browser-level testing, then continue with
-the remaining gaps above.
+**Immediate next step:** write daily tasks for phase 3 as the owner approaches
+it; decide on browser-level testing.
 
 ---
 
@@ -495,7 +426,7 @@ the remaining gaps above.
   `expense-tracker`.
 - Keep the owner pointed at the goal. If time drains into watching lectures,
   collecting frameworks, polishing beginner projects or perfecting this
-  dashboard instead of doing the day's mission, say so: *what are we building,
+  app instead of doing the day's tasks, say so: *what are we building,
   why, and what does it prove?*
 - The Learning app is **a tool**, not the training. It should never become the
   thing that replaces the learning it exists to direct.

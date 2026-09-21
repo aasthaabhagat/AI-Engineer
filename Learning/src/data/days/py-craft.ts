@@ -12,15 +12,7 @@ export const pyCraftDays: Day[] = [
     title: "Classes and the Repository Pattern",
     objective:
       "Turn the loose data functions into an ExpenseRepository object that owns storage.",
-    whyItMatters:
-      "Module-level functions with a module-level file path cannot be swapped, configured or tested independently. An object with injected configuration can.",
-    careerConnection:
-      "Swapping JSON for PostgreSQL in Phase 5 should touch one class. If it touches ten files, the design was wrong.",
     estimatedMinutes: 110,
-    projectId: "expense-tracker",
-    repoPath: REPO,
-    skills: ["python-oop", "code-architecture"],
-    evidence: ["ev-oop-2", "ev-arch-3"],
     tasks: [
       {
         id: "d23-t1",
@@ -53,14 +45,6 @@ export const pyCraftDays: Day[] = [
         priority: "important",
       },
     ],
-    deliverables: ["ExpenseRepository class"],
-    definitionOfDone: [
-      "Storage details live in one class",
-      "Tests construct a repository with a temp path",
-      "Application still runs",
-      "Committed",
-    ],
-    gitTask: { commitMessage: "Introduce ExpenseRepository" },
   },
   {
     id: "day-024",
@@ -69,15 +53,7 @@ export const pyCraftDays: Day[] = [
     moduleId: "m-py-datamodel",
     title: "Magic Methods",
     objective: "Make your objects behave like built-in Python types where it helps.",
-    whyItMatters:
-      "__repr__ makes debugging bearable. __eq__ makes tests readable. Implemented carelessly, they make objects lie about themselves.",
-    careerConnection:
-      "Reading library source becomes much easier once dunder methods are familiar.",
     estimatedMinutes: 80,
-    projectId: "expense-tracker",
-    repoPath: REPO,
-    skills: ["python-oop"],
-    evidence: ["ev-oop-3"],
     tasks: [
       {
         id: "d24-t1",
@@ -108,13 +84,6 @@ export const pyCraftDays: Day[] = [
         priority: "optional",
       },
     ],
-    deliverables: ["Objects with natural Python behaviour"],
-    definitionOfDone: [
-      "repr is informative in a debugger",
-      "Equality compares values, not identity",
-      "Committed",
-    ],
-    gitTask: { commitMessage: "Implement dunder methods on domain objects" },
   },
   {
     id: "day-025",
@@ -124,15 +93,7 @@ export const pyCraftDays: Day[] = [
     title: "Inheritance vs Composition",
     objective:
       "Add a second storage backend and choose the structure deliberately.",
-    whyItMatters:
-      "Inheritance is the most over-used tool in OOP. Feeling the difference on your own code is the only way the rule stops being abstract.",
-    careerConnection:
-      "Pluggable backends are how real systems swap a vector store, a model provider or a queue.",
     estimatedMinutes: 110,
-    projectId: "expense-tracker",
-    repoPath: REPO,
-    skills: ["python-oop", "code-architecture"],
-    evidence: ["ev-oop-2", "ev-oop-4"],
     tasks: [
       {
         id: "d25-t1",
@@ -163,14 +124,6 @@ export const pyCraftDays: Day[] = [
         priority: "important",
       },
     ],
-    deliverables: ["Two interchangeable storage backends"],
-    definitionOfDone: [
-      "Backend switchable by configuration alone",
-      "Tests run against both backends",
-      "Design choice justified in writing",
-      "Committed",
-    ],
-    gitTask: { commitMessage: "Add pluggable storage backends" },
   },
   {
     id: "day-026",
@@ -179,15 +132,7 @@ export const pyCraftDays: Day[] = [
     moduleId: "m-py-craft",
     title: "Package Structure and pyproject.toml",
     objective: "Turn the folder of scripts into an installable package with an entry point.",
-    whyItMatters:
-      "Installable means importable, testable and deployable. It also ends import path confusion permanently.",
-    careerConnection:
-      "Every Python service you deploy is packaged this way, and every Dockerfile installs it.",
     estimatedMinutes: 110,
-    projectId: "expense-tracker",
-    repoPath: REPO,
-    skills: ["python-core", "cli-apps"],
-    evidence: ["ev-cli-4", "ev-py-5"],
     tasks: [
       {
         id: "d26-t1",
@@ -218,14 +163,6 @@ export const pyCraftDays: Day[] = [
         priority: "essential",
       },
     ],
-    deliverables: ["Installable package", "expense-tracker command"],
-    definitionOfDone: [
-      "pip install -e . succeeds",
-      "The command runs from any directory",
-      "pytest still passes after restructuring",
-      "Committed",
-    ],
-    gitTask: { commitMessage: "Package expense tracker with pyproject and console entry point" },
   },
   {
     id: "day-027",
@@ -234,15 +171,7 @@ export const pyCraftDays: Day[] = [
     moduleId: "m-py-datamodel",
     title: "Static Type Checking",
     objective: "Run a type checker over the project and fix what it finds.",
-    whyItMatters:
-      "Annotations that are never checked are just comments. A checker turns them into a safety net that runs before your code does.",
-    careerConnection:
-      "Typed Python is standard in serious backend and ML platform teams.",
     estimatedMinutes: 90,
-    projectId: "expense-tracker",
-    repoPath: REPO,
-    skills: ["python-typing"],
-    evidence: ["ev-ty-3"],
     tasks: [
       {
         id: "d27-t1",
@@ -275,13 +204,6 @@ export const pyCraftDays: Day[] = [
         priority: "important",
       },
     ],
-    deliverables: ["Clean type check run"],
-    definitionOfDone: [
-      "Type checker passes",
-      "No blanket Any used to hide errors",
-      "Committed",
-    ],
-    gitTask: { commitMessage: "Add static type checking and fix type errors" },
   },
   {
     id: "day-028",
@@ -290,15 +212,7 @@ export const pyCraftDays: Day[] = [
     moduleId: "m-py-craft",
     title: "Linting and Formatting",
     objective: "Automate code style so it stops being a decision.",
-    whyItMatters:
-      "Consistent formatting makes diffs readable, and linters catch real defects — unused variables, shadowed names, unreachable code.",
-    careerConnection:
-      "These are the first two steps of the CI pipeline you build in Phase 2.",
     estimatedMinutes: 80,
-    projectId: "expense-tracker",
-    repoPath: REPO,
-    skills: ["python-core", "code-architecture"],
-    evidence: ["ev-py-6"],
     tasks: [
       {
         id: "d28-t1",
@@ -329,9 +243,6 @@ export const pyCraftDays: Day[] = [
         priority: "optional",
       },
     ],
-    deliverables: ["Lint and format configuration", "Clean lint run"],
-    definitionOfDone: ["Lint passes with no ignored errors", "Formatting is automatic", "Committed"],
-    gitTask: { commitMessage: "Add linting and formatting configuration" },
   },
   {
     id: "day-029",
@@ -340,15 +251,7 @@ export const pyCraftDays: Day[] = [
     moduleId: "m-py-craft",
     title: "Debugging Properly",
     objective: "Use a real debugger instead of scattering print statements.",
-    whyItMatters:
-      "Breakpoints let you inspect actual state at the moment of failure. Print statements let you inspect what you guessed to print.",
-    careerConnection:
-      "Debugging skill is the difference between a two-hour bug and a two-day bug, and it is what you will lean on hardest with AI systems.",
     estimatedMinutes: 90,
-    projectId: "expense-tracker",
-    repoPath: REPO,
-    skills: ["python-core", "python-errors"],
-    evidence: ["ev-err-5"],
     tasks: [
       {
         id: "d29-t1",
@@ -380,14 +283,6 @@ export const pyCraftDays: Day[] = [
         repoPath: "Learning/ENGINEERING_JOURNAL.md",
       },
     ],
-    deliverables: ["Debugger configured", "First journal entry"],
-    definitionOfDone: [
-      "Bug found without adding a single print",
-      "Traceback read correctly",
-      "Journal entry written",
-      "Committed",
-    ],
-    gitTask: { commitMessage: "Add engineering journal" },
   },
   {
     id: "day-030",
@@ -396,15 +291,7 @@ export const pyCraftDays: Day[] = [
     moduleId: "m-py-craft",
     title: "Performance Basics",
     objective: "Measure before optimising, then optimise the thing that is actually slow.",
-    whyItMatters:
-      "Intuition about performance is usually wrong. Measurement is the whole skill.",
-    careerConnection:
-      "Latency and cost optimisation for LLM systems is this same discipline with money attached.",
     estimatedMinutes: 90,
-    projectId: "expense-tracker",
-    repoPath: REPO,
-    skills: ["python-core", "dsa"],
-    evidence: ["ev-dsa-1"],
     tasks: [
       {
         id: "d30-t1",
@@ -435,13 +322,6 @@ export const pyCraftDays: Day[] = [
         priority: "important",
       },
     ],
-    deliverables: ["Profiling results with before/after numbers"],
-    definitionOfDone: [
-      "Bottleneck identified by measurement, not guesswork",
-      "Improvement quantified",
-      "Committed",
-    ],
-    gitTask: { commitMessage: "Profile and optimise expense analysis" },
   },
   {
     id: "day-031",
@@ -450,15 +330,7 @@ export const pyCraftDays: Day[] = [
     moduleId: "m-py-craft",
     title: "Documentation That Earns Its Place",
     objective: "Write docstrings and a README a stranger could act on.",
-    whyItMatters:
-      "Your README is the first thing a recruiter or interviewer reads. It is also the first thing you will read in six months when you have forgotten everything.",
-    careerConnection:
-      "Documentation quality is a visible, checkable proxy for engineering maturity.",
     estimatedMinutes: 90,
-    projectId: "expense-tracker",
-    repoPath: REPO,
-    skills: ["portfolio", "code-architecture"],
-    evidence: ["ev-po-1"],
     tasks: [
       {
         id: "d31-t1",
@@ -491,13 +363,6 @@ export const pyCraftDays: Day[] = [
         priority: "important",
       },
     ],
-    deliverables: ["Documented codebase", "README with an architecture section"],
-    definitionOfDone: [
-      "Setup instructions work from a clean clone",
-      "Limitations stated honestly",
-      "Committed",
-    ],
-    gitTask: { commitMessage: "Document the expense tracker" },
   },
   {
     id: "day-032",
@@ -506,15 +371,7 @@ export const pyCraftDays: Day[] = [
     moduleId: "m-py-craft",
     title: "Pay Down the Debt",
     objective: "Close out DEFECTS.md and remove everything dead.",
-    whyItMatters:
-      "Superseded files, duplicated logic and stale TODOs confuse future you and any reviewer. Deleting code is engineering work.",
-    careerConnection:
-      "Leaving a codebase cleaner than you found it is a habit senior engineers are hired for.",
     estimatedMinutes: 100,
-    projectId: "expense-tracker",
-    repoPath: REPO,
-    skills: ["code-architecture", "code-review"],
-    evidence: ["ev-arch-2"],
     tasks: [
       {
         id: "d32-t1",
@@ -547,14 +404,6 @@ export const pyCraftDays: Day[] = [
         priority: "essential",
       },
     ],
-    deliverables: ["Clean codebase", "DEFECTS.md closed out"],
-    definitionOfDone: [
-      "No dead or superseded files remain",
-      "No duplicated logic",
-      "All tests pass",
-      "Committed",
-    ],
-    gitTask: { commitMessage: "Remove superseded modules and close known defects" },
   },
   {
     id: "day-033",
@@ -564,15 +413,7 @@ export const pyCraftDays: Day[] = [
     title: "Explain It Out Loud",
     objective:
       "Walk through your own architecture as if to an interviewer, and find the parts you cannot defend.",
-    whyItMatters:
-      "You do not know something until you can explain it without notes. Gaps in explanation are gaps in understanding.",
-    careerConnection:
-      "This is literally the project deep-dive interview round.",
     estimatedMinutes: 90,
-    projectId: "expense-tracker",
-    repoPath: REPO,
-    skills: ["interview", "code-architecture"],
-    evidence: ["ev-iv-1", "ev-iv-2"],
     tasks: [
       {
         id: "d33-t1",
@@ -603,14 +444,6 @@ export const pyCraftDays: Day[] = [
         priority: "important",
       },
     ],
-    deliverables: ["Architecture diagram", "Two-minute project explanation"],
-    definitionOfDone: [
-      "Architecture drawn without looking at the code",
-      "Every design decision has a stated reason",
-      "Scaling limits identified honestly",
-      "Committed",
-    ],
-    gitTask: { commitMessage: "Add architecture notes and project explanation" },
   },
   {
     id: "day-034",
@@ -620,15 +453,7 @@ export const pyCraftDays: Day[] = [
     title: "Phase 1 Capstone: Expense Tracker v1.0",
     objective:
       "Ship a tagged v1.0 that meets every quality gate, and audit the phase honestly.",
-    whyItMatters:
-      "Finishing properly — tagged, documented, tested, clean — is a skill of its own. Most people abandon projects at 90%.",
-    careerConnection:
-      "This becomes the first entry in your portfolio: not impressive in scope, but unimpeachable in craft.",
     estimatedMinutes: 120,
-    projectId: "expense-tracker",
-    repoPath: REPO,
-    skills: ["python-core", "git", "portfolio"],
-    evidence: ["ev-git-6", "ev-po-1", "ev-po-5"],
     tasks: [
       {
         id: "d34-t1",
@@ -668,17 +493,5 @@ export const pyCraftDays: Day[] = [
         priority: "essential",
       },
     ],
-    deliverables: ["Tagged v1.0.0 release", "Phase 1 retrospective", "Updated skill evidence"],
-    definitionOfDone: [
-      "Tests, lint and type check all pass",
-      "Fresh clone sets up and runs from README alone",
-      "v1.0.0 tagged and pushed",
-      "Skill evidence updated honestly",
-      "Retrospective written",
-    ],
-    gitTask: {
-      commitMessage: "Release expense tracker v1.0.0",
-      note: "Tag this one: git tag -a v1.0.0 -m 'Expense Tracker v1.0.0' && git push origin v1.0.0",
-    },
   },
 ];

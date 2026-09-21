@@ -11,15 +11,7 @@ export const pyQualityDays: Day[] = [
     moduleId: "m-py-testing",
     title: "First Tests with pytest",
     objective: "Write your first automated tests against analyzer.py.",
-    whyItMatters:
-      "You have been testing by hand: run the app, click through the menu, eyeball the number. That does not survive a refactor and it does not scale. A test suite is how you change code without fear.",
-    careerConnection:
-      "No serious codebase accepts untested code. This is the single clearest signal that separates a script writer from an engineer.",
     estimatedMinutes: 110,
-    projectId: "expense-tracker",
-    repoPath: REPO,
-    skills: ["python-testing"],
-    evidence: ["ev-test-1"],
     tasks: [
       {
         id: "d10-t1",
@@ -53,14 +45,6 @@ export const pyQualityDays: Day[] = [
         priority: "important",
       },
     ],
-    deliverables: ["tests/ directory", "First passing test suite"],
-    definitionOfDone: [
-      "pytest runs and passes",
-      "At least 5 tests written",
-      "You can read and explain a failure message",
-      "Committed",
-    ],
-    gitTask: { commitMessage: "Add first pytest suite for expense analysis" },
   },
   {
     id: "day-011",
@@ -70,15 +54,7 @@ export const pyQualityDays: Day[] = [
     title: "Edge Cases and Failure Paths",
     objective:
       "Test what breaks: empty lists, one item, negative amounts, malformed records.",
-    whyItMatters:
-      "Tests that only cover the happy path give false confidence. Every bug you have hit so far lived in an edge case.",
-    careerConnection:
-      "Thinking in edge cases is what interviewers probe for, and what prevents production incidents.",
     estimatedMinutes: 100,
-    projectId: "expense-tracker",
-    repoPath: REPO,
-    skills: ["python-testing", "python-errors"],
-    evidence: ["ev-test-2"],
     tasks: [
       {
         id: "d11-t1",
@@ -110,14 +86,6 @@ export const pyQualityDays: Day[] = [
         priority: "important",
       },
     ],
-    deliverables: ["Edge case tests", "Known coverage gaps documented"],
-    definitionOfDone: [
-      "Empty and single-item cases tested",
-      "pytest.raises used for failure paths",
-      "Coverage gaps written down honestly",
-      "Committed",
-    ],
-    gitTask: { commitMessage: "Test edge cases and failure paths" },
   },
   {
     id: "day-012",
@@ -127,15 +95,7 @@ export const pyQualityDays: Day[] = [
     title: "Fixtures and Testing File I/O",
     objective:
       "Test the data layer without touching your real expenses.json, using fixtures and tmp_path.",
-    whyItMatters:
-      "A test that writes to your real data file is a test you will be afraid to run. Isolation is what makes a suite safe to run constantly.",
-    careerConnection:
-      "The same technique isolates tests from databases, model APIs and vector stores later.",
     estimatedMinutes: 110,
-    projectId: "expense-tracker",
-    repoPath: REPO,
-    skills: ["python-testing", "code-architecture"],
-    evidence: ["ev-test-3", "ev-arch-3"],
     tasks: [
       {
         id: "d12-t1",
@@ -169,14 +129,6 @@ export const pyQualityDays: Day[] = [
         priority: "essential",
       },
     ],
-    deliverables: ["conftest.py", "Data layer tests using tmp_path"],
-    definitionOfDone: [
-      "No test touches the real expenses.json",
-      "Storage path is injectable",
-      "Round-trip and corruption cases tested",
-      "Committed",
-    ],
-    gitTask: { commitMessage: "Test data layer with fixtures and temporary paths" },
   },
   {
     id: "day-013",
@@ -186,15 +138,7 @@ export const pyQualityDays: Day[] = [
     title: "A Real CLI with argparse",
     objective:
       "Add a non-interactive command interface alongside the menu.",
-    whyItMatters:
-      "An interactive menu cannot be scripted, scheduled or tested end to end. Arguments can.",
-    careerConnection:
-      "Every deployment, data pipeline and training run is launched by a command with arguments.",
     estimatedMinutes: 110,
-    projectId: "expense-tracker",
-    repoPath: REPO,
-    skills: ["cli-apps", "python-core"],
-    evidence: ["ev-cli-2", "ev-cli-3"],
     tasks: [
       {
         id: "d13-t1",
@@ -228,14 +172,6 @@ export const pyQualityDays: Day[] = [
         priority: "important",
       },
     ],
-    deliverables: ["Scriptable CLI with subcommands"],
-    definitionOfDone: [
-      "Expenses can be added without the interactive menu",
-      "--help output is useful",
-      "Failure produces a non-zero exit code",
-      "Committed",
-    ],
-    gitTask: { commitMessage: "Add scriptable CLI with argparse subcommands" },
   },
   {
     id: "day-014",
@@ -244,15 +180,7 @@ export const pyQualityDays: Day[] = [
     moduleId: "m-py-craft",
     title: "Logging Instead of print",
     objective: "Replace debugging prints with structured, levelled logging.",
-    whyItMatters:
-      "print goes to one place, has no severity, no timestamp and no context. When something breaks on a server at 3am, logs are all you have.",
-    careerConnection:
-      "This is the first rung of observability — the same ladder that ends with tracing LLM calls and agent steps.",
     estimatedMinutes: 100,
-    projectId: "expense-tracker",
-    repoPath: REPO,
-    skills: ["observability", "python-core"],
-    evidence: ["ev-ob-1"],
     tasks: [
       {
         id: "d14-t1",
@@ -285,14 +213,6 @@ export const pyQualityDays: Day[] = [
         priority: "important",
       },
     ],
-    deliverables: ["Logging configured across the application"],
-    definitionOfDone: [
-      "No print used for diagnostics",
-      "Levels chosen deliberately",
-      "Log includes timestamp and module",
-      "Committed",
-    ],
-    gitTask: { commitMessage: "Replace diagnostic prints with logging" },
   },
   {
     id: "day-015",
@@ -302,15 +222,7 @@ export const pyQualityDays: Day[] = [
     title: "Configuration and Environment Variables",
     objective:
       "Move settings out of the code and into configuration read from the environment.",
-    whyItMatters:
-      "Hard-coded paths, currencies and file names mean the same code cannot run in two places. Configuration is what makes an application deployable.",
-    careerConnection:
-      "API keys, database URLs and model names all arrive this way in production. Getting the habit now prevents committing a secret later.",
     estimatedMinutes: 90,
-    projectId: "expense-tracker",
-    repoPath: REPO,
-    skills: ["python-core", "ai-security"],
-    evidence: ["ev-sec-3"],
     tasks: [
       {
         id: "d15-t1",
@@ -344,14 +256,6 @@ export const pyQualityDays: Day[] = [
         priority: "important",
       },
     ],
-    deliverables: ["config.py", ".env.example", "Documented configuration"],
-    definitionOfDone: [
-      "No hard-coded paths remain in the logic",
-      "Sensible defaults when env vars are absent",
-      ".env ignored, .env.example committed",
-      "Committed",
-    ],
-    gitTask: { commitMessage: "Read configuration from the environment" },
   },
   {
     id: "day-016",
@@ -361,15 +265,7 @@ export const pyQualityDays: Day[] = [
     title: "Comprehensions and Generators",
     objective:
       "Rewrite the analysis functions in idiomatic Python and understand lazy evaluation.",
-    whyItMatters:
-      "Generators let you process data larger than memory. Every data pipeline and streaming LLM response you write later depends on this idea.",
-    careerConnection:
-      "Streaming model responses token by token is the same mechanism.",
     estimatedMinutes: 100,
-    projectId: "expense-tracker",
-    repoPath: REPO,
-    skills: ["python-advanced", "python-core"],
-    evidence: ["ev-adv-1"],
     tasks: [
       {
         id: "d16-t1",
@@ -401,13 +297,6 @@ export const pyQualityDays: Day[] = [
         priority: "optional",
       },
     ],
-    deliverables: ["Idiomatic analyser", "A generator-based reader"],
-    definitionOfDone: [
-      "Tests still pass after the rewrite",
-      "You can explain when a generator beats a list",
-      "Committed",
-    ],
-    gitTask: { commitMessage: "Rewrite analysis with comprehensions and generators" },
   },
   {
     id: "day-017",
@@ -416,15 +305,7 @@ export const pyQualityDays: Day[] = [
     moduleId: "m-py-advanced",
     title: "Decorators",
     objective: "Write decorators that add timing and retry behaviour without touching the functions.",
-    whyItMatters:
-      "Cross-cutting concerns — timing, retries, caching, auth — do not belong inside business logic. Decorators are how Python separates them.",
-    careerConnection:
-      "FastAPI routes, pytest fixtures and LLM retry wrappers are all decorators. You will read them daily.",
     estimatedMinutes: 100,
-    projectId: "expense-tracker",
-    repoPath: REPO,
-    skills: ["python-advanced"],
-    evidence: ["ev-adv-2"],
     tasks: [
       {
         id: "d17-t1",
@@ -457,13 +338,6 @@ export const pyQualityDays: Day[] = [
         priority: "important",
       },
     ],
-    deliverables: ["@timed and @retry decorators with tests"],
-    definitionOfDone: [
-      "Decorators preserve function metadata via functools.wraps",
-      "Retry behaviour is tested, not assumed",
-      "Committed",
-    ],
-    gitTask: { commitMessage: "Add timing and retry decorators" },
   },
   {
     id: "day-018",
@@ -472,15 +346,7 @@ export const pyQualityDays: Day[] = [
     moduleId: "m-py-advanced",
     title: "Context Managers",
     objective: "Turn the atomic save into a context manager that guarantees cleanup.",
-    whyItMatters:
-      "with open(...) already protects you from leaked file handles. Writing your own teaches you how resource safety actually works.",
-    careerConnection:
-      "Database transactions, model sessions and distributed locks are all context managers.",
     estimatedMinutes: 90,
-    projectId: "expense-tracker",
-    repoPath: REPO,
-    skills: ["python-advanced", "reliability"],
-    evidence: ["ev-adv-3"],
     tasks: [
       {
         id: "d18-t1",
@@ -505,13 +371,6 @@ export const pyQualityDays: Day[] = [
         priority: "essential",
       },
     ],
-    deliverables: ["atomic_write context manager with a failure test"],
-    definitionOfDone: [
-      "Exception inside the block leaves the original file untouched",
-      "Temp file cleaned up on failure",
-      "Committed",
-    ],
-    gitTask: { commitMessage: "Add atomic write context manager" },
   },
   {
     id: "day-019",
@@ -520,15 +379,7 @@ export const pyQualityDays: Day[] = [
     moduleId: "m-py-advanced",
     title: "Collections: dict, set, Counter, defaultdict",
     objective: "Choose the data structure that makes the operation cheap and the code short.",
-    whyItMatters:
-      "Your category_summary builds a dict with an if-not-in check. Counter and defaultdict exist precisely for that. Knowing the standard library is a force multiplier.",
-    careerConnection:
-      "Structure choice is the practical half of Big O, and it comes up in every interview.",
     estimatedMinutes: 90,
-    projectId: "expense-tracker",
-    repoPath: REPO,
-    skills: ["python-core", "dsa"],
-    evidence: ["ev-dsa-1"],
     tasks: [
       {
         id: "d19-t1",
@@ -560,13 +411,6 @@ export const pyQualityDays: Day[] = [
         priority: "optional",
       },
     ],
-    deliverables: ["Simplified summary functions", "monthly_summary"],
-    definitionOfDone: [
-      "Tests still pass",
-      "Manual if-not-in-dict pattern eliminated",
-      "Committed",
-    ],
-    gitTask: { commitMessage: "Use collections for expense summaries" },
   },
   {
     id: "day-020",
@@ -575,15 +419,7 @@ export const pyQualityDays: Day[] = [
     moduleId: "m-py-craft",
     title: "Dates, Strings and Formatting",
     objective: "Handle dates correctly and format output properly.",
-    whyItMatters:
-      "Dates are where quiet bugs live: ambiguous formats, timezones, string comparison of '9' vs '10'. Your date parsing already accepts four formats; make sure it stores one.",
-    careerConnection:
-      "Time handling bugs are a classic production incident cause across every kind of system.",
     estimatedMinutes: 90,
-    projectId: "expense-tracker",
-    repoPath: REPO,
-    skills: ["python-core"],
-    evidence: ["ev-py-1"],
     tasks: [
       {
         id: "d20-t1",
@@ -615,13 +451,6 @@ export const pyQualityDays: Day[] = [
         priority: "optional",
       },
     ],
-    deliverables: ["Date range filtering", "Consistent ISO storage"],
-    definitionOfDone: [
-      "All stored dates are ISO format",
-      "Date filtering tested including boundary dates",
-      "Committed",
-    ],
-    gitTask: { commitMessage: "Add date range filtering" },
   },
   {
     id: "day-021",
@@ -630,15 +459,7 @@ export const pyQualityDays: Day[] = [
     moduleId: "m-py-craft",
     title: "CSV Import and Export",
     objective: "Move data in and out of the application in a second format.",
-    whyItMatters:
-      "Supporting a second format forces the serialisation boundary to be real rather than assumed. If adding CSV is painful, your layering is wrong.",
-    careerConnection:
-      "Data ingestion is the first stage of every ML and RAG pipeline you will build.",
     estimatedMinutes: 100,
-    projectId: "expense-tracker",
-    repoPath: REPO,
-    skills: ["python-core", "code-architecture"],
-    evidence: ["ev-arch-1"],
     tasks: [
       {
         id: "d21-t1",
@@ -671,14 +492,6 @@ export const pyQualityDays: Day[] = [
         priority: "essential",
       },
     ],
-    deliverables: ["CSV import and export sharing one validation path"],
-    definitionOfDone: [
-      "Round trip JSON to CSV to JSON preserves data",
-      "Bad rows rejected with a clear message",
-      "Only one validator exists",
-      "Committed",
-    ],
-    gitTask: { commitMessage: "Add CSV import and export" },
   },
   {
     id: "day-022",
@@ -688,15 +501,7 @@ export const pyQualityDays: Day[] = [
     title: "Consuming an HTTP API",
     objective:
       "Call a real API, handle its failures, and cache the result.",
-    whyItMatters:
-      "This is the exact shape of every LLM call you will make: a slow network request that can time out, rate limit, return an error, or return something unexpected.",
-    careerConnection:
-      "Phase 11 is this day with a larger bill attached. Handling failure well here is directly reusable.",
     estimatedMinutes: 120,
-    projectId: "expense-tracker",
-    repoPath: REPO,
-    skills: ["python-core", "reliability", "cs-networking"],
-    evidence: ["ev-rel-1", "ev-rel-2", "ev-net-1"],
     tasks: [
       {
         id: "d22-t1",
@@ -736,13 +541,5 @@ export const pyQualityDays: Day[] = [
         priority: "essential",
       },
     ],
-    deliverables: ["API client with timeout, retry and cache"],
-    definitionOfDone: [
-      "Every request has a timeout",
-      "Network failure degrades gracefully instead of crashing",
-      "Cached value used when fresh",
-      "Committed",
-    ],
-    gitTask: { commitMessage: "Add currency conversion with timeout, retry and caching" },
   },
 ];

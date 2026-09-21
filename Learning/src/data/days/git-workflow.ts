@@ -18,14 +18,7 @@ export const gitWorkflowDays: Day[] = [
     title: "What a Commit Actually Is",
     objective:
       "Understand the object model: working tree, index, commit, and why branches are cheap.",
-    whyItMatters:
-      "Most Git confusion comes from treating it as a magic backup tool. Once you know a commit is a snapshot with parents, the commands stop being spells.",
-    careerConnection:
-      "Every professional workflow assumes fluency here. Fear of Git leads to fear of changing code.",
     estimatedMinutes: 90,
-    skills: ["git"],
-    evidence: ["ev-git-1"],
-    repoPath: ".",
     tasks: [
       {
         id: "d35-t1",
@@ -59,13 +52,6 @@ export const gitWorkflowDays: Day[] = [
         priority: "important",
       },
     ],
-    deliverables: ["Notes on the Git object model"],
-    definitionOfDone: [
-      "Can explain working tree vs index vs commit",
-      "git add -p used successfully",
-      "Own history reviewed critically",
-    ],
-    gitTask: { commitMessage: "Add git learning notes" },
   },
   {
     id: "day-036",
@@ -74,14 +60,7 @@ export const gitWorkflowDays: Day[] = [
     moduleId: "m-git-core",
     title: "Undoing Things Safely",
     objective: "Learn to recover: amend, restore, reset, revert, reflog.",
-    whyItMatters:
-      "Fear of losing work makes people commit rarely and in huge lumps. Knowing you can recover almost anything changes how you work.",
-    careerConnection:
-      "Confidently reverting a bad deploy commit under pressure is a real, observed skill.",
     estimatedMinutes: 90,
-    skills: ["git"],
-    evidence: ["ev-git-1"],
-    repoPath: ".",
     tasks: [
       {
         id: "d36-t1",
@@ -114,12 +93,6 @@ export const gitWorkflowDays: Day[] = [
         priority: "important",
       },
     ],
-    deliverables: ["Recovery techniques practised on a scratch branch"],
-    definitionOfDone: [
-      "A 'lost' commit recovered via reflog",
-      "Can state when reset is dangerous",
-      "No artifacts or secrets tracked",
-    ],
   },
   {
     id: "day-037",
@@ -128,14 +101,7 @@ export const gitWorkflowDays: Day[] = [
     moduleId: "m-git-branching",
     title: "Branch Per Feature",
     objective: "Stop committing directly to main; adopt a branching workflow.",
-    whyItMatters:
-      "Branches let you keep main always working while you experiment. Every team you join will require this.",
-    careerConnection:
-      "Committing straight to main is an immediate red flag in a professional setting.",
     estimatedMinutes: 90,
-    skills: ["git"],
-    evidence: ["ev-git-2"],
-    repoPath: REPO,
     tasks: [
       {
         id: "d37-t1",
@@ -160,13 +126,6 @@ export const gitWorkflowDays: Day[] = [
         priority: "essential",
       },
     ],
-    deliverables: ["A feature developed and merged from a branch"],
-    definitionOfDone: [
-      "Feature built entirely on a branch",
-      "main never broken during the work",
-      "Merged and branch deleted",
-    ],
-    gitTask: { commitMessage: "Add monthly spending report" },
   },
   {
     id: "day-038",
@@ -175,14 +134,7 @@ export const gitWorkflowDays: Day[] = [
     moduleId: "m-git-branching",
     title: "Merge Conflicts on Purpose",
     objective: "Create a conflict deliberately and resolve it properly.",
-    whyItMatters:
-      "Conflicts are routine. Panicking and accepting whichever side looks familiar is how working code gets deleted.",
-    careerConnection:
-      "Conflict resolution happens weekly on any team of more than one person.",
     estimatedMinutes: 90,
-    skills: ["git"],
-    evidence: ["ev-git-3"],
-    repoPath: REPO,
     tasks: [
       {
         id: "d38-t1",
@@ -213,12 +165,6 @@ export const gitWorkflowDays: Day[] = [
         priority: "essential",
       },
     ],
-    deliverables: ["A conflict resolved with both intents preserved"],
-    definitionOfDone: [
-      "Conflict resolved deliberately",
-      "Tests pass after resolution",
-      "Can explain what each side was trying to do",
-    ],
   },
   {
     id: "day-039",
@@ -227,14 +173,7 @@ export const gitWorkflowDays: Day[] = [
     moduleId: "m-git-branching",
     title: "Rebase and a Readable History",
     objective: "Understand rebase, squash your own messy commits, and know the danger.",
-    whyItMatters:
-      "History is documentation. Twelve commits called 'fix' teach nobody anything, including you.",
-    careerConnection:
-      "Many teams require a clean, linear history before merge.",
     estimatedMinutes: 100,
-    skills: ["git"],
-    evidence: ["ev-git-1"],
-    repoPath: REPO,
     tasks: [
       {
         id: "d39-t1",
@@ -266,12 +205,6 @@ export const gitWorkflowDays: Day[] = [
         priority: "essential",
       },
     ],
-    deliverables: ["A squashed, readable branch history"],
-    definitionOfDone: [
-      "Interactive rebase completed successfully",
-      "Can state the golden rule in your own words",
-      "Feature branch rebased cleanly",
-    ],
   },
   {
     id: "day-040",
@@ -280,13 +213,7 @@ export const gitWorkflowDays: Day[] = [
     moduleId: "m-git-collab",
     title: "Remotes: fetch, pull, push",
     objective: "Understand the difference between your repo and GitHub's copy.",
-    whyItMatters:
-      "Most 'Git broke' moments are really a misunderstanding of what is local and what is remote.",
-    careerConnection: "Daily mechanics of working with any shared repository.",
     estimatedMinutes: 80,
-    skills: ["git"],
-    evidence: ["ev-git-1"],
-    repoPath: ".",
     tasks: [
       {
         id: "d40-t1",
@@ -317,12 +244,6 @@ export const gitWorkflowDays: Day[] = [
         priority: "important",
       },
     ],
-    deliverables: ["Local and remote fully in sync"],
-    definitionOfDone: [
-      "Can explain fetch vs pull precisely",
-      "A divergence reconciled without losing work",
-      "Everything pushed",
-    ],
   },
   {
     id: "day-041",
@@ -331,14 +252,7 @@ export const gitWorkflowDays: Day[] = [
     moduleId: "m-git-collab",
     title: "Pull Requests and Reviewing Your Own Diff",
     objective: "Ship a feature through a PR and review it as a stranger would.",
-    whyItMatters:
-      "Reading your own diff before merging catches an astonishing amount: debug code, secrets, half-finished thoughts, lost behaviour.",
-    careerConnection:
-      "PR quality is the most visible artefact of your work on a team, and on your public GitHub.",
     estimatedMinutes: 110,
-    skills: ["git", "code-review"],
-    evidence: ["ev-git-4", "ev-cr-1", "ev-cr-2"],
-    repoPath: REPO,
     tasks: [
       {
         id: "d41-t1",
@@ -369,13 +283,6 @@ export const gitWorkflowDays: Day[] = [
         priority: "essential",
       },
     ],
-    deliverables: ["A merged pull request with a self-review"],
-    definitionOfDone: [
-      "PR description stands alone",
-      "Own diff reviewed line by line",
-      "At least one genuine improvement found in review",
-      "Merged",
-    ],
   },
   {
     id: "day-042",
@@ -384,14 +291,7 @@ export const gitWorkflowDays: Day[] = [
     moduleId: "m-git-collab",
     title: "Issues and Tracking Work",
     objective: "Move your backlog out of your head and into GitHub Issues.",
-    whyItMatters:
-      "Work you remember is work you will forget. Written issues also make your repository legible to someone else.",
-    careerConnection:
-      "Issue hygiene and linking commits to issues is standard practice everywhere.",
     estimatedMinutes: 70,
-    skills: ["git", "portfolio"],
-    evidence: ["ev-git-4"],
-    repoPath: ".",
     tasks: [
       {
         id: "d42-t1",
@@ -415,11 +315,6 @@ export const gitWorkflowDays: Day[] = [
         priority: "important",
       },
     ],
-    deliverables: ["A real issue backlog"],
-    definitionOfDone: [
-      "Issues opened with clear titles and acceptance criteria",
-      "One issue closed via a commit reference",
-    ],
   },
   {
     id: "day-043",
@@ -428,14 +323,7 @@ export const gitWorkflowDays: Day[] = [
     moduleId: "m-git-collab",
     title: "Tags, Releases and Versioning",
     objective: "Mark meaningful points in history and publish a release.",
-    whyItMatters:
-      "A version is a promise about what someone gets. Semantic versioning makes that promise precise.",
-    careerConnection:
-      "Releases, changelogs and rollback targets all depend on this.",
     estimatedMinutes: 70,
-    skills: ["git"],
-    evidence: ["ev-git-6"],
-    repoPath: ".",
     tasks: [
       {
         id: "d43-t1",
@@ -459,13 +347,6 @@ export const gitWorkflowDays: Day[] = [
         priority: "important",
       },
     ],
-    deliverables: ["Published release", "CHANGELOG.md"],
-    definitionOfDone: [
-      "Annotated tag pushed",
-      "Release notes describe what changed and why",
-      "Changelog started",
-    ],
-    gitTask: { commitMessage: "Add changelog" },
   },
   {
     id: "day-044",
@@ -474,14 +355,7 @@ export const gitWorkflowDays: Day[] = [
     moduleId: "m-git-ci",
     title: "First GitHub Actions Workflow",
     objective: "Make your tests run automatically on every push.",
-    whyItMatters:
-      "Automation catches what discipline misses. This is the first piece of production engineering in the whole roadmap, and it arrives on day 44, not month eleven.",
-    careerConnection:
-      "CI on a personal project is a strong and uncommon signal on a junior AI engineer's GitHub.",
     estimatedMinutes: 110,
-    skills: ["github-actions", "cicd", "python-testing"],
-    evidence: ["ev-gha-1", "ev-gha-2", "ev-test-4"],
-    repoPath: ".github/workflows",
     tasks: [
       {
         id: "d44-t1",
@@ -515,14 +389,6 @@ export const gitWorkflowDays: Day[] = [
         priority: "important",
       },
     ],
-    deliverables: ["Working CI workflow", "Status badge"],
-    definitionOfDone: [
-      "Tests run on every push",
-      "You can explain every line of the YAML",
-      "A failing test visibly fails CI",
-      "Badge in README",
-    ],
-    gitTask: { commitMessage: "Add CI workflow running tests on push" },
   },
   {
     id: "day-045",
@@ -531,14 +397,7 @@ export const gitWorkflowDays: Day[] = [
     moduleId: "m-git-ci",
     title: "Harden the Pipeline",
     objective: "Add lint and type checking to CI, plus caching and a version matrix.",
-    whyItMatters:
-      "A pipeline that only runs tests still lets style and type regressions through. A slow pipeline stops being run.",
-    careerConnection:
-      "Pipeline design — what to gate on, what to cache, what to parallelise — is real DevOps work.",
     estimatedMinutes: 100,
-    skills: ["github-actions", "cicd"],
-    evidence: ["ev-gha-5", "ev-cd-1"],
-    repoPath: ".github/workflows",
     tasks: [
       {
         id: "d45-t1",
@@ -571,13 +430,6 @@ export const gitWorkflowDays: Day[] = [
         priority: "important",
       },
     ],
-    deliverables: ["Multi-job pipeline with caching, matrix and secrets"],
-    definitionOfDone: [
-      "Lint and type check gate the build",
-      "Cache measurably speeds up runs",
-      "Secret used without leaking into logs",
-    ],
-    gitTask: { commitMessage: "Add lint, type check, caching and matrix to CI" },
   },
   {
     id: "day-046",
@@ -587,14 +439,7 @@ export const gitWorkflowDays: Day[] = [
     title: "Phase 2 Capstone: Ship It Properly",
     objective:
       "Take one feature from issue to branch to PR to green CI to merge to release.",
-    whyItMatters:
-      "This is the complete professional loop. From here on, every feature in every project follows it.",
-    careerConnection:
-      "This exact loop is what your future team's onboarding document describes.",
     estimatedMinutes: 120,
-    skills: ["git", "cicd", "code-review", "python-testing"],
-    evidence: ["ev-git-4", "ev-cd-1", "ev-cr-3"],
-    repoPath: REPO,
     tasks: [
       {
         id: "d46-t1",
@@ -631,14 +476,6 @@ export const gitWorkflowDays: Day[] = [
         minutes: 20,
         priority: "essential",
       },
-    ],
-    deliverables: ["Feature shipped through the full workflow", "Phase 2 retrospective"],
-    definitionOfDone: [
-      "Issue closed by a merged PR",
-      "CI green before merge",
-      "Changelog and tag updated",
-      "Skill evidence updated honestly",
-      "Retrospective written",
     ],
   },
 ];
